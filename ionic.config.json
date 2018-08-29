@@ -1,0 +1,7 @@
+{
+  "name": "tontine",
+  "integrations": {
+    "cordova": {}
+  },
+  "type": "ionic-angular"
+}
