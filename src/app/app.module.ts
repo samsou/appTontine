@@ -4,6 +4,7 @@ import localeFr from '@angular/common/locales/fr';
 import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
+import { AngularFireModule } from 'angularfire2';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { AccordionComponent } from '../components/accordion/accordion';
@@ -16,6 +17,17 @@ import { MyApp } from './app.component';
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
+
+let firebaseConfig = {
+  apiKey: "AIzaSyB7NuN8n3kCAJZBOSMpdEWSvw4ecvmzBFc",
+  authDomain: "apptontine-cabfa.firebaseapp.com",
+  databaseURL: "https://apptontine-cabfa.firebaseio.com",
+  projectId: "apptontine-cabfa",
+  storageBucket: "apptontine-cabfa.appspot.com",
+  messagingSenderId: "745339778068"
+};
+
+
 @NgModule({
   declarations: [
     MyApp,
@@ -29,7 +41,8 @@ registerLocaleData(localeFr, 'fr');
     BrowserModule,
     IonicModule.forRoot(MyApp),
     HttpClientModule,
-    FormsModule
+    FormsModule,
+    AngularFireModule.initializeApp(firebaseConfig)
   ],
   bootstrap: [IonicApp],
   entryComponents: [
