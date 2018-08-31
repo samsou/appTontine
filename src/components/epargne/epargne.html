@@ -1,0 +1,40 @@
+<!-- Generated template for the ClientComponent component -->
+<h3 padding>Les comptes epargne</h3>
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th class="counter">N°</th>
+                <th class="id">id</th>
+                <th>Client</th>
+                <th>Date de création</th>
+                <!-- <th>Montant souscrit</th> -->
+                <!-- <th>Mise</th>
+                <th>Avance</th>
+                <th>Date avance</th> -->
+                <!-- <th class="hide">Montant adhesion</th>
+                <th>Date de clotûre</th> -->
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let epargne of epargnes | recherche:dataProvider.userData.currentSearch;let index = index">
+                <td class="counter">{{index + 1}}</td>
+                <td class="id">{{epargne.id}}</td>
+                <td>{{epargne?.client?.name}} {{epargne?.client?.firstName}}</td>
+                <td>{{epargne.date | date:'mediumDate'}}</td>
+                <!-- <td>{{epargne.montantSouscrit}}</td>
+                <td>{{epargne.mise}}</td>
+                <td>{{epargne.avance}}</td>
+                <td>{{epargne.dateAvance}}</td> -->
+                <!-- <td class="hide">{{epargne.montantAdhesion}}</td>
+                <td>{{epargne.dateCloture}}</td> -->
+                <td>
+                    <ion-icon name="create" (click)="edit(epargne)" class="edit"></ion-icon>
+                    <ion-icon name="ios-close-outline" (click)="delete(epargne)" class="trash"></ion-icon>
+                    <ion-icon name="md-more" (click)="openOptions($event,epargne)" class="options"></ion-icon>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,0 +1,65 @@
+<!--
+  Generated template for the FaireMisePage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>Faire une mise sur le compte de {{compte?.client?.name}}</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <p>
+        Le montant souscrit pour ce compte: {{compte?.montantSouscritTontine | currency:'XOF':true:'2.0'}} <br> Le nombre de mise: {{compte.miseTontine}} <br> Le client a faire une avance sur ce compte? {{compte.avanceTontine?'Oui':'Non'}} <br>
+        <span *ngIf="compte.avanceTontine && compte.avanceDate">
+      Date de l'avance: {{compte.avanceDate | date:'mediumDate'}}
+    </span>
+    </p> <br>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th class="counter2">N°</th>
+                    <th class="id">id</th>
+                    <!-- <th>Date</th> -->
+                    <th>Montant</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let mise of mises;let index = index">
+                    <td class="counter2">{{index + 1}}</td>
+                    <td class="id">{{compte.id}}</td>
+                    <!-- <td>{{tontine.date | date:'mediumDate'}}</td> -->
+                    <td>{{compte.montantSouscritTontine| currency:'XOF':true:'2.0'}}</td>
+                    <td>
+                        <ion-checkbox [(ngModel)]="mise.checked" name="checked" [disabled]="mise.disabled" (ionChange)="onChange(mise)"></ion-checkbox>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</ion-content>
+<ion-footer>
+    <ion-navbar>
+        <ion-title *ngIf="nbreMise.size">
+            {{(nbreMise.size * (compte.montantSouscritTontine || 0)) | currency:'XOF':true:'2.0'}} à payer
+        </ion-title>
+        <ion-buttons end>
+            <button ion-button (click)="save()">
+        Enregistrer
+      </button>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-footer>

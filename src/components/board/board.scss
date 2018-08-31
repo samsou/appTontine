@@ -1,0 +1,19 @@
+board {
+    [ion-col] {
+        min-height: 200px;
+    }
+    .item-inner * {
+        padding-left: 1px;
+        color: white;
+        font-weight: bold;
+    }
+    #clients .item-inner {
+        background: rgb(126, 10, 235);
+    }
+    #tontine .item-inner {
+        background: rgb(149, 218, 72);
+    }
+    #epargne .item-inner {
+        background: rgb(206, 164, 27);
+    }
+}

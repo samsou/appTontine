@@ -1,0 +1,13 @@
+<!-- Generated template for the CreateTontineComponent component -->
+<form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm" padding>
+    <ion-list no-lines>
+        <ion-item>
+            <ion-label class="oblige">Selectionnez le client</ion-label>
+            <ion-select [(ngModel)]="epargne.idClient" required name="client">
+                <ion-option value="Tontine">client 1</ion-option>
+                <ion-option value="Epargne">Client2</ion-option>
+            </ion-select>
+        </ion-item>
+    </ion-list>
+    <button ion-button outline margin float-right>Créer compte</button>
+</form>

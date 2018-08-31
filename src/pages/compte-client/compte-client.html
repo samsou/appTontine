@@ -1,0 +1,67 @@
+<!--
+  Generated template for the CompteClientPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>Les comptes du client {{client.name}} {{client.firstName}}</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <ion-segment [(ngModel)]="typeCompte" color="primary" (ionChange)="onChanged($event)">
+        <ion-segment-button value="tontine">
+            Tontine
+        </ion-segment-button>
+        <ion-segment-button value="epargne">
+            Epargne
+        </ion-segment-button>
+    </ion-segment>
+    <br><br>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th class="counter">N°</th>
+                    <th class="id">id</th>
+                    <th>Client</th>
+                    <th>Date de création</th>
+                    <th *ngIf="typeCompte == 'tontine'">Montant souscrit</th>
+                    <th *ngIf="typeCompte == 'tontine'">Mise</th>
+                    <th *ngIf="typeCompte == 'tontine'">Avance</th>
+                    <th *ngIf="typeCompte == 'tontine'">Date avance</th>
+                    <th class="hide">Montant adhesion</th>
+                    <th *ngIf="typeCompte == 'tontine'">Date de clotûre</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let compte of comptes;let index = index">
+                    <td class="counter">{{index + 1}}</td>
+                    <td class="id">{{compte.id}}</td>
+                    <td>{{compte?.client?.name}} {{compte?.client?.firstName}}</td>
+                    <td>{{compte.dateCompte | date:'mediumDate'}}</td>
+                    <td *ngIf="typeCompte == 'tontine'">{{compte.montantSouscritTontine| currency:'XOF':true:'2.0'}}</td>
+                    <td *ngIf="typeCompte == 'tontine'">{{compte.miseTontine}}</td>
+                    <td *ngIf="typeCompte == 'tontine'">{{compte.avance?'Oui':'Non'}}</td>
+                    <td *ngIf="typeCompte == 'tontine'">{{compte.dateAvance | date:'mediumDate'}}</td>
+                    <td class="hide">{{compte.montantAdhesion| currency:'XOF':true:'2.0'}}</td>
+                    <td *ngIf="typeCompte == 'tontine'">{{compte.dateCloture | date:'mediumDate'}}</td>
+                    <td>
+
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</ion-content>

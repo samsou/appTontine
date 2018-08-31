@@ -1,0 +1,47 @@
+<!-- Generated template for the ClientComponent component -->
+<h3 padding>Les clients</h3>
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th class="counter">N°</th>
+                <th class="id">id</th>
+                <th>Date</th>
+                <th>Nom & prénoms</th>
+                <th>Num. carte</th>
+                <th>Quartier & maison</th>
+                <th>Téléphone</th>
+                <th>Profession</th>
+                <th>Activité</th>
+                <th>Lieu d'exercice</th>
+                <th>Email</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let client of clients | recherche:dataProvider.userData.currentSearch;let index = index">
+                <td class="counter">{{index + 1}}</td>
+                <td class="id">{{client.id}}</td>
+                <td>{{client.date | date:'mediumDate'}}</td>
+                <td>{{client.name}} {{client.firstName}}</td>
+                <td>{{client.numCarte}}</td>
+                <td>{{client.quartier}} {{client.maison}}</td>
+                <td>{{client.telephone}}</td>
+                <td>{{client.profession}}</td>
+                <td>{{client.activiteExerce}}</td>
+                <td>{{client.lieuExercice}}</td>
+                <td>{{client.email}}</td>
+                <td>
+                    <ion-icon name="create" (click)="edit(client)" class="edit"></ion-icon>
+                    <ion-icon name="ios-close-outline" (click)="delete(client)" class="trash"></ion-icon>
+                    <ion-icon class="options" name="md-more" (click)="openOptions($event,client)"></ion-icon>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>
+<ion-fab bottom right>
+    <button ion-fab (click)="addClient()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+</ion-fab>

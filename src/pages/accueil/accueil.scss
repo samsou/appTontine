@@ -1,0 +1,42 @@
+page-accueil {
+    .menus {
+        transition: all transform 2s;
+        border-right: 1px solid rgba(141, 135, 135, 0.5);
+        width: 27%;
+        ion-item {
+            cursor: pointer;
+        }
+    }
+    .menus.isOpen {
+        width: 0px important;
+    }
+    ul.breadcrumb {
+        padding: 10px 16px;
+        list-style: none;
+        background-color: #eee;
+    }
+    /* Display list items side by side */
+    ul.breadcrumb li {
+        display: inline;
+        font-size: 18px;
+        padding: 8px;
+        border-right: 0.1px solid white;
+    }
+    ul.breadcrumb li:last-child {
+        border-right: 0px solid;
+    }
+    /* ul.breadcrumb li:nth-child(even) {
+        background-color: #dedede80;
+    } */
+    /* Add a color to all links inside the list */
+    ul.breadcrumb li a {
+        color: #0275d8;
+        text-decoration: none;
+        cursor: pointer;
+    }
+    /* Add a color on mouse-over */
+    ul.breadcrumb li a:hover {
+        color: #01447e;
+        text-decoration: none;
+    }
+}

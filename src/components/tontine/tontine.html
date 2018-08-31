@@ -1,0 +1,40 @@
+<!-- Generated template for the ClientComponent component -->
+<h3 padding>Les comptes tontine</h3>
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th class="counter">N°</th>
+                <th class="id">id</th>
+                <th>Client</th>
+                <th>Date de création</th>
+                <th>Montant souscrit</th>
+                <th>Mise</th>
+                <th>Avance</th>
+                <th>Date avance</th>
+                <th class="hide">Montant adhesion</th>
+                <th>Date de clotûre</th>
+                <th>Actions</th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let tontine of tontines | recherche:dataProvider.userData.currentSearch;let index = index">
+                <td class="counter">{{index + 1}}</td>
+                <td class="id">{{tontine.id}}</td>
+                <td>{{tontine?.client?.name}} {{tontine?.client?.firstName}}</td>
+                <td>{{tontine.dateCompte | date:'mediumDate'}}</td>
+                <td>{{tontine.montantSouscritTontine| currency:'XOF':true:'2.0'}}</td>
+                <td>{{tontine.miseTontine}}</td>
+                <td>{{tontine.avance?'Oui':'Non'}}</td>
+                <td>{{tontine.dateAvance | date:'mediumDate'}}</td>
+                <td class="hide">{{tontine.montantAdhesion| currency:'XOF':true:'2.0'}}</td>
+                <td>{{tontine.dateCloture | date:'mediumDate'}}</td>
+                <td>
+                    <ion-icon name="create" (click)="edit(tontine)" class="edit"></ion-icon>
+                    <ion-icon name="ios-close-outline" (click)="delete(tontine)" class="trash"></ion-icon>
+                    <ion-icon name="md-more" (click)="openOptions($event,tontine)" class="options"></ion-icon>
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

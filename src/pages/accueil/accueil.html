@@ -1,0 +1,93 @@
+<!--
+  Generated template for the AccueilPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-buttons left *ngIf="isEnabled">
+            <button ion-button icon-only (click)="toggle()">
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        </ion-buttons>
+        <button ion-button icon-only menuToggle *ngIf="!isEnabled">
+          <ion-icon name="menu"></ion-icon>
+        </button>
+        <ion-title (click)="toBoard()" style="cursor:pointer">{{code}}{{plateforme}}</ion-title>
+        <ion-buttons end *ngIf="dataProvider.userData.code">
+            <ion-searchbar [(ngModel)]="dataProvider.userData.currentSearch" mode="wp" placeholder="rechercher">
+            </ion-searchbar>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content no-padding no-margin>
+    <ion-split-pane no-padding no-margin *ngIf="isEnabled" [enabled]="isOpen" [when]="isOpen">
+        <!--  our side menu  -->
+        <ion-content no-padding no-margin class="menus" [ngClass]="{isOpen:isOpen}" *ngIf='isOpen'>
+            <ion-list no-lines>
+                <ion-item *ngFor="let menu of menus" (click)="toLink(menu)" [ngClass]="{active:dataProvider.userData.currentMenu == menu}">
+                    {{menu.libelle}}
+                </ion-item>
+            </ion-list>
+            <hr>
+            <ion-list no-lines>
+                <ion-item *ngFor="let menu of menusStats" (click)="toLink(menu)" [ngClass]="{active:dataProvider.userData.currentMenu == menu}">
+                    {{menu.libelle}}
+                </ion-item>
+            </ion-list>
+            <ion-footer no-border>
+                <ion-toolbar>
+                    <ion-title (click)="openSettings()" style="cursor: pointer">
+                        <ion-icon name="settings"></ion-icon>
+                        Paramètrage
+                    </ion-title>
+                </ion-toolbar>
+            </ion-footer>
+        </ion-content>
+
+        <!-- the main content -->
+        <ion-content main no-padding no-margin>
+            <ul class="breadcrumb" no-padding no-margin nowrap align-items-start justify-content-start *ngIf="dataProvider.userData.currentMenu?.breadcrumbs && dataProvider.userData.currentMenu?.breadcrumbs.length && isEnabled">
+                <li *ngFor="let bread of dataProvider.userData.currentMenu?.breadcrumbs" (click)="toBread(bread)" [ngClass]="{active:dataProvider.userData.code == bread.code}"><a>{{bread.libelle}}</a></li>
+            </ul>
+            <div [ngSwitch]="dataProvider.userData.code">
+                <client *ngSwitchCase="'CLIENTS'"></client>
+                <tontine *ngSwitchCase="'TONTINES'"></tontine>
+                <create-tontine *ngSwitchCase="'CREATE_TONTINE'"></create-tontine>
+                <mise *ngSwitchCase="'MISE'"></mise>
+                <!-- <tontine *ngSwitchCase="'RETRAIT_TONTINE'"></tontine> -->
+                <epargne *ngSwitchCase="'EPARGNE'"></epargne>
+                <div margin *ngSwitchCase="'CREATE_EPARGNE'">
+                    <create-epargne>
+                    </create-epargne>
+                </div>
+                <depot-epargne *ngSwitchCase="'DEPOT_EPARGNE'"></depot-epargne>
+                <retrait-epargne *ngSwitchCase="'RETRAIT_EPARGNE'"></retrait-epargne>
+                <stats *ngSwitchCase="'STATS'"></stats>
+                <audits *ngSwitchCase="'AUDITS'"></audits>
+                <board *ngSwitchDefault></board>
+            </div>
+        </ion-content>
+    </ion-split-pane>
+    <div *ngIf="!isEnabled">
+        <div [ngSwitch]="dataProvider.userData.code">
+            <client *ngSwitchCase="'CLIENTS'"></client>
+            <tontine *ngSwitchCase="'TONTINES'"></tontine>
+            <create-tontine *ngSwitchCase="'CREATE_TONTINE'"></create-tontine>
+            <mise *ngSwitchCase="'MISE'"></mise>
+            <!-- <tontine *ngSwitchCase="'RETRAIT_TONTINE'"></tontine> -->
+            <epargne *ngSwitchCase="'EPARGNE'"></epargne>
+            <create-epargne *ngSwitchCase="'CREATE_EPARGNE'"></create-epargne>
+            <depot-epargne *ngSwitchCase="'DEPOT_EPARGNE'"></depot-epargne>
+            <retrait-epargne *ngSwitchCase="'RETRAIT_EPARGNE'"></retrait-epargne>
+            <stats *ngSwitchCase="'STATS'"></stats>
+            <audits *ngSwitchCase="'AUDITS'"></audits>
+            <board *ngSwitchDefault></board>
+        </div>
+    </div>
+</ion-content>

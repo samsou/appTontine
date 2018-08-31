@@ -1,0 +1,37 @@
+<h4 ion-text text-center> La liste des depôts epargne</h4>
+<div class="table-wrapper">
+    <table>
+        <thead>
+            <tr>
+                <th class="counter">N°</th>
+                <th class="id">id</th>
+                <th>Client</th>
+                <th>Date de retrait</th>
+                <th>Montant</th>
+                <!-- <th>Mise</th>
+                <th>Avance</th>
+                <th>Date avance</th> -->
+                <!-- <th class="hide">Montant adhesion</th>
+                <th>Date de clotûre</th> -->
+                <th></th>
+            </tr>
+        </thead>
+        <tbody>
+            <tr *ngFor="let epargne of epargnes | recherche:dataProvider.userData.currentSearch;let index = index">
+                <td class="counter">{{index + 1}}</td>
+                <td class="id">{{epargne.id}}</td>
+                <td>{{epargne?.client?.name}} {{epargne?.client?.firstName}}</td>
+                <td>{{epargne.date | date:'mediumDate'}}</td>
+                <td>{{epargne.montant}}</td>
+                <!--  <td>{{epargne.mise}}</td>
+                <td>{{epargne.avance}}</td>
+                <td>{{epargne.dateAvance}}</td> -->
+                <!-- <td class="hide">{{epargne.montantAdhesion}}</td>
+                <td>{{epargne.dateCloture}}</td> -->
+                <td>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

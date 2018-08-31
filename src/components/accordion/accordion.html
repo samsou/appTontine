@@ -1,0 +1,12 @@
+<ion-list class="accordion-list" no-padding no-margin>
+    <ion-list-header no-lines no-padding no-margin class="accordion-head">
+        <a ion-item detail-none [style.background]="headerColor" (click)="toggleAccordion()" class="accordion-header" [class.active]="expanded">
+            {{ title }}
+            <ion-icon item-end name="ios-arrow-forward" *ngIf="hasContent">
+            </ion-icon>
+        </a>
+        <section #accordionContent [style.background]="contentColor" [class.active]="expanded" class="accordion-content">
+            <ng-content></ng-content>
+        </section>
+    </ion-list-header>
+</ion-list>

@@ -1,0 +1,29 @@
+<ion-content padding>
+    <!-- [ngStyle]="{'background-image': 'url(' + backgroundImage +')'}"  class="transparent-header" -->
+    <h6 text-center padding style="color:rgb(36, 34, 34)">
+        Connexion</h6>
+    <div class="abs2">
+        <!--  <img class="logo" src="assets/imgs/culte.png" style="width:90px;height: 90;border-radius: 50%;" /> -->
+        <ion-item>
+            <ion-input type="text" [(ngModel)]="model.username" (keyup)="onkeyup($event)" placeholder="Nom d'utilisateur"></ion-input>
+        </ion-item>
+        <br><br>
+        <ion-item>
+            <ion-input type="password" [(ngModel)]="model.password" (keyup)="onkeyup($event)" placeholder="Mot de passe"></ion-input>
+        </ion-item>
+        <br>
+        <ion-row>
+            <ion-col>
+                <button ion-button class="login-button" [disabled]="!model.username.trim() || !model.password.trim()" (click)="login()">Se connecter</button>
+            </ion-col>
+        </ion-row>
+        <br>
+        <!-- <ion-row>
+            <ion-col>
+                <div (click)="goToSignup()">
+                    <span class="signup">Ou créer un compte.</span>
+                </div>
+            </ion-col>
+        </ion-row> -->
+    </div>
+</ion-content>

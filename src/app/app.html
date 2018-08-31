@@ -1,1 +1,37 @@
-<ion-nav [root]="rootPage"></ion-nav>
+<ion-menu [content]="mycontent">
+    <ion-header>
+
+        <ion-navbar>
+            <ion-title>{{plateforme}}</ion-title>
+        </ion-navbar>
+
+    </ion-header>
+    <ion-content>
+        <ion-list no-lines>
+            <!--  <ion-item *ngFor="let menu of menus" (click)="toLink(menu)" [ngClass]="{active:userData.currentMenu == menu}">
+                {{menu.libelle}}
+                <ion-note item-end *ngIf="menu.breadcrumbs"></ion-note>
+            </ion-item> -->
+            <accordion-list *ngFor="let menu of menus; let index = index" [title]="menu.libelle" hasMargin="false" [expanded]="index === 0" no-padding no-margin [hasContent]="menu.breadcrumbs && menu.breadcrumbs.length" (click)="toLink(menu)">
+                <ion-item *ngFor="let bread of menu.breadcrumbs" (click)="toBread(bread)" [ngClass]="{active:userData.code == bread.code}">
+                    {{bread.libelle}}
+                </ion-item>
+            </accordion-list>
+        </ion-list>
+
+        <ion-list no-lines>
+            <ion-item *ngFor="let menu of menusStats" (click)="toLink(menu)" [ngClass]="{active:userData.currentMenu == menu}" menuToggle>
+                {{menu.libelle}}
+            </ion-item>
+        </ion-list>
+    </ion-content>
+    <ion-footer no-border>
+        <ion-toolbar>
+            <ion-title (click)="openSettings()" menuToggle>
+                <ion-icon name="settings"></ion-icon>
+                Paramètrage
+            </ion-title>
+        </ion-toolbar>
+    </ion-footer>
+</ion-menu>
+<ion-nav [root]="rootPage" #mycontent></ion-nav>
