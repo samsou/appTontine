@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs/Subject';
 
-import { Settings } from './model';
+import { Client, Compte, Settings } from './model';
 
 
 export class UserData {
@@ -11,7 +11,9 @@ export class UserData {
     currentSearch = '';
     code = '';
     currentMenu: any;
-    clients: any = [];
+    clientsMap: any = {};
+    TONTINE: Compte[] = [];
+    EPARGNE: Compte[] = [];
     settings: Settings = {
         nbreJrAvance: 15
     };
@@ -21,6 +23,13 @@ export class UserData {
             this._instance = new UserData();
         }
         return this._instance;
+    }
+    get clients(): Client[] {
+        let clts: Client[] = [];
+        for (const key in this.clientsMap) {
+            clts.push(this.clientsMap[key]);
+        }
+        return clts.reverse();
     }
     get plateforme(): string {
         return 'Plateforme';

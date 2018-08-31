@@ -4,6 +4,7 @@ import { Pipe, PipeTransform } from '@angular/core';
 export class RecherchePipe implements PipeTransform {
   transform(value: any[], search: string = ""): any[] {
     if (!search) return value;
+    search = search.trim();
     if (!Array.isArray(value) || !value || !value.length) return [];
     let check: boolean = false;
     return value.filter((current, i) => {

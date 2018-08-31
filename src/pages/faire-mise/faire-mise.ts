@@ -1,7 +1,8 @@
 import { Component } from '@angular/core';
-import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
+import { IonicPage, NavParams, ToastController, ViewController } from 'ionic-angular';
 
 import { Compte } from '../../providers/data/model';
+import { DataProvider } from './../../providers/data/data';
 import { Mise } from './../../providers/data/model';
 
 /**
@@ -17,18 +18,19 @@ import { Mise } from './../../providers/data/model';
   templateUrl: 'faire-mise.html',
 })
 export class FaireMisePage {
-  compte: Compte = {};
+  compte: Compte = {
+    typeCompte: ''
+  };
   mise: Mise = {};
   mises: any[] = [];
   nbreMise = new Set();
-  constructor(public navCtrl: NavController, public navParams: NavParams, private viewCtrl: ViewController) {
+  isSaving: boolean;
+  constructor(public dataProvider: DataProvider, public navParams: NavParams, private viewCtrl: ViewController, private toastCtrl: ToastController) {
     if (!navParams.get('compte')) {
       this.close();
     } else {
       this.compte = navParams.get('compte');
-      this.compte.montantSouscritTontine = 1000;
-      this.compte.dateCompte = Date.now();
-      this.compte.miseTontine = 30;
+      this.compte = Object.assign({}, this.compte);
       for (let index = 1; index <= 31; index++) {
         this.mises.push({
           index: index,
@@ -47,13 +49,27 @@ export class FaireMisePage {
     }
   }
   save() {
+    this.isSaving = true;
     this.mise.idClient = this.compte.idClient;
     this.mise.idCompte = this.compte.id;
     this.mise.date = Date.now();
-    //this.mise.mise
+    this.dataProvider.addMise(this.mise).then((client) => {
+      this.dataProvider.addCompte(Object.assign({}, this.compte, { miseTontine: (this.compte.miseTontine || 0) + this.nbreMise.size })).then((client) => { }).catch((e) => { });
+      this.isSaving = false;
+      this.close(this.mise);
+    }).catch((err) => {
+      this.isSaving = false;
+      let message = `Une erreur s'est produite lors de la mise du client ${this.compte.client.name} ${this.compte.client.firstName}`;
+      let toast = this.toastCtrl.create({
+        message: message, duration: 2000,
+        position: 'bottom'
+      });
+      toast.present();
+    });
+
   }
-  close() {
-    this.viewCtrl.dismiss();
+  close(result?) {
+    this.viewCtrl.dismiss(result);
   }
 
 }

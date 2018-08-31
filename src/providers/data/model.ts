@@ -10,20 +10,21 @@ export interface Client {
     lieuExercice?: string;
     numCarte?: string;
     email?: string;
-    date?: any;
+    date?: number;
 }
 export interface Compte {
     id?: any;
     idClient?: any;
     client?: Client,
-    typeCompte?: string;
-    montantSouscritTontine?: any;
+    typeCompte: string;
+    montantSouscritTontine?: number;
     dateCompte?: any;
     miseTontine?: number;
     avanceTontine?: boolean;
     avanceDate?: any;
     montantAdhesion?: string;
     dateCloture?: string;
+    montant?: number;
 }
 export interface Avance {
     id?: any;

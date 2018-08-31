@@ -36,12 +36,12 @@ export class LoginPage {
         loading.dismiss();
         this.dataProvider.isLogged = true;
         this.navCtrl.setRoot("AccueilPage");
-        const alert = this.alertCtrl.create({
-          title: "Erreur d'authentification",
-          subTitle: "Nom d'utilisateur ou mot de passe erroné.",
-          buttons: ['Ok']
-        });
-        //alert.present();
+        /*  const alert = this.alertCtrl.create({
+           title: "Erreur d'authentification",
+           subTitle: "Nom d'utilisateur ou mot de passe erroné.",
+           buttons: ['Ok']
+         });
+         alert.present(); */
       });
 
     loading.present();

@@ -5,6 +5,7 @@ import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { BrowserModule } from '@angular/platform-browser';
 import { AngularFireModule } from 'angularfire2';
+import { AngularFireDatabaseModule } from 'angularfire2/database';
 import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 
 import { AccordionComponent } from '../components/accordion/accordion';
@@ -42,7 +43,8 @@ let firebaseConfig = {
     IonicModule.forRoot(MyApp),
     HttpClientModule,
     FormsModule,
-    AngularFireModule.initializeApp(firebaseConfig)
+    AngularFireModule.initializeApp(firebaseConfig),
+    AngularFireDatabaseModule
   ],
   bootstrap: [IonicApp],
   entryComponents: [

@@ -19,7 +19,7 @@ import { Client, Compte } from '../../providers/data/model';
 export class CompteClientPage {
   typeCompte: string = 'tontine';
   client: Client = {};
-  comptes: Compte[] = [{}, {}];
+  comptes: Compte[] = [];
   constructor(public navCtrl: NavController, private navParams: NavParams, public viewctrl: ViewController) {
     this.client = this.navParams.get('client') || {};
   }

@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { AlertController, ModalController, PopoverController, ViewController } from 'ionic-angular';
+import { AlertController, ModalController, PopoverController, ToastController, ViewController } from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
 import { Compte } from '../../providers/data/model';
@@ -15,16 +15,64 @@ import { Compte } from '../../providers/data/model';
   templateUrl: 'epargne.html'
 })
 export class EpargneComponent {
-  epargnes: Compte[] = [{}, {}, {}];
+  epargnes: Compte[] = [];
 
-  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController) {
+  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+  }
+  ngAfterViewInit() {
+    this.getComptes();
+  }
+  getComptes() {
+    this.dataProvider.getComptes('EPARGNE').subscribe((comptes: Compte[]) => {
+      this.epargnes = comptes.map((compte) => {
+        compte.client = this.dataProvider.getClientById(compte.idClient);
+        return compte;
+      });
+      console.log(this.epargnes);
+    }, (err) => {
+      console.log(err);
+    });
   }
   openOptions(myEvent, compte: Compte) {
     let popover = this.popoverCtrl.create(EpargneOptions);
     popover.onDidDismiss((result) => {
       if (result == 'DEPOT') { }
       else if (result == 'RETRAIT') { }
-      else if (result == 'SOLDE') { }
+      else if (result == 'SOLDE') {
+        let name: string = '';
+        if (compte.client) {
+          name = compte.client.name + ' ' + compte.client.firstName;
+        }
+        let alert = this.alertCtrl.create({
+          title: "Consulter solde",
+          message: `du compte epargne du client ${name}?`,
+          enableBackdropDismiss: false,
+          buttons: [
+            {
+              text: 'Annuler'
+            },
+            {
+              text: 'Consulter',
+              handler: () => {
+                let alert = this.alertCtrl.create({
+                  message: `Le solde sur le compte epargne du client ${name} est ${compte.montant || '00'}`,
+                  enableBackdropDismiss: false,
+                  buttons: [
+                    {
+                      text: 'Ok',
+                      handler: () => {
+
+                      }
+                    }
+                  ]
+                });
+                alert.present();
+              }
+            }
+          ]
+        });
+        alert.present();
+      }
     });
     popover.present({
       ev: myEvent
@@ -52,7 +100,21 @@ export class EpargneComponent {
         {
           text: 'Supprimer',
           handler: () => {
-
+            this.dataProvider.removeCompte(compte).then(() => {
+              let toast = this.toastCtrl.create({
+                message: `Le compte tontine du client ${compte.client.name} ${compte.client.firstName} a été supprimé`,
+                duration: 2000,
+                position: 'bottom'
+              });
+              toast.present();
+            }).catch(() => {
+              let toast = this.toastCtrl.create({
+                message: `Le client ${compte.client.name} ${compte.client.firstName} n'a pas été modifié`,
+                duration: 2000,
+                position: 'bottom'
+              });
+              toast.present();
+            });
           }
         }
       ]

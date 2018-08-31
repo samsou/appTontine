@@ -1,17 +1,22 @@
 <!-- Generated template for the CreateTontineComponent component -->
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm" padding>
     <ion-list no-lines>
-        <ion-item>
+        <ion-item *ngIf="!tontine.id">
             <ion-label class="oblige">Selectionnez le client</ion-label>
-            <ion-select [(ngModel)]="tontine.idClient" required name="client">
-                <ion-option value="Tontine">client 1</ion-option>
-                <ion-option value="Epargne">Client2</ion-option>
+            <ion-select [(ngModel)]="tontine.idClient" required name="client" [disabled]="tontine.id">
+                <ion-option [value]="getSelected(clt)" *ngFor="let clt of dataProvider.userData.clients" [disabled]="tontine.id"> {{clt.name}} {{clt.firstName}}</ion-option>
             </ion-select>
+        </ion-item>
+        <ion-item *ngIf="tontine.id">
+            Nom client: {{tontine.client?.name}} {{tontine.client?.firstName}}
         </ion-item>
         <ion-item>
             <ion-label color="primary" stacked class="oblige">Montant souscrit</ion-label>
             <ion-input type="text" required pattern="[0-9 ]+" [(ngModel)]="tontine.montantSouscritTontine" name="montantSouscritTontine"></ion-input>
         </ion-item>
+        <p *ngIf="tontine.montantSouscritTontine && tontine.montantSouscritTontine < 25" style="color:red" text-right>
+            Le montant doit dépasser un seuil
+        </p>
     </ion-list>
-    <button ion-button outline margin float-right>Créer compte</button>
+    <button ion-button outline margin float-right [disabled]="editForm.form.invalid || isSaving || tontine.montantSouscritTontine < 25">{{this.tontine.id?'Modifier compte':'Créer compte'}}</button>
 </form>

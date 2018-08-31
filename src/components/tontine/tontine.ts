@@ -1,9 +1,15 @@
 import { Component } from '@angular/core';
-import { AlertController, ModalController, NavParams, PopoverController, ViewController } from 'ionic-angular';
+import {
+  AlertController,
+  ModalController,
+  NavParams,
+  PopoverController,
+  ToastController,
+  ViewController,
+} from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
 import { Compte } from '../../providers/data/model';
-import { CreateTontineComponent } from '../create-tontine/create-tontine';
 
 /**
  * Generated class for the TontineComponent component.
@@ -16,9 +22,22 @@ import { CreateTontineComponent } from '../create-tontine/create-tontine';
   templateUrl: 'tontine.html'
 })
 export class TontineComponent {
-  tontines: Compte[] = [{}, {}, {}];
+  tontines: Compte[] = [];
 
-  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController) {
+  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+  }
+  ngAfterViewInit() {
+    this.getComptes();
+  }
+  getComptes() {
+    this.dataProvider.getComptes('TONTINE').subscribe((comptes: Compte[]) => {
+      this.tontines = comptes.map((compte) => {
+        compte.client = this.dataProvider.getClientById(compte.idClient);
+        return compte;
+      });
+    }, (err) => {
+      console.log(err);
+    });
   }
   openOptions(myEvent, compte: Compte) {
     let popover = this.popoverCtrl.create(TontineOptions, { compte });
@@ -27,6 +46,7 @@ export class TontineComponent {
         let modal = this.modalCtrl.create('FaireMisePage', { compte }, {
           enableBackdropDismiss: false
         });
+        //modal.
         modal.present();
       }
       else if (result == 'RETRAIT') {
@@ -42,7 +62,7 @@ export class TontineComponent {
     });
   }
   edit(compte: Compte) {
-    let modal = this.modalCtrl.create('WrapperPage', { compte, type:'CreateTontineComponent' }, {
+    let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'CreateTontineComponent' }, {
       enableBackdropDismiss: false
     });
     modal.present();
@@ -63,7 +83,21 @@ export class TontineComponent {
         {
           text: 'Supprimer',
           handler: () => {
-
+            this.dataProvider.removeCompte(compte).then(() => {
+              let toast = this.toastCtrl.create({
+                message: `Le compte tontine du client ${compte.client.name} ${compte.client.firstName} a été supprimé`,
+                duration: 2000,
+                position: 'bottom'
+              });
+              toast.present();
+            }).catch(() => {
+              let toast = this.toastCtrl.create({
+                message: `Le client ${compte.client.name} ${compte.client.firstName} n'a pas été modifié`,
+                duration: 2000,
+                position: 'bottom'
+              });
+              toast.present();
+            });
           }
         }
       ]

@@ -19,7 +19,7 @@
 
 
 <ion-content padding>
-    <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm">
+    <form name="editForm" role="form" novalidate #editForm="ngForm">
         <ion-list no-lines>
             <ion-item>
                 <ion-label color="primary" stacked class="oblige">Nom</ion-label>
@@ -47,13 +47,13 @@
                 <ion-col>
                     <ion-item>
                         <ion-label color="primary" stacked class="oblige">Téléphone</ion-label>
-                        <ion-input type="text" required [(ngModel)]="client.telephone" name="telephone"></ion-input>
+                        <ion-input type="text" required [(ngModel)]="client.telephone" name="telephone" pattern="^[0-9 ]+$"></ion-input>
                     </ion-item>
                 </ion-col>
                 <ion-col>
                     <ion-item>
                         <ion-label color="primary" stacked>Email</ion-label>
-                        <ion-input type="email" required [(ngModel)]="client.email" name="email"></ion-input>
+                        <ion-input type="email" [(ngModel)]="client.email" name="email" pattern="[a-z0-9._%+-]+@[a-z0-9.-]+\.[a-z]{2,4}$"></ion-input>
                     </ion-item>
                 </ion-col>
             </ion-row>
@@ -92,7 +92,7 @@
         </ion-buttons>
 
         <ion-buttons end>
-            <button ion-button [disabled]="editForm.form.invalid">
+            <button ion-button [disabled]="editForm.form.invalid || isSaving" (click)="save()">
         Enregistrer
       </button>
         </ion-buttons>

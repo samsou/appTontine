@@ -20,14 +20,14 @@
 
 <ion-content padding>
     <ion-item>
-        <ion-label color="primary" stacked>Nombre de jour avant de prendre avance</ion-label>
-        <ion-input type="text" [(ngModel)]="dataProvider.userData.settings.nbreJrAvance" name="nbreJrAvance"></ion-input>
+        <ion-label color="primary" stacked class="oblige">Nombre de jour avant de prendre avance</ion-label>
+        <ion-input type="text" [(ngModel)]="settings.nbreJrAvance" name="nbreJrAvance" required></ion-input>
     </ion-item>
 </ion-content>
 <ion-footer>
     <ion-navbar>
         <ion-buttons end>
-            <button ion-button (click)="save()">
+            <button ion-button (click)="save()" [disabled]="!settings.nbreJrAvance || isSaving">
         Enregistrer
       </button>
         </ion-buttons>

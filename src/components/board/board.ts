@@ -1,5 +1,6 @@
 import { Component, ElementRef, ViewChild } from '@angular/core';
 
+import { DataProvider } from '../../providers/data/data';
 import { UserData } from './../../providers/data/userdata';
 
 declare let Chart: any;
@@ -18,7 +19,7 @@ export class BoardComponent {
   @ViewChild('myChart2') myChart2: ElementRef;
   @ViewChild('myChart3') myChart3: ElementRef;
   @ViewChild('myChart4') myChart4: ElementRef;
-  constructor() {
+  constructor(public dataProvider: DataProvider) {
   }
   ngAfterViewInit() {
     let labels: string[] = [];
@@ -37,6 +38,7 @@ export class BoardComponent {
     this.buildChart(this.myChart4.nativeElement, 'bar', 'Rapport journalier', labels);
   }
   private buildChart(el: any, type: string, label: string, labels: string[]) {
+    try {
     let ctx = el.getContext('2d');
     new Chart(ctx, {
       type: type,
@@ -74,5 +76,6 @@ export class BoardComponent {
         }
       }
     });
+  }catch(e){}
   }
 }

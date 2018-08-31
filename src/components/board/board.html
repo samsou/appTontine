@@ -8,7 +8,7 @@
                 </ion-avatar>
                 <p>Nombre de clients</p>
                 <ion-note item-end>
-                    <ion-badge mode="ios">12</ion-badge>
+                    <ion-badge mode="ios">{{dataProvider.userData.clients.length || 0}}</ion-badge>
                 </ion-note>
             </ion-item>
         </ion-card>
@@ -21,7 +21,7 @@
                 </ion-avatar>
                 <p>Nombre de comptes tontine</p>
                 <ion-note item-end>
-                    <ion-badge mode="ios">12</ion-badge>
+                    <ion-badge mode="ios">{{dataProvider.userData['TONTINE'].length || 0}}</ion-badge>
                 </ion-note>
             </ion-item>
         </ion-card>
@@ -34,7 +34,7 @@
                 </ion-avatar>
                 <p>Nombre de compte epargne</p>
                 <ion-note item-end>
-                    <ion-badge mode="ios">12</ion-badge>
+                    <ion-badge mode="ios">{{dataProvider.userData['EPARGNE'].length || 0}}</ion-badge>
                 </ion-note>
             </ion-item>
         </ion-card>

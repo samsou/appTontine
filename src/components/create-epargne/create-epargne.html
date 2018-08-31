@@ -1,13 +1,24 @@
 <!-- Generated template for the CreateTontineComponent component -->
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm" padding>
     <ion-list no-lines>
-        <ion-item>
+        <ion-item *ngIf="!epargne.id">
             <ion-label class="oblige">Selectionnez le client</ion-label>
-            <ion-select [(ngModel)]="epargne.idClient" required name="client">
-                <ion-option value="Tontine">client 1</ion-option>
-                <ion-option value="Epargne">Client2</ion-option>
+            <ion-select [(ngModel)]="epargne.idClient" required name="client" [disabled]="epargne.id">
+                <ion-option [value]="getSelected(clt)" *ngFor="let clt of dataProvider.userData.clients" [disabled]="epargne.id"> {{clt.name}} {{clt.firstName}}
+                </ion-option>
             </ion-select>
         </ion-item>
+        <ion-item *ngIf="epargne.id">
+            Nom client: {{epargne.client?.name}} {{epargne.client?.firstName}}
+        </ion-item>
+        <ion-item>
+            <ion-label color="primary" stacked class="oblige">Dépôt initial</ion-label>
+            <ion-input type="text" required pattern="[0-9 ]+" [(ngModel)]="epargne.montant" name="montant"></ion-input>
+        </ion-item>
+        <p *ngIf="epargne.montant && epargne.montant < 25" style="color:red" text-right>
+            Le dépôt initial doit dépasser un seuil
+        </p>
     </ion-list>
-    <button ion-button outline margin float-right>Créer compte</button>
+    <button ion-button outline margin float-right [disabled]="editForm.form.invalid || isSaving || (epargne.montant < 25)">{{this.epargne.id?'Modifier
+      compte':'Créer compte'}}</button>
 </form>

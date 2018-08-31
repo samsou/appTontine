@@ -1,6 +1,8 @@
 import { Component, Input } from '@angular/core';
+import { ToastController, ViewController } from 'ionic-angular';
 
-import { Compte } from './../../providers/data/model';
+import { DataProvider } from './../../providers/data/data';
+import { Client, Compte } from './../../providers/data/model';
 
 /**
  * Generated class for the CreateTontineComponent component.
@@ -13,16 +15,48 @@ import { Compte } from './../../providers/data/model';
   templateUrl: 'create-tontine.html'
 })
 export class CreateTontineComponent {
-
+  isSaving: boolean = false;
   @Input('compte') tontine: Compte = {
     typeCompte: 'TONTINE'
   };
+  client: Client = {};
 
-  constructor() {
+  constructor(public dataProvider: DataProvider, private toastCtrl: ToastController, private viewCtrl: ViewController) {
+  }
+
+  getSelected(clt: Client): any {
+    this.client = clt;
+    return clt.id;
   }
   save() {
-    this.tontine.typeCompte = 'TONTINE';
-    this.tontine.dateCompte = Date.now();
+    this.isSaving = true;
+    if (!this.tontine.id) {
+      this.tontine.typeCompte = 'TONTINE';
+      this.tontine.miseTontine = 0;
+      this.tontine.dateCompte = Date.now();
+    } else
+      this.client = this.tontine.client;
+    this.dataProvider.addCompte(this.tontine).then(() => {
+      this.isSaving = false;
+      let toast = this.toastCtrl.create({
+        message: `Le compte tontine du client ${this.client.name} a été ${!this.tontine.id ? 'crée' : 'modifié'}`,
+        position: 'bottom',
+        duration: 2000
+      });
+      toast.present();
+      this.tontine.idClient = null;
+      this.tontine.montantSouscritTontine = null;
+      this.client = null;
+      if (this.tontine.id) this.viewCtrl.dismiss();
+    }).catch(() => {
+      this.isSaving = false;
+      let toast = this.toastCtrl.create({
+        message: `Une erreur s'est produite lors de la ${!this.tontine.id ? 'création' : 'modification'} d'un compte tontine du client ${this.client.name}`,
+        duration: 2000,
+        position: 'bottom'
+      });
+      toast.present();
+    });
   }
 
 }

@@ -15,13 +15,17 @@ import { DataProvider } from './../../providers/data/data';
   templateUrl: 'client.html'
 })
 export class ClientComponent {
-  clients: Client[] = [{}, {}, {}];
+  clients: Client[] = [];
   constructor(private dataProvider: DataProvider, private modalCtrl: ModalController, private toastCtrl: ToastController, private popoverCtrl: PopoverController, private alertCtrl: AlertController) {
-
+  }
+  ngAfterViewInit() {
+    this.getClients();
   }
   getClients() {
-    this.dataProvider.getClients().subscribe(() => {
-
+    this.dataProvider.getClients().subscribe((clients: Client[]) => {
+      this.clients = clients;
+    }, (err) => {
+      console.log(err);
     });
   }
   showComptes(client: Client) {
@@ -54,7 +58,21 @@ export class ClientComponent {
         {
           text: 'Supprimer',
           handler: () => {
-
+            this.dataProvider.removeClient(client).then(() => {
+              let toast = this.toastCtrl.create({
+                message: `Le client ${client.name} ${client.firstName} a été supprimé`,
+                duration: 2000,
+                position: 'bottom'
+              });
+              toast.present();
+            }).catch(() => {
+              let toast = this.toastCtrl.create({
+                message: `Le client ${client.name} ${client.firstName} n'a pas été modifié`,
+                duration: 2000,
+                position: 'bottom'
+              });
+              toast.present();
+            });
           }
         }
       ]

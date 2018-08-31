@@ -2,6 +2,7 @@ import { Component } from '@angular/core';
 import { IonicPage, ViewController } from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
+import { Settings } from '../../providers/data/model';
 
 /**
  * Generated class for the SettingsPage page.
@@ -16,14 +17,27 @@ import { DataProvider } from '../../providers/data/data';
   templateUrl: 'settings.html',
 })
 export class SettingsPage {
+  settings:Settings = {
+    nbreJrAvance:15
+  };
+  isSaving:boolean = false;
   constructor(public dataProvider: DataProvider, public viewCtrl: ViewController) {
+    this.settings = dataProvider.userData.settings || this.settings;
+    this.settings = Object.assign({}, this.settings);
   }
 
   close() {
     this.viewCtrl.dismiss();
   }
   save() {
-    //this.dataProvider.saveSettings();
+    this.isSaving =true;
+    this.dataProvider.updateSettings(this.settings).then(()=>{
+      this.isSaving = false;
+      this.close();
+    }).catch(() => {
+      this.isSaving = false;
+      alert('Les Paramètres ne sont pas mise à jour,problème de réseau !!!');
+    });
   }
 
 }
