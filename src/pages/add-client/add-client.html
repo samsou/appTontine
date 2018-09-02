@@ -93,7 +93,7 @@
 
         <ion-buttons end>
             <button ion-button [disabled]="editForm.form.invalid || isSaving" (click)="save()">
-        Enregistrer
+        <ion-spinner *ngIf="isSaving"></ion-spinner> Enregistrer
       </button>
         </ion-buttons>
     </ion-navbar>

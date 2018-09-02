@@ -1,22 +1,36 @@
 <!-- Generated template for the CreateTontineComponent component -->
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm" padding>
     <ion-list no-lines>
-        <ion-item *ngIf="!tontine.id">
+        <ion-item *ngIf="!tontine.id" padding-bottom>
+            <ion-label class="oblige">Selectionnez le produit tontine</ion-label>
+            <ion-select [(ngModel)]="tontine.idProduit" required name="produit" [disabled]="tontine.idProduit">
+                <ion-option [value]="getSelectedProduit(pdt)" *ngFor="let pdt of dataProvider.userData.produits | typed:'TONTINE'"> {{pdt.libelle}}</ion-option>
+                <ion-option value='' *ngIf="!dataProvider.userData.produits">Pas de produits tontine</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item *ngIf="!tontine.id" padding-bottom>
             <ion-label class="oblige">Selectionnez le client</ion-label>
             <ion-select [(ngModel)]="tontine.idClient" required name="client" [disabled]="tontine.id">
                 <ion-option [value]="getSelected(clt)" *ngFor="let clt of dataProvider.userData.clients" [disabled]="tontine.id"> {{clt.name}} {{clt.firstName}}</ion-option>
+                <ion-option value='' *ngIf="!dataProvider.userData.clients">Pas de clients</ion-option>
             </ion-select>
         </ion-item>
-        <ion-item *ngIf="tontine.id">
-            Nom client: {{tontine.client?.name}} {{tontine.client?.firstName}}
+        <ion-item *ngIf="tontine.id" padding-bottom>
+            Nom client: {{tontine.client?.name}} {{tontine.client?.firstName}} <br> Produit: {{tontine.produit?.libelle}}
+
         </ion-item>
         <ion-item>
             <ion-label color="primary" stacked class="oblige">Montant souscrit</ion-label>
             <ion-input type="text" required pattern="[0-9 ]+" [(ngModel)]="tontine.montantSouscritTontine" name="montantSouscritTontine"></ion-input>
         </ion-item>
-        <p *ngIf="tontine.montantSouscritTontine && tontine.montantSouscritTontine < 25" style="color:red" text-right>
-            Le montant doit dépasser un seuil
+        <p *ngIf="tontine.montantSouscritTontine && tontine.montantSouscritTontine < produit?.montantMin" class="helper-error" text-right>
+            Le montant souscrit doit dépasser le montant minimum du produit
+        </p>
+        <p *ngIf="tontine.montantSouscritTontine && tontine.montantSouscritTontine > produit?.montantMax" class="helper-error" text-right>
+            Le montant souscrit ne peut pas dépasser le montant maximum du produit
         </p>
     </ion-list>
-    <button ion-button outline margin float-right [disabled]="editForm.form.invalid || isSaving || tontine.montantSouscritTontine < 25">{{this.tontine.id?'Modifier compte':'Créer compte'}}</button>
+    <button ion-button outline margin float-right [disabled]="editForm.form.invalid || isSaving || tontine.montantSouscritTontine < produit?.montantMin || tontine.montantSouscritTontine > produit?.montantMax"> 
+        <ion-spinner *ngIf="isSaving"></ion-spinner>
+        {{this.tontine.id?'Modifier compte':'Créer compte'}}</button>
 </form>

@@ -28,7 +28,7 @@
     <ion-navbar>
         <ion-buttons end>
             <button ion-button (click)="save()" [disabled]="!settings.nbreJrAvance || isSaving">
-        Enregistrer
+        <ion-spinner *ngIf="isSaving"></ion-spinner> Enregistrer
       </button>
         </ion-buttons>
     </ion-navbar>

@@ -1,6 +1,6 @@
 import { Subject } from 'rxjs/Subject';
 
-import { Client, Compte, Settings } from './model';
+import { Client, Compte, Produit, Settings } from './model';
 
 
 export class UserData {
@@ -12,6 +12,7 @@ export class UserData {
     code = '';
     currentMenu: any;
     clientsMap: any = {};
+    produits: Produit[] = [];
     TONTINE: Compte[] = [];
     EPARGNE: Compte[] = [];
     settings: Settings = {
@@ -35,17 +36,24 @@ export class UserData {
         return 'Plateforme';
     }
     menusStats: any[] = [
-        { 'libelle': 'Statistiques', code: 'STATS' },
-        { 'libelle': 'Audits', code: 'AUDITS' }
+        { 'libelle': 'Statistiques', code: 'STATS', icon: 'pie' },
+        { 'libelle': 'Audits', code: 'AUDITS', icon: 'pulse' }
     ];
     menus: any[] = [
         {
+            'libelle': 'Produits',
+            code: 'PRODUITS',
+            icon: 'bookmarks'
+        },
+        {
             'libelle': 'Clients',
-            code: 'CLIENTS'
+            code: 'CLIENTS',
+            icon: 'person'
         },
         {
             'libelle': 'Tontine',
             code: 'TONTINES',
+            icon: 'folder',
             'breadcrumbs': [
                 {
                     'libelle': 'Les comptes tontine'
@@ -68,6 +76,7 @@ export class UserData {
         {
             'libelle': 'Epargne',
             code: 'EPARGNE',
+            icon: 'paper',
             'breadcrumbs': [
                 {
                     'libelle': 'Les comptes epargne'

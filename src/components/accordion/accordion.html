@@ -1,7 +1,7 @@
 <ion-list class="accordion-list" no-padding no-margin>
     <ion-list-header no-lines no-padding no-margin class="accordion-head">
-        <a ion-item detail-none [style.background]="headerColor" (click)="toggleAccordion()" class="accordion-header" [class.active]="expanded">
-            {{ title }}
+        <a ion-item detail-none [style.background]="headerColor" (click)="toggleAccordion()" class="accordion-header" [class.active]="expanded" [attr.menuToggle]="hasContent?'':null">
+            <ion-icon [name]="icon" color="primary"></ion-icon> &nbsp;{{ title }}
             <ion-icon item-end name="ios-arrow-forward" *ngIf="hasContent">
             </ion-icon>
         </a>

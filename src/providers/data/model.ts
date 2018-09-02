@@ -12,9 +12,24 @@ export interface Client {
     email?: string;
     date?: number;
 }
+export interface Produit {
+    id?: any;
+    typeProduit?: any;
+    periodicite?: any;
+    montantMin?: number;
+    montantMax?: number;
+    nbreMiseAvance?: number;
+    nbreMiseTotal?: number;
+    nbreMisePrelever?: number;
+    libelle?: string;
+    nbreEcheance?: number;
+    date?: number;
+}
 export interface Compte {
     id?: any;
     idClient?: any;
+    idProduit?: any;
+    produit?: any;
     client?: Client,
     typeCompte: string;
     montantSouscritTontine?: number;

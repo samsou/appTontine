@@ -26,6 +26,7 @@ export class EpargneComponent {
     this.dataProvider.getComptes('EPARGNE').subscribe((comptes: Compte[]) => {
       this.epargnes = comptes.map((compte) => {
         compte.client = this.dataProvider.getClientById(compte.idClient);
+        compte.produit = this.dataProvider.getProduitById(compte.idProduit);
         return compte;
       });
       console.log(this.epargnes);

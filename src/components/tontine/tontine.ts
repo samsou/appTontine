@@ -33,6 +33,7 @@ export class TontineComponent {
     this.dataProvider.getComptes('TONTINE').subscribe((comptes: Compte[]) => {
       this.tontines = comptes.map((compte) => {
         compte.client = this.dataProvider.getClientById(compte.idClient);
+        compte.produit = this.dataProvider.getProduitById(compte.idProduit);
         return compte;
       });
     }, (err) => {

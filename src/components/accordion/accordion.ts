@@ -15,10 +15,11 @@ export class AccordionComponent {
   @Input() textColor: string = '#FFF';
   @Input() contentColor: string = '#F9F9F9';
   @Input() title: string;
+  @Input() icon: string;
   @Input() hasMargin: boolean = true;
   @Input() expanded: boolean;
   @Input() hasContent: boolean = true;
-
+ 
   @ViewChild('accordionContent') elementView: ElementRef;
 
   viewHeight: number;

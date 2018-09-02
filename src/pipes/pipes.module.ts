@@ -1,8 +1,11 @@
 import { NgModule } from '@angular/core';
 import { RecherchePipe } from './recherche/recherche';
+import { TypedPipe } from './typed/typed';
 @NgModule({
-	declarations: [RecherchePipe],
+	declarations: [RecherchePipe,
+    TypedPipe],
 	imports: [],
-	exports: [RecherchePipe]
+	exports: [RecherchePipe,
+    TypedPipe]
 })
 export class PipesModule {}

@@ -67,7 +67,7 @@ export class ClientComponent {
               toast.present();
             }).catch(() => {
               let toast = this.toastCtrl.create({
-                message: `Le client ${client.name} ${client.firstName} n'a pas été modifié`,
+                message: `Le client ${client.name} ${client.firstName} n'a pas été supprimé`,
                 duration: 2000,
                 position: 'bottom'
               });

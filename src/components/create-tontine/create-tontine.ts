@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ToastController, ViewController } from 'ionic-angular';
 
 import { DataProvider } from './../../providers/data/data';
-import { Client, Compte } from './../../providers/data/model';
+import { Client, Compte, Produit } from './../../providers/data/model';
 
 /**
  * Generated class for the CreateTontineComponent component.
@@ -20,6 +20,7 @@ export class CreateTontineComponent {
     typeCompte: 'TONTINE'
   };
   client: Client = {};
+  produit: Produit = {};
 
   constructor(public dataProvider: DataProvider, private toastCtrl: ToastController, private viewCtrl: ViewController) {
   }
@@ -28,14 +29,20 @@ export class CreateTontineComponent {
     this.client = clt;
     return clt.id;
   }
+  getSelectedProduit(produit: Produit): any {
+    this.produit = produit;
+    return produit.id;
+  }
   save() {
     this.isSaving = true;
     if (!this.tontine.id) {
       this.tontine.typeCompte = 'TONTINE';
       this.tontine.miseTontine = 0;
       this.tontine.dateCompte = Date.now();
-    } else
+    } else {
       this.client = this.tontine.client;
+      this.produit = this.tontine.produit;
+    }
     this.dataProvider.addCompte(this.tontine).then(() => {
       this.isSaving = false;
       let toast = this.toastCtrl.create({

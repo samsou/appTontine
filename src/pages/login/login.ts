@@ -17,7 +17,6 @@ export class LoginPage {
   public backgroundImage = 'assets/imgs/background-5.jpg';
   constructor(public navCtrl: NavController, public loadingCtrl: LoadingController,
     public alertCtrl: AlertController, private dataProvider: DataProvider) {
-
   }
   onkeyup(ev: any) {
     if (this.model.password && this.model.username && ev.keyCode == 13) this.login();
@@ -34,14 +33,12 @@ export class LoginPage {
         this.navCtrl.setRoot("AccueilPage");
       }, (error) => {
         loading.dismiss();
-        this.dataProvider.isLogged = true;
-        this.navCtrl.setRoot("AccueilPage");
-        /*  const alert = this.alertCtrl.create({
-           title: "Erreur d'authentification",
-           subTitle: "Nom d'utilisateur ou mot de passe erroné.",
-           buttons: ['Ok']
-         });
-         alert.present(); */
+        const alert = this.alertCtrl.create({
+          title: "Erreur d'authentification",
+          subTitle: "Nom d'utilisateur ou mot de passe erroné.",
+          buttons: ['Ok']
+        });
+        alert.present();
       });
 
     loading.present();

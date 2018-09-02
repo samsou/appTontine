@@ -1,24 +1,36 @@
 <!-- Generated template for the CreateTontineComponent component -->
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm" padding>
     <ion-list no-lines>
-        <ion-item *ngIf="!epargne.id">
+        <ion-item *ngIf="!epargne.id" padding-bottom>
+            <ion-label class="oblige">Selectionnez le produit epargne</ion-label>
+            <ion-select [(ngModel)]="epargne.idProduit" required name="produit" [disabled]="epargne.idProduit">
+                <ion-option [value]="getSelectedProduit(produit)" *ngFor="let produit of dataProvider.userData.produits | typed:'EPARGNE'">
+                    {{produit.libelle}}</ion-option>
+                <ion-option value='' *ngIf="!dataProvider.userData.produits">Pas de produits épargne</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item *ngIf="!epargne.id" padding-bottom>
             <ion-label class="oblige">Selectionnez le client</ion-label>
             <ion-select [(ngModel)]="epargne.idClient" required name="client" [disabled]="epargne.id">
                 <ion-option [value]="getSelected(clt)" *ngFor="let clt of dataProvider.userData.clients" [disabled]="epargne.id"> {{clt.name}} {{clt.firstName}}
                 </ion-option>
+                <ion-option value='' *ngIf="!dataProvider.userData.clients">Pas de clients</ion-option>
             </ion-select>
         </ion-item>
-        <ion-item *ngIf="epargne.id">
+        <ion-item *ngIf="epargne.id" padding-bottom>
             Nom client: {{epargne.client?.name}} {{epargne.client?.firstName}}
+            <br> Produit: {{epargne.produit?.libelle}}
         </ion-item>
         <ion-item>
             <ion-label color="primary" stacked class="oblige">Dépôt initial</ion-label>
             <ion-input type="text" required pattern="[0-9 ]+" [(ngModel)]="epargne.montant" name="montant"></ion-input>
         </ion-item>
-        <p *ngIf="epargne.montant && epargne.montant < 25" style="color:red" text-right>
+        <p *ngIf="epargne.montant && epargne.montant < 25" class="helper-error" text-right>
             Le dépôt initial doit dépasser un seuil
         </p>
     </ion-list>
-    <button ion-button outline margin float-right [disabled]="editForm.form.invalid || isSaving || (epargne.montant < 25)">{{this.epargne.id?'Modifier
+    <button ion-button outline margin float-right [disabled]="editForm.form.invalid || isSaving || (epargne.montant < 25)">
+        <ion-spinner *ngIf="isSaving"></ion-spinner>
+        {{this.epargne.id?'Modifier
       compte':'Créer compte'}}</button>
 </form>

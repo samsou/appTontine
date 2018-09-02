@@ -2,7 +2,7 @@ import { Component, Input } from '@angular/core';
 import { ToastController, ViewController } from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
-import { Client, Compte } from '../../providers/data/model';
+import { Client, Compte, Produit } from '../../providers/data/model';
 
 /**
  * Generated class for the CreateEpargneComponent component.
@@ -22,13 +22,17 @@ export class CreateEpargneComponent {
 
   client: Client = {};
   isSaving: boolean = false;
-
+  produit: Produit = {};
   constructor(public dataProvider: DataProvider, private toastCtrl: ToastController, private viewCtrl: ViewController) {
   }
 
   getSelected(clt: Client): any {
     this.client = clt;
     return clt.id;
+  }
+  getSelectedProduit(produit: Produit): any {
+    this.produit = produit;
+    return produit.id;
   }
   save() {
     this.isSaving = true;

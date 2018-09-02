@@ -1,11 +1,10 @@
 import 'rxjs/add/operator/map';
 
-import { HttpClient, HttpHeaders, HttpParams } from '@angular/common/http';
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireObject } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 
-import { Client, Compte, Mise, Settings } from './model';
+import { Client, Compte, Mise, Produit, Settings } from './model';
 import { UserData } from './userdata';
 
 /*
@@ -17,14 +16,17 @@ import { UserData } from './userdata';
 @Injectable()
 export class DataProvider {
   isLogged: boolean = false;
-  private BASE_URL: string = 'http://localhost';
+  user: any = {};
+  //private BASE_URL: string = 'http://localhost';
   clientsCollection: AngularFireObject<any>;
-  constructor(public http: HttpClient, private db: AngularFireDatabase) {
+  constructor(private db: AngularFireDatabase) {
     this.clientsCollection = this.db.object('clients');
     this.getSettings().subscribe(() => { }, () => { });
     this.getClients().subscribe(() => { }, () => { });
+    this.getProduits().subscribe(() => { }, () => { });
     this.getComptes('TONTINE').subscribe(() => { }, () => { });
     this.getComptes('EPARGNE').subscribe(() => { }, () => { });
+
   }
   get userData() {
     return UserData.getInstance();
@@ -56,6 +58,11 @@ export class DataProvider {
   getClientById(idClient: any) {
     return this.userData.clientsMap[idClient];
   }
+  getProduitById(idProduit: any) {
+    return this.userData.produits.find((prdt) => {
+      return prdt.id == idProduit;
+    });
+  }
   getComptes(typeCompte: string): Observable<Compte[]> {
     return this.db.object(`comptes/${typeCompte}`).valueChanges().map((clts) => {
       let comptes: Compte[] = [];
@@ -69,6 +76,7 @@ export class DataProvider {
   addCompte(cpte: Compte): Promise<any> {
     let compte = Object.assign({}, cpte);
     delete compte.client;
+    delete compte.produit;
     if (!compte.id) {
       compte.dateCompte = Date.now();
       return Promise.resolve(this.db.list(`comptes/${compte.typeCompte}`).push(compte));
@@ -102,15 +110,49 @@ export class DataProvider {
     if (!client.id) return Promise.reject('No_Id');
     return this.db.object(`clients/${client.id}`).remove();
   }
-  login(model: any): Observable<any> {
-    const options = this.createRequestOption();
-    return this.http.get(`${this.BASE_URL}/api/login`, options);
+  getProduits(): Observable<Produit[]> {
+    return this.db.object(`produits`).valueChanges().map((prdts) => {
+      let produits: Produit[] = [];
+      for (const key in prdts) {
+        produits.push({ id: key, ...prdts[key] });
+      }
+      this.userData.produits = produits.reverse();
+      return produits;
+    });
   }
-  logout() {
+  addProduit(produit: Produit): Promise<any> {
+    produit.montantMax = +produit.montantMax || 0;
+    produit.montantMin = +produit.montantMin || 0;
+    produit.nbreEcheance = +produit.nbreEcheance || 0;
+    produit.nbreMiseAvance = +produit.nbreMiseAvance || 0;
+    produit.nbreMisePrelever = +produit.nbreMisePrelever || 0;
+    produit.nbreMiseTotal = +produit.nbreMiseTotal || 0;
+
+    if (!produit.id) {
+      produit.date = Date.now();
+      return Promise.resolve(this.db.list('produits').push(produit));
+    } else {
+      return this.db.object(`produits/${produit.id}`).update(produit);
+    }
+  }
+  removeProduit(produit: Produit): Promise<any> {
+    if (!produit.id) return Promise.reject('No_Id');
+    return this.db.object(`produits/${produit.id}`).remove();
+  }
+  login(model: any): Observable<any> {
+    return Observable.create((observer) => {
+      setTimeout(() => {
+        observer.next(true);
+      }, 1500);
+    });
+  }
+  logout(): Promise<any> {
     this.isLogged = false;
+    this.user = {};
+    return Promise.resolve(true);
     //return this.http.get('', this.createRequestOption());
   }
-  private createRequestOption(req?: any): RequestOptions {
+  /* private createRequestOption(req?: any): RequestOptions {
     const options: RequestOptions = {
       responseType: 'json'
     };
@@ -138,7 +180,7 @@ export class DataProvider {
     }
     options.params = params;
     options.headers = new HttpHeaders();
-    options.headers.append('accept', '*/*');
+    //options.headers.append('accept', '* / *');
     options.headers.append(
       'Access-Control-Allow-Headers',
       'X-Total-Count, Link'
@@ -155,10 +197,10 @@ export class DataProvider {
       options.headers.append('Authorization', 'Bearer ' + token);
     }
     return options;
-  };
+  } */
 
 }
-interface RequestOptions {
+/* interface RequestOptions {
   headers?: HttpHeaders | {
     [header: string]: string | string[];
   };
@@ -169,4 +211,4 @@ interface RequestOptions {
   reportProgress?: boolean;
   responseType: 'json';
   withCredentials?: boolean;
-}
+} */

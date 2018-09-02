@@ -56,8 +56,8 @@
             {{(nbreMise.size * (compte.montantSouscritTontine || 0)) | currency:'XOF':true:'2.0'}} à payer
         </ion-title>
         <ion-buttons end>
-            <button ion-button (click)="save()">
-        Enregistrer
+            <button ion-button (click)="save()" [disabled]="isSaving">
+        <ion-spinner *ngIf="isSaving"></ion-spinner> Enregistrer
       </button>
         </ion-buttons>
     </ion-navbar>
