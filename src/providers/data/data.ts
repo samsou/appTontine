@@ -31,6 +31,46 @@ export class DataProvider {
   get userData() {
     return UserData.getInstance();
   }
+  getDepots(): Observable<any[]> {
+    return this.db.object('depots').valueChanges().map((clts) => {
+      let depots: any = [];
+      for (const key in clts) {
+        depots.push({ id: key, ...clts[key] });
+      }
+      this.userData.depots = depots;
+      return depots;
+    });
+  }
+  getRetraits(): Observable<any[]> {
+    return this.db.object('retraits').valueChanges().map((clts) => {
+      let retraits: any = [];
+      for (const key in clts) {
+        retraits.push({ id: key, ...clts[key] });
+      }
+      this.userData.retraits = retraits;
+      return retraits;
+    });
+  }
+  faireDepot(model: any, montantTotal: number, typeCompte: string = 'EPARGNE'): Promise<any> {
+    model.date = Date.now();
+    return new Promise((resolve, reject) => {
+      this.db.list(`depots`).push(model).then(() => {
+        resolve(this.db.object(`comptes/${typeCompte}/${model.compte}`).update({ montant: montantTotal }));
+      }, () => {
+        reject([]);
+      });
+    });
+  }
+  faireRetrait(model: any, montantRestant: number, typeCompte: string = 'EPARGNE'): Promise<any> {
+    model.date = Date.now();
+    return new Promise((resolve, reject) => {
+      this.db.list(`retraits`).push(model).then(() => {
+        resolve(this.db.object(`comptes/${typeCompte}/${model.compte}`).update({ montant: montantRestant }));
+      }, () => {
+        reject([]);
+      });
+    });
+  }
   getSettings(): Observable<Settings> {
     return this.db.object('settings').valueChanges().map((settings) => {
       if (settings)

@@ -20,9 +20,17 @@ export class CreateTontineComponent {
     typeCompte: 'TONTINE'
   };
   client: Client = {};
-  produit: Produit = {};
+  private _produit: Produit = {};
 
   constructor(public dataProvider: DataProvider, private toastCtrl: ToastController, private viewCtrl: ViewController) {
+  }
+  get produit() {
+    if (this.tontine && this.tontine.id)
+      return this.tontine.produit;
+    return this._produit;
+  }
+  set produit(newProd) {
+    this._produit = newProd;
   }
 
   getSelected(clt: Client): any {

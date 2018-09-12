@@ -111,7 +111,7 @@ export class TontineComponent {
   template: `
     <ion-list>
       <button ion-item (click)="close('MISE')" *ngIf="isNotFull">Faire une mise</button>
-      <button ion-item (click)="close('RETRAIT')" *ngIf="compte.miseTontine >= 2 || isRetrait">Retirer le montant</button>
+      <button ion-item (click)="close('RETRAIT')" *ngIf="(compte.miseTontine >= 2 || isRetrait) && (!compte.avanceTontine || compte.produit.nbreMiseTotal <= compte.miseTontine)">Cloturer le compte</button>
       <button ion-item (click)="close('AVANCE')" *ngIf="!compte.avanceTontine && compte.typeCompte == 'TONTINE' &&  isAvance && !compte.dateCloture">Faire une avance</button>
       <button ion-item (click)="close('MISES')" *ngIf="compte && compte.miseTontine">Voir les mises</button>
     </ion-list>

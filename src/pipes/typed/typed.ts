@@ -9,9 +9,10 @@ import { Pipe, PipeTransform } from '@angular/core';
   name: 'typed'
 })
 export class TypedPipe implements PipeTransform {
-  
+
   transform(value: any[], type: string): any[] {
     if (!type) return value;
+    type = type.toUpperCase();
     return value.filter((value) => {
       return value.typeProduit === type;
     });

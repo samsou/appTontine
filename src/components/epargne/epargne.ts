@@ -1,5 +1,13 @@
 import { Component } from '@angular/core';
-import { AlertController, ModalController, PopoverController, ToastController, ViewController } from 'ionic-angular';
+import {
+  Alert,
+  AlertController,
+  LoadingController,
+  ModalController,
+  PopoverController,
+  ToastController,
+  ViewController,
+} from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
 import { Compte } from '../../providers/data/model';
@@ -17,7 +25,7 @@ import { Compte } from '../../providers/data/model';
 export class EpargneComponent {
   epargnes: Compte[] = [];
 
-  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {
   }
   ngAfterViewInit() {
     this.getComptes();
@@ -29,16 +37,163 @@ export class EpargneComponent {
         compte.produit = this.dataProvider.getProduitById(compte.idProduit);
         return compte;
       });
-      console.log(this.epargnes);
     }, (err) => {
       console.log(err);
     });
   }
   openOptions(myEvent, compte: Compte) {
     let popover = this.popoverCtrl.create(EpargneOptions);
+    let resultIssue: Alert = this.alertCtrl.create({
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {
+
+          }
+        }
+      ]
+    });
+    let loading = this.loadingCtrl.create({
+      enableBackdropDismiss: false
+    });
     popover.onDidDismiss((result) => {
-      if (result == 'DEPOT') { }
-      else if (result == 'RETRAIT') { }
+      if (result == 'DEPOT') {
+        let alert = this.alertCtrl.create({
+          title: `Dépôt sur le compte de ${compte.client.name}`,
+          message: `Voulez-vous déposer combien?`,
+          inputs: [
+            {
+              label: 'Montant',
+              type: 'text',
+              name: 'montant'
+            },
+            {
+              label: 'Nom du déposant',
+              type: 'text',
+              name: 'nameDeposant'
+            }, {
+
+              label: 'Téléphone du déposant',
+              type: 'text',
+              name: 'phoneDeposant'
+            },
+            {
+              label: 'numéro de pièce',
+              type: 'text',
+              name: 'numCarteDeposant'
+            }
+          ],
+          enableBackdropDismiss: false,
+          buttons: [
+            {
+              text: 'Annuler'
+            },
+            {
+              text: 'Valider',
+              handler: (data) => {
+                console.log(data);
+                data.montant = data.montant.replace(/[ -]+/g, '');
+                if (data.montant && +data.montant) {
+                  loading.present();
+                  this.dataProvider.faireDepot(
+                    {
+                      numCarteDeposant: data.numCarteDeposant,
+                      phoneDeposant: data.phoneDeposant,
+                      nameDeposant: data.nameDeposant,
+                      montant: +data.montant,
+                      compte: compte.id,
+                      idClient: compte.client.id,
+                    },
+                    (+data.montant) + (+compte.montant)
+                  ).then(() => {
+                    loading.dismiss();
+                    resultIssue.setMessage(`Le dépôt de ${data.montant} a été effectué avec succès sur le compte du client ${compte.client.name} ${compte.client.firstName}`);
+                    resultIssue.present();
+                  }).catch(() => {
+                    resultIssue.setMessage(`Le dépôt de ${data.montant} sur le compte du client ${compte.client.name} ${compte.client.firstName} a échoué `);
+                    resultIssue.present();
+                  });
+                } else {
+                  resultIssue.setMessage(`Le montant est incorrect`);
+                  resultIssue.present();
+                }
+              }
+            }
+          ]
+        });
+        alert.present();
+      }
+      else if (result == 'RETRAIT') {
+        let alert = this.alertCtrl.create({
+          title: `Retrait sur le compte de ${compte.client.name}`,
+          message: `Voulez-vous retirer combien?`,
+          inputs: [
+            {
+              label: 'Montant',
+              type: 'text',
+              name: 'montant'
+            },
+            /* {
+              label: 'Nom du déposant',
+              type: 'text',
+              name: 'nameDeposant'
+            }, {
+
+              label: 'Téléphone du déposant',
+              type: 'text',
+              name: 'phoneDeposant'
+            },
+            {
+              label: 'numéro de pièce',
+              type: 'text',
+              name: 'numCarteDeposant'
+            } */
+          ],
+          enableBackdropDismiss: false,
+          buttons: [
+            {
+              text: 'Annuler'
+            },
+            {
+              text: 'Valider',
+              handler: (data) => {
+                console.log(data);
+                data.montant = data.montant.replace(/[ -]+/g, '');
+                if (data.montant && +data.montant) {
+                  if (+data.montant >= compte.montant) {
+                    resultIssue.setMessage(`Vous ne pouvez pas retirer cette somme.Le montant est insuffisant.`);
+                    resultIssue.present();
+                    return;
+                  }
+                  loading.present();
+                  this.dataProvider.faireRetrait(
+                    {
+                      /* numCarteDeposant: data.numCarteDeposant,
+                      phoneDeposant: data.phoneDeposant,
+                      nameDeposant: data.nameDeposant, */
+                      montant: +data.montant,
+                      compte: compte.id,
+                      idClient: compte.client.id
+                    },
+                    (+compte.montant) - (+data.montant)
+                  ).then(() => {
+                    loading.dismiss();
+                    resultIssue.setMessage(`Le retrait de ${data.montant} a été effectué avec succès sur le compte du client ${compte.client.name} ${compte.client.firstName}`);
+                    resultIssue.present();
+                  }).catch(() => {
+                    resultIssue.setMessage(`Le retrait de ${data.montant} sur le compte du client ${compte.client.name} ${compte.client.firstName} a échoué `);
+                    resultIssue.present();
+                  });
+                } else {
+                  resultIssue.setMessage(`Le montant est incorrect`);
+                  resultIssue.present();
+                }
+              }
+            }
+          ]
+        });
+        alert.present();
+      }
       else if (result == 'SOLDE') {
         let name: string = '';
         if (compte.client) {

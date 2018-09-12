@@ -31,7 +31,11 @@ export class FaireMisePage {
     } else {
       this.compte = navParams.get('compte');
       this.compte = Object.assign({}, this.compte);
-      for (let index = 1; index <= 31; index++) {
+      let len = 31;
+      if (this.compte.produit && this.compte.produit.nbreMiseTotal) {
+        len = this.compte.produit.nbreMiseTotal;
+      }
+      for (let index = 1; index <= len; index++) {
         this.mises.push({
           index: index,
           checked: this.compte.miseTontine >= index,

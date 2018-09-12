@@ -32,7 +32,7 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let produit of produits | recherche:dataProvider.userData.currentSearch;let index = index">
+            <tr *ngFor="let produit of produits | typed: typeCompte | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
                 <td class="id">{{produit.id}}</td>
                 <td>{{produit.date | date:'mediumDate'}}</td>

@@ -34,6 +34,7 @@ export class AccueilPage {
     window.ononline = () => {
       this.onLine = navigator.onLine;
     }
+    this.onLine = navigator.onLine;
   }
   toggle() {
     this.isOpen = !this.isOpen;

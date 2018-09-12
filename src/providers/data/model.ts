@@ -29,7 +29,7 @@ export interface Compte {
     id?: any;
     idClient?: any;
     idProduit?: any;
-    produit?: any;
+    produit?: Produit;
     client?: Client,
     typeCompte: string;
     montantSouscritTontine?: number;

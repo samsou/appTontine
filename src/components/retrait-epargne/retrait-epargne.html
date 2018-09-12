@@ -6,7 +6,7 @@
             <tr>
                 <th class="counter">N°</th>
                 <th class="id">id</th>
-                <th>Client</th>
+                <th>Compte client</th>
                 <th>Date de retrait</th>
                 <th>Montant</th>
                 <!-- <th>Mise</th>
@@ -18,12 +18,12 @@
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let epargne of epargnes | recherche:dataProvider.userData.currentSearch;let index = index">
+            <tr *ngFor="let retrait of retraits | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
-                <td class="id">{{epargne.id}}</td>
-                <td>{{epargne?.client?.name}} {{epargne?.client?.firstName}}</td>
-                <td>{{epargne.date | date:'mediumDate'}}</td>
-                <td>{{epargne.montant}}</td>
+                <td class="id">{{retrait.id}}</td>
+                <td>{{retrait?.client?.name}} {{retrait?.client?.firstName}}</td>
+                <td>{{retrait.date | date:'mediumDate'}}</td>
+                <td>{{retrait.montant | currency:'XOF':true:'2.0'}}</td>
                 <!--  <td>{{epargne.mise}}</td>
                 <td>{{epargne.avance}}</td>
                 <td>{{epargne.dateAvance}}</td> -->

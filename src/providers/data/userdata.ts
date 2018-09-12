@@ -13,6 +13,8 @@ export class UserData {
     currentMenu: any;
     clientsMap: any = {};
     produits: Produit[] = [];
+    depots: any[] = [];
+    retraits: any[] = [];
     TONTINE: Compte[] = [];
     EPARGNE: Compte[] = [];
     settings: Settings = {

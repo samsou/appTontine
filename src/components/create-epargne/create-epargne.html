@@ -3,7 +3,7 @@
     <ion-list no-lines>
         <ion-item *ngIf="!epargne.id" padding-bottom>
             <ion-label class="oblige">Selectionnez le produit epargne</ion-label>
-            <ion-select [(ngModel)]="epargne.idProduit" required name="produit" [disabled]="epargne.idProduit">
+            <ion-select [(ngModel)]="epargne.idProduit" required name="produit" [disabled]="epargne.id">
                 <ion-option [value]="getSelectedProduit(produit)" *ngFor="let produit of dataProvider.userData.produits | typed:'EPARGNE'">
                     {{produit.libelle}}</ion-option>
                 <ion-option value='' *ngIf="!dataProvider.userData.produits">Pas de produits épargne</ion-option>
@@ -18,13 +18,16 @@
             </ion-select>
         </ion-item>
         <ion-item *ngIf="epargne.id" padding-bottom>
-            Nom client: {{epargne.client?.name}} {{epargne.client?.firstName}}
-            <br> Produit: {{epargne.produit?.libelle}}
+            Nom client: <strong>{{epargne.client?.name}} {{epargne.client?.firstName}}</strong>
+            <br><br><br> Produit: <strong><em>{{epargne.produit?.libelle}}</em></strong> <br><br>
         </ion-item>
-        <ion-item>
+        <ion-item *ngIf="!epargne.id">
             <ion-label color="primary" stacked class="oblige">Dépôt initial</ion-label>
             <ion-input type="text" required pattern="[0-9 ]+" [(ngModel)]="epargne.montant" name="montant"></ion-input>
         </ion-item>
+        <p *ngIf="epargne.id">
+            Dépôt initial est de <em>{{epargne.montant | currency:'XOF':true:'2.0'}}</em> <br><br>
+        </p>
         <p *ngIf="epargne.montant && epargne.montant < 25" class="helper-error" text-right>
             Le dépôt initial doit dépasser un seuil
         </p>

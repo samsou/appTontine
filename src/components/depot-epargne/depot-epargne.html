@@ -8,21 +8,23 @@
                 <th>Client</th>
                 <th>Date de retrait</th>
                 <th>Montant</th>
-                <!-- <th>Mise</th>
-                <th>Avance</th>
-                <th>Date avance</th> -->
+                <th>Nom déposant</th>
+                <th>Téléphone déposant</th>
+                <!--  <th>Date avance</th> -->
                 <!-- <th class="hide">Montant adhesion</th>
                 <th>Date de clotûre</th> -->
                 <th></th>
             </tr>
         </thead>
         <tbody>
-            <tr *ngFor="let epargne of epargnes | recherche:dataProvider.userData.currentSearch;let index = index">
+            <tr *ngFor="let depot of depots | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
-                <td class="id">{{epargne.id}}</td>
-                <td>{{epargne?.client?.name}} {{epargne?.client?.firstName}}</td>
-                <td>{{epargne.date | date:'mediumDate'}}</td>
-                <td>{{epargne.montant}}</td>
+                <td class="id">{{depot.id}}</td>
+                <td>{{depot?.client?.name}} {{depot?.client?.firstName}}</td>
+                <td>{{depot.date | date:'mediumDate'}}</td>
+                <td>{{depot.montant | currency:'XOF':true:'2.0'}}</td>
+                <td>{{depot?.nameDeposant}}</td>
+                <td>{{depot?.phoneDeposant}}</td>
                 <!--  <td>{{epargne.mise}}</td>
                 <td>{{epargne.avance}}</td>
                 <td>{{epargne.dateAvance}}</td> -->
