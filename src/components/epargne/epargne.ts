@@ -23,7 +23,7 @@ import { Compte } from '../../providers/data/model';
   templateUrl: 'epargne.html'
 })
 export class EpargneComponent {
-  epargnes: Compte[] = [];
+  epargnes: Compte[];
 
   constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {
   }
