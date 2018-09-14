@@ -15,7 +15,6 @@ export class StatsComponent {
   text: string;
 
   constructor() {
-    console.log('Hello StatsComponent Component');
     this.text = 'Hello World';
   }
 

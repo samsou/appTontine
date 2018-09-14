@@ -17,7 +17,12 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <ng-template #elseBlock>
+            <tbody text-center margin padding>
+                <ion-spinner class="loading" margin padding></ion-spinner>
+            </tbody>
+        </ng-template>
+        <tbody *ngIf="epargnes;else elseBlock">
             <tr *ngFor="let epargne of epargnes | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
                 <td class="id">{{epargne.id}}</td>

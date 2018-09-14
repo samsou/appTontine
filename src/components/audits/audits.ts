@@ -15,7 +15,6 @@ export class AuditsComponent {
   text: string;
 
   constructor() {
-    console.log('Hello AuditsComponent Component');
     this.text = 'Hello World';
   }
 

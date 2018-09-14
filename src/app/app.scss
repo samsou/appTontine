@@ -100,6 +100,11 @@ span.oblige:after {
     color: red;
 }
 
+.loading {
+    position: absolute !important;
+    left: 50% !important;
+}
+
 .table-wrapper {
     overflow-x: auto;
 }

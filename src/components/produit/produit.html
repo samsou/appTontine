@@ -31,7 +31,12 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
+        <ng-template #elseBlock>
+            <tbody text-center margin padding>
+                <ion-spinner class="loading" margin padding></ion-spinner>
+            </tbody>
+        </ng-template>
+        <tbody *ngIf="produits;else elseBlock">
             <tr *ngFor="let produit of produits | typed: typeCompte | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
                 <td class="id">{{produit.id}}</td>

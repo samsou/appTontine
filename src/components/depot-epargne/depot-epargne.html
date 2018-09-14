@@ -16,12 +16,17 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody>
+        <ng-template #elseBlock>
+            <tbody text-center margin padding>
+                <ion-spinner class="loading" margin padding></ion-spinner>
+            </tbody>
+        </ng-template>
+        <tbody *ngIf="depots;else elseBlock">
             <tr *ngFor="let depot of depots | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
                 <td class="id">{{depot.id}}</td>
                 <td>{{depot?.client?.name}} {{depot?.client?.firstName}}</td>
-                <td>{{depot.date | date:'mediumDate'}}</td>
+                <td>{{depot.date | date:'medium'}}</td>
                 <td>{{depot.montant | currency:'XOF':true:'2.0'}}</td>
                 <td>{{depot?.nameDeposant}}</td>
                 <td>{{depot?.phoneDeposant}}</td>

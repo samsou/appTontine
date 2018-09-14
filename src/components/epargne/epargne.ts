@@ -38,7 +38,6 @@ export class EpargneComponent {
         return compte;
       });
     }, (err) => {
-      console.log(err);
     });
   }
   openOptions(myEvent, compte: Compte) {
@@ -54,7 +53,7 @@ export class EpargneComponent {
       ]
     });
     let loading = this.loadingCtrl.create({
-      enableBackdropDismiss: false
+      enableBackdropDismiss: false,
     });
     popover.onDidDismiss((result) => {
       if (result == 'DEPOT') {
@@ -63,22 +62,22 @@ export class EpargneComponent {
           message: `Voulez-vous déposer combien?`,
           inputs: [
             {
-              label: 'Montant',
+              placeholder: 'Montant',
               type: 'text',
               name: 'montant'
             },
             {
-              label: 'Nom du déposant',
+              placeholder: 'Nom du déposant',
               type: 'text',
               name: 'nameDeposant'
             }, {
 
-              label: 'Téléphone du déposant',
+              placeholder: 'Téléphone du déposant',
               type: 'text',
               name: 'phoneDeposant'
             },
             {
-              label: 'numéro de pièce',
+              placeholder: 'numéro de pièce',
               type: 'text',
               name: 'numCarteDeposant'
             }
@@ -91,7 +90,6 @@ export class EpargneComponent {
             {
               text: 'Valider',
               handler: (data) => {
-                console.log(data);
                 data.montant = data.montant.replace(/[ -]+/g, '');
                 if (data.montant && +data.montant) {
                   loading.present();
@@ -129,7 +127,7 @@ export class EpargneComponent {
           message: `Voulez-vous retirer combien?`,
           inputs: [
             {
-              label: 'Montant',
+              placeholder: 'Montant',
               type: 'text',
               name: 'montant'
             },
@@ -157,7 +155,6 @@ export class EpargneComponent {
             {
               text: 'Valider',
               handler: (data) => {
-                console.log(data);
                 data.montant = data.montant.replace(/[ -]+/g, '');
                 if (data.montant && +data.montant) {
                   if (+data.montant >= compte.montant) {
@@ -165,6 +162,7 @@ export class EpargneComponent {
                     resultIssue.present();
                     return;
                   }
+                  loading.setContent("Retrait ...");
                   loading.present();
                   this.dataProvider.faireRetrait(
                     {
@@ -176,7 +174,7 @@ export class EpargneComponent {
                       idClient: compte.client.id
                     },
                     (+compte.montant) - (+data.montant)
-                  ).then(() => {
+                  ).then((result) => {
                     loading.dismiss();
                     resultIssue.setMessage(`Le retrait de ${data.montant} a été effectué avec succès sur le compte du client ${compte.client.name} ${compte.client.firstName}`);
                     resultIssue.present();

@@ -38,7 +38,7 @@ export interface Compte {
     avanceTontine?: boolean;
     avanceDate?: any;
     montantAdhesion?: string;
-    dateCloture?: string;
+    dateCloture?: number;
     montant?: number;
 }
 export interface Avance {

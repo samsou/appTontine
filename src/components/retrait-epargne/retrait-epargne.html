@@ -17,12 +17,17 @@
                 <th></th>
             </tr>
         </thead>
-        <tbody>
+        <ng-template #elseBlock>
+            <tbody text-center margin padding>
+                <ion-spinner class="loading" margin padding></ion-spinner>
+            </tbody>
+        </ng-template>
+        <tbody *ngIf="retraits;else elseBlock">
             <tr *ngFor="let retrait of retraits | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
                 <td class="id">{{retrait.id}}</td>
                 <td>{{retrait?.client?.name}} {{retrait?.client?.firstName}}</td>
-                <td>{{retrait.date | date:'mediumDate'}}</td>
+                <td>{{retrait.date | date:'medium'}}</td>
                 <td>{{retrait.montant | currency:'XOF':true:'2.0'}}</td>
                 <!--  <td>{{epargne.mise}}</td>
                 <td>{{epargne.avance}}</td>

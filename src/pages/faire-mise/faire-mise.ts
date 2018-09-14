@@ -56,6 +56,7 @@ export class FaireMisePage {
     this.isSaving = true;
     this.mise.idClient = this.compte.idClient;
     this.mise.idCompte = this.compte.id;
+    this.mise.mise = this.nbreMise.size || 1;
     this.mise.date = Date.now();
     this.dataProvider.addMise(this.mise).then((client) => {
       this.dataProvider.addCompte(Object.assign({}, this.compte, { miseTontine: (this.compte.miseTontine || 0) + this.nbreMise.size })).then((client) => { }).catch((e) => { });

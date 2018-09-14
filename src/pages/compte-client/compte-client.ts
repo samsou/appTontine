@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import { IonicPage, NavController, NavParams, ViewController } from 'ionic-angular';
 
+import { DataProvider } from '../../providers/data/data';
 import { Client, Compte } from '../../providers/data/model';
 
 
@@ -20,8 +21,11 @@ export class CompteClientPage {
   typeCompte: string = 'tontine';
   client: Client = {};
   comptes: Compte[] = [];
-  constructor(public navCtrl: NavController, private navParams: NavParams, public viewctrl: ViewController) {
+  constructor(public navCtrl: NavController, private navParams: NavParams, public viewctrl: ViewController, private dataProvider: DataProvider) {
     this.client = this.navParams.get('client') || {};
+  }
+  ionViewDidLoad() {
+    this.comptes = this.dataProvider.getClientAccounts(this.client.id);
   }
   onChanged(ev) { }
   close(result?: any) {

@@ -87,13 +87,34 @@ export class DataProvider {
     });
   }
 
+  getMises(compte: Compte): Observable<any> {
+    return this.db.object(`mises/${compte.id}`).valueChanges().map((value) => {
+      let mises = [];
+      for (const key in value) {
+        if (value[key].idCompte == compte.id)
+          mises.push({ id: key, ...value[key] });
+      }
+      return mises;
+    });
+  }
+
   addMise(ms: Mise): Promise<any> {
     let mise = Object.assign({}, ms);
     delete mise.client;
     delete mise.compte;
     mise.date = Date.now();
-    return Promise.resolve(this.db.list(`mises`).push(mise));
-
+    return Promise.resolve(this.db.list(`mises/${ms.idCompte}`).push(mise));
+  }
+  cloturerCompte(cpte: Compte): Promise<any> {
+    let compte = Object.assign({}, cpte);
+    compte.dateCloture = Date.now();
+    return this.addCompte(compte);
+  }
+  accordAvance(cpte: Compte): Promise<any> {
+    let compte = Object.assign({}, cpte);
+    compte.avanceDate = Date.now();
+    compte.avanceTontine = true;
+    return this.addCompte(compte);
   }
   getClientById(idClient: any) {
     return this.userData.clientsMap[idClient];
@@ -185,6 +206,16 @@ export class DataProvider {
         observer.next(true);
       }, 1500);
     });
+  }
+  getClientAccounts(idClient: any): Compte[] {
+    if (!idClient) return [];
+    let comptes = this.userData.EPARGNE.filter((epargne) => {
+      return epargne.idClient == idClient;
+    });
+    let comptes2 = this.userData.TONTINE.filter((tontine) => {
+      return tontine.idClient == idClient;
+    });
+    return comptes.concat(...comptes2);
   }
   logout(): Promise<any> {
     this.isLogged = false;

@@ -1,6 +1,7 @@
 import { Component } from '@angular/core';
 import {
   AlertController,
+  LoadingController,
   ModalController,
   NavParams,
   PopoverController,
@@ -22,9 +23,9 @@ import { Compte } from '../../providers/data/model';
   templateUrl: 'tontine.html'
 })
 export class TontineComponent {
-  tontines: Compte[] = [];
-
-  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+  tontines: Compte[];
+  cloturer: any;
+  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {
   }
   ngAfterViewInit() {
     this.getComptes();
@@ -37,7 +38,6 @@ export class TontineComponent {
         return compte;
       });
     }, (err) => {
-      console.log(err);
     });
   }
   openOptions(myEvent, compte: Compte) {
@@ -51,12 +51,81 @@ export class TontineComponent {
         modal.present();
       }
       else if (result == 'RETRAIT') {
+        let montantARetirer = 0;
+        montantARetirer = compte.montantSouscritTontine * (compte.miseTontine - compte.produit.nbreMisePrelever);
 
+        let alert = this.alertCtrl.create({
+          title: "Cloture du compte tontine",
+          message: `Le client ${compte.client.name} ${compte.client.firstName} va recevoir la somme de ${montantARetirer}`,
+          buttons: [
+            'Annuler',
+            {
+              text: 'OK',
+              handler: () => {
+                let loading = this.loadingCtrl.create({
+                  content: 'Cloture du compte ...',
+                  enableBackdropDismiss: false
+                });
+                loading.present();
+                this.dataProvider.cloturerCompte(compte).then(() => {
+                  loading.dismiss();
+                  alert = this.alertCtrl.create({
+                    buttons: ['OK']
+                  });
+                  alert.setMessage("Le compte a été cloturé avec succès");
+                  alert.present();
+                }).catch(() => {
+                  loading.dismiss();
+                  alert = this.alertCtrl.create({
+                    buttons: ['OK']
+                  });
+                  alert.setMessage("Une erreur s'est produite lors de la cloture du compte, veuillez réessayer!!!");
+                  alert.present();
+                });
+              }
+            }]
+        });
+        alert.present();
       }
       else if (result == 'AVANCE') {
-
+        let alert = this.alertCtrl.create({
+          title: "Operation de demande d'avance",
+          message: `Le client ${compte.client.name} ${compte.client.firstName} souhaitant faire une avance sur son compte à déjà fait ${compte.miseTontine} mise(s)`,
+          buttons: ['Annuler', {
+            text: 'OK',
+            handler: () => {
+              let loading = this.loadingCtrl.create({
+                content: "demande d'avance ...",
+                enableBackdropDismiss: false
+              });
+              loading.present();
+              this.dataProvider.accordAvance(compte).then(() => {
+                loading.dismiss();
+                alert = this.alertCtrl.create({
+                  buttons: ['OK']
+                });
+                alert.setMessage("L'avance a été accordé au client");
+                alert.present();
+              }).catch(() => {
+                loading.dismiss();
+                alert = this.alertCtrl.create({
+                  buttons: ['OK']
+                });
+                alert.setMessage("Une erreur s'est produite lors de l'accord de l'avance sur le compte, veuillez réessayer!!!");
+                alert.present();
+              });
+            }
+          }]
+        });
+        alert.present();
       }
-      else if (result == 'MISES') { }
+      else if (result == 'MISES') {
+        let modal = this.modalCtrl.create('MisesPage', { compte }, {
+          enableBackdropDismiss: false
+        });
+        //modal.
+        modal.present();
+      }
     });
     popover.present({
       ev: myEvent
@@ -111,8 +180,8 @@ export class TontineComponent {
   template: `
     <ion-list>
       <button ion-item (click)="close('MISE')" *ngIf="isNotFull">Faire une mise</button>
-      <button ion-item (click)="close('RETRAIT')" *ngIf="(compte.miseTontine >= 2 || isRetrait) && (!compte.avanceTontine || compte.produit.nbreMiseTotal <= compte.miseTontine)">Cloturer le compte</button>
-      <button ion-item (click)="close('AVANCE')" *ngIf="!compte.avanceTontine && compte.typeCompte == 'TONTINE' &&  isAvance && !compte.dateCloture">Faire une avance</button>
+      <button ion-item (click)="close('RETRAIT')" *ngIf="(compte.miseTontine >= 2 || isRetrait) && (!compte.avanceTontine || compte.produit.nbreMiseTotal <= compte.miseTontine) && !compte.dateCloture">Cloturer le compte</button>
+      <button ion-item (click)="close('AVANCE')" *ngIf="!compte.avanceTontine && compte.typeCompte == 'TONTINE' && isAvance && !compte.dateCloture && ((compte.miseTontine || 0) < compte.produit.nbreMiseTotal)">Faire une avance</button>
       <button ion-item (click)="close('MISES')" *ngIf="compte && compte.miseTontine">Voir les mises</button>
     </ion-list>
   `
@@ -122,7 +191,7 @@ export class TontineOptions {
   isAvance: boolean = false;
   isRetrait: boolean = false;
   isNotFull: boolean = false;
-  constructor(public viewCtrl: ViewController, private navParams: NavParams, private dataProvider: DataProvider) {
+  constructor(public viewCtrl: ViewController, private navParams: NavParams) {
     this.compte = this.navParams.get('compte');
     this.isAvance = this.canAvance();
     this.isRetrait = this.canRetrait();
@@ -133,12 +202,12 @@ export class TontineOptions {
     return 31 <= this.compte.miseTontine;
   }
   isNotCloture(): boolean {
-    if (!this.compte) return false;
-    return !this.compte.miseTontine || this.compte.miseTontine < 31;
+    if (!this.compte || this.compte.dateCloture || this.compte.miseTontine >= this.compte.produit.nbreMiseTotal) return false;
+    return !this.compte.miseTontine || this.compte.miseTontine < this.compte.produit.nbreMiseTotal;
   }
   canAvance(): boolean {
     if (!this.compte) return false;
-    return this.dataProvider.userData.settings.nbreJrAvance <= this.compte.miseTontine;
+    return this.compte.produit.nbreMiseAvance <= this.compte.miseTontine;
   }
   close(result?: any) {
     this.viewCtrl.dismiss(result);

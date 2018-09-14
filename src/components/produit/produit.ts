@@ -17,7 +17,7 @@ import { Produit } from '../../providers/data/model';
 export class ProduitComponent {
 
   typeCompte: string = 'tontine';
-  produits: Produit[] = [];
+  produits: Produit[];
   constructor(private dataProvider: DataProvider, private modalCtrl: ModalController, private toastCtrl: ToastController, private alertCtrl: AlertController) {
   }
   ngAfterViewInit() {

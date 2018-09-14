@@ -13,7 +13,7 @@ import { DataProvider } from './../../providers/data/data';
   templateUrl: 'retrait-epargne.html'
 })
 export class RetraitEpargneComponent {
-  retraits: any[] = [];
+  retraits: any[];
   constructor(public dataProvider: DataProvider) {
     this.dataProvider.getRetraits().subscribe((retraits: any[]) => {
       this.retraits = retraits.map((retrait) => {

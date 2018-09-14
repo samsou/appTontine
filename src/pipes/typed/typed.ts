@@ -14,7 +14,7 @@ export class TypedPipe implements PipeTransform {
     if (!type) return value;
     type = type.toUpperCase();
     return value.filter((value) => {
-      return value.typeProduit === type;
+      return value.typeProduit === type || value.typeCompte === type;
     });
   }
 }

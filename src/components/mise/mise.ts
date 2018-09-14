@@ -15,7 +15,6 @@ export class MiseComponent {
   text: string;
 
   constructor() {
-    console.log('Hello MiseComponent Component');
     this.text = 'Hello World';
   }
 

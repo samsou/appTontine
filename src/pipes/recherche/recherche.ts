@@ -9,6 +9,7 @@ export class RecherchePipe implements PipeTransform {
     let check: boolean = false;
     return value.filter((current, i) => {
       check = false;
+      console.log(current);
       for (var key in current) {
         if (
           typeof current[key] == "string" ||

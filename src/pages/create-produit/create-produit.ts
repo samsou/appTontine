@@ -35,7 +35,6 @@ export class CreateProduitPage {
       this.produit.nbreMisePrelever = null;
       this.produit.nbreMiseTotal = null;
     }
-    console.log(this.produit);
     this.dataProvider.addProduit(this.produit).then((client) => {
       this.isSaving = false;
       this.close(this.produit);

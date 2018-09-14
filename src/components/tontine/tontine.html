@@ -1,5 +1,18 @@
 <!-- Generated template for the ClientComponent component -->
-<h3 padding>Les comptes tontine</h3>
+<ion-row>
+    <ion-col col-xs-12 col-md-6 col-lg-8 col-xl-8>
+        <h3 padding>Les comptes tontine</h3>
+    </ion-col>
+    <ion-col col-xs-12 col-md-6 col-lg-4 col-xl-4>
+        <h6 padding text-right>
+            <span>Clôturés</span>
+            <ion-checkbox [(ngModel)]="cloturer" name="cloturer"></ion-checkbox>
+            &nbsp;
+            <span>avec avance</span>
+            <ion-checkbox [(ngModel)]="avance" name="avance"></ion-checkbox>
+        </h6>
+    </ion-col>
+</ion-row>
 <div class="table-wrapper">
     <table>
         <thead>
@@ -17,21 +30,26 @@
                 <th>Actions</th>
             </tr>
         </thead>
-        <tbody>
-            <tr *ngFor="let tontine of tontines | recherche:dataProvider.userData.currentSearch;let index = index">
+        <ng-template #elseBlock>
+            <tbody text-center margin padding>
+                <ion-spinner class="loading" margin padding></ion-spinner>
+            </tbody>
+        </ng-template>
+        <tbody *ngIf="tontines;else elseBlock">
+            <tr *ngFor="let tontine of tontines | cloturer: cloturer |cloturer:avance:'avanceTontine' | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
                 <td class="id">{{tontine.id}}</td>
                 <td>{{tontine?.client?.name}} {{tontine?.client?.firstName}}</td>
                 <td>{{tontine.dateCompte | date:'mediumDate'}}</td>
                 <td>{{tontine.montantSouscritTontine| currency:'XOF':true:'2.0'}}</td>
                 <td>{{tontine.miseTontine}}</td>
-                <td>{{tontine.avance?'Oui':'Non'}}</td>
-                <td>{{tontine.dateAvance | date:'mediumDate'}}</td>
+                <td>{{tontine.avanceTontine?'Oui':'Non'}}</td>
+                <td>{{tontine.avanceDate | date:'mediumDate'}}</td>
                 <td class="hide">{{tontine.montantAdhesion| currency:'XOF':true:'2.0'}}</td>
                 <td>{{tontine.dateCloture | date:'mediumDate'}}</td>
                 <td>
-                    <ion-icon name="create" (click)="edit(tontine)" class="edit" *ngIf="!tontine.avance && !tontine.miseTontine"></ion-icon>
-                    <ion-icon name="ios-close-outline" (click)="delete(tontine)" class="trash" *ngIf="!tontine.avance && !tontine.miseTontine"></ion-icon>
+                    <ion-icon name="create" (click)="edit(tontine)" class="edit" *ngIf="!tontine.avanceTontine && !tontine.miseTontine"></ion-icon>
+                    <ion-icon name="ios-close-outline" (click)="delete(tontine)" class="trash" *ngIf="!tontine.avanceTontine && !tontine.miseTontine"></ion-icon>
                     <ion-icon name="md-more" (click)="openOptions($event,tontine)" class="options"></ion-icon>
                 </td>
             </tr>

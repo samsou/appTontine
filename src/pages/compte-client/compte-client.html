@@ -34,28 +34,30 @@
                 <tr>
                     <th class="counter">N°</th>
                     <th class="id">id</th>
-                    <th>Client</th>
+                    <!-- <th>Client</th> -->
                     <th>Date de création</th>
                     <th *ngIf="typeCompte == 'tontine'">Montant souscrit</th>
                     <th *ngIf="typeCompte == 'tontine'">Mise</th>
                     <th *ngIf="typeCompte == 'tontine'">Avance</th>
                     <th *ngIf="typeCompte == 'tontine'">Date avance</th>
                     <th class="hide">Montant adhesion</th>
+                    <th *ngIf="typeCompte != 'tontine'">Montant</th>
                     <th *ngIf="typeCompte == 'tontine'">Date de clotûre</th>
                     <th></th>
                 </tr>
             </thead>
             <tbody>
-                <tr *ngFor="let compte of comptes;let index = index">
+                <tr *ngFor="let compte of comptes | typed : typeCompte;let index = index">
                     <td class="counter">{{index + 1}}</td>
                     <td class="id">{{compte.id}}</td>
-                    <td>{{compte?.client?.name}} {{compte?.client?.firstName}}</td>
+                    <!-- <td>{{compte?.client?.name}} {{compte?.client?.firstName}}</td> -->
                     <td>{{compte.dateCompte | date:'mediumDate'}}</td>
                     <td *ngIf="typeCompte == 'tontine'">{{compte.montantSouscritTontine| currency:'XOF':true:'2.0'}}</td>
                     <td *ngIf="typeCompte == 'tontine'">{{compte.miseTontine}}</td>
                     <td *ngIf="typeCompte == 'tontine'">{{compte.avance?'Oui':'Non'}}</td>
                     <td *ngIf="typeCompte == 'tontine'">{{compte.dateAvance | date:'mediumDate'}}</td>
                     <td class="hide">{{compte.montantAdhesion| currency:'XOF':true:'2.0'}}</td>
+                    <td *ngIf="typeCompte != 'tontine'">{{compte.montant| currency:'XOF':true:'2.0'}}</td>
                     <td *ngIf="typeCompte == 'tontine'">{{compte.dateCloture | date:'mediumDate'}}</td>
                     <td>
 

@@ -13,7 +13,7 @@ import { DataProvider } from '../../providers/data/data';
   templateUrl: 'depot-epargne.html'
 })
 export class DepotEpargneComponent {
-  depots: any[] = [];
+  depots: any[];
   constructor(public dataProvider: DataProvider) {
     this.dataProvider.getDepots().subscribe((depots:any[]) => {
       this.depots = depots.map((depot) => {
