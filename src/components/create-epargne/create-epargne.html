@@ -9,9 +9,13 @@
                 <ion-option value='' *ngIf="!dataProvider.userData.produits">Pas de produits épargne</ion-option>
             </ion-select>
         </ion-item>
-        <ion-item *ngIf="!epargne.id" padding-bottom>
+        <ion-item *ngIf="!epargne.id" padding-bottom (click)="openSearch()" style="cursor:pointer">
             <ion-label class="oblige">Selectionnez le client</ion-label>
-            <ion-select [(ngModel)]="epargne.idClient" required name="client" [disabled]="epargne.id">
+            <span item-end
+        *ngIf="dataProvider.userData.clients && dataProvider.userData.clients.length > 3">
+        {{client?.name}} {{client?.firstName}}
+    </span> 
+            <ion-select [(ngModel)]="epargne.idClient" required name="client" [disabled]="epargne.id" *ngIf="!dataProvider.userData.clients || dataProvider.userData.clients.length <= 3">
                 <ion-option [value]="getSelected(clt)" *ngFor="let clt of dataProvider.userData.clients" [disabled]="epargne.id"> {{clt.name}} {{clt.firstName}}
                 </ion-option>
                 <ion-option value='' *ngIf="!dataProvider.userData.clients">Pas de clients</ion-option>

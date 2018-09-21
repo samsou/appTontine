@@ -15,7 +15,6 @@ import { AccountOptions } from '../pages/accueil/accueil';
 import { HomePage } from '../pages/home/home';
 import { DataProvider } from '../providers/data/data';
 import { MyApp } from './app.component';
-
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
 

@@ -1,6 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ToastController, ViewController } from 'ionic-angular';
-
+import { ToastController, ViewController,ModalController } from 'ionic-angular';
 import { DataProvider } from './../../providers/data/data';
 import { Client, Compte, Produit } from './../../providers/data/model';
 
@@ -22,7 +21,7 @@ export class CreateTontineComponent {
   client: Client = {};
   private _produit: Produit = {};
 
-  constructor(public dataProvider: DataProvider, private toastCtrl: ToastController, private viewCtrl: ViewController) {
+  constructor(public dataProvider: DataProvider, private toastCtrl: ToastController, private viewCtrl: ViewController,private modalCtrl: ModalController) {
   }
   get produit() {
     if (this.tontine && this.tontine.id)
@@ -40,6 +39,20 @@ export class CreateTontineComponent {
   getSelectedProduit(produit: Produit): any {
     this.produit = produit;
     return produit.id;
+  } 
+  openSearch(){
+    if(!(this.dataProvider.userData.clients && this.dataProvider.userData.clients.length > 3)) return ;
+     let modal = this.modalCtrl.create('ClientSearchPage', { items:this.dataProvider.userData.clients, title: 'Sélectionnez le client',id: this.client}, {
+      enableBackdropDismiss: false,
+      'cssClass':'client-search'
+    });
+    modal.onDidDismiss((result)=>{
+      if(result){
+this.client = result;
+this.tontine.idClient = result.id;
+      }
+    });
+    modal.present();
   }
   save() {
     this.isSaving = true;
@@ -61,6 +74,7 @@ export class CreateTontineComponent {
       toast.present();
       this.tontine.idClient = null;
       this.tontine.montantSouscritTontine = null;
+      this.tontine.idProduit = null;
       this.client = null;
       if (this.tontine.id) this.viewCtrl.dismiss();
     }).catch(() => {
