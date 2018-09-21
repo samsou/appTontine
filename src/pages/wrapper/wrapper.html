@@ -13,6 +13,12 @@
         <ion-title *ngIf="type == 'CreateEpargneComponent'">
             Modifier le compte epargne
         </ion-title>
+        <ion-title *ngIf="type == 'DepotEpargneComponent'">
+            Les dépôts sur le compte épargne du client {{compte.client?.name}} {{compte.client?.firstName}}
+        </ion-title>
+        <ion-title *ngIf="type == 'RetraitEpargneComponent'">
+            Les retraits sur le compte épargne du client {{compte.client?.name}} {{compte.client?.firstName}}
+        </ion-title>
         <ion-buttons end>
             <button ion-button icon-only (click)="close()">
         <ion-icon name="close"></ion-icon>
@@ -30,4 +36,11 @@
     <div *ngIf="type == 'CreateEpargneComponent'">
         <create-epargne [compte]="compte"></create-epargne>
     </div>
+    <div *ngIf="type == 'DepotEpargneComponent'">
+        <depot-epargne [compte]="compte"></depot-epargne>
+    </div>
+    <div *ngIf="type == 'RetraitEpargneComponent'">
+        <retrait-epargne [compte]="compte"></retrait-epargne>
+    </div>
+
 </ion-content>

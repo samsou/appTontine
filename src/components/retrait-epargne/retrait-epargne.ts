@@ -1,5 +1,6 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
+import { Compte } from '../../providers/data/model';
 import { DataProvider } from './../../providers/data/data';
 
 /**
@@ -14,11 +15,20 @@ import { DataProvider } from './../../providers/data/data';
 })
 export class RetraitEpargneComponent {
   retraits: any[];
+  @Input() compte: Compte;
   constructor(public dataProvider: DataProvider) {
+
+  }
+  ngAfterViewInit() {
     this.dataProvider.getRetraits().subscribe((retraits: any[]) => {
-      this.retraits = retraits.map((retrait) => {
-        retrait.client = this.dataProvider.getClientById(retrait.idClient);
-        return retrait;
+      this.retraits = [];
+      retraits.forEach((retrait) => {
+        if (this.compte && this.compte.idClient != retrait.idClient) {
+
+        } else {
+          retrait.client = this.dataProvider.getClientById(retrait.idClient);
+          this.retraits.push(retrait);
+        }
       });
     });
   }

@@ -1,19 +1,16 @@
 <!-- Generated template for the RetraitEpargneComponent component -->
-<h4 ion-text text-center> La liste des retraits epargne</h4>
+<h4 ion-text text-center *ngIf="!compte"> La liste des retraits epargne</h4>
 <div class="table-wrapper">
     <table>
         <thead>
             <tr>
                 <th class="counter">N°</th>
                 <th class="id">id</th>
-                <th>Compte client</th>
+                <th *ngIf="!compte">Compte client</th>
                 <th>Date de retrait</th>
                 <th>Montant</th>
-                <!-- <th>Mise</th>
-                <th>Avance</th>
-                <th>Date avance</th> -->
-                <!-- <th class="hide">Montant adhesion</th>
-                <th>Date de clotûre</th> -->
+                <th>Nom retirant</th>
+                <th>Téléphone retirant</th>
                 <th></th>
             </tr>
         </thead>
@@ -26,14 +23,11 @@
             <tr *ngFor="let retrait of retraits | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
                 <td class="id">{{retrait.id}}</td>
-                <td>{{retrait?.client?.name}} {{retrait?.client?.firstName}}</td>
+                <td *ngIf="!compte">{{retrait?.client?.name}} {{retrait?.client?.firstName}}</td>
                 <td>{{retrait.date | date:'medium'}}</td>
                 <td>{{retrait.montant | currency:'XOF':true:'2.0'}}</td>
-                <!--  <td>{{epargne.mise}}</td>
-                <td>{{epargne.avance}}</td>
-                <td>{{epargne.dateAvance}}</td> -->
-                <!-- <td class="hide">{{epargne.montantAdhesion}}</td>
-                <td>{{epargne.dateCloture}}</td> -->
+                <td>{{depot?.nameRetirant}}</td>
+                <td>{{depot?.phoneRetirant}}</td>
                 <td>
 
                 </td>

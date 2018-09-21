@@ -1,6 +1,7 @@
-import { Component } from '@angular/core';
+import { Component, Input } from '@angular/core';
 
 import { DataProvider } from '../../providers/data/data';
+import { Compte } from '../../providers/data/model';
 
 /**
  * Generated class for the DepotEpargneComponent component.
@@ -14,13 +15,18 @@ import { DataProvider } from '../../providers/data/data';
 })
 export class DepotEpargneComponent {
   depots: any[];
+  @Input() compte: Compte;
   constructor(public dataProvider: DataProvider) {
-    this.dataProvider.getDepots().subscribe((depots:any[]) => {
-      this.depots = depots.map((depot) => {
+
+  }
+  ngAfterViewInit() {
+    this.dataProvider.getDepots().subscribe((depots: any[]) => {
+      this.depots = [];
+      depots.forEach((depot) => {
+        if (this.compte && this.compte.idClient != depot.idClient) return;
         depot.client = this.dataProvider.getClientById(depot.idClient);
-        return depot;
+        this.depots.push(depot);
       });
     });
   }
-
 }

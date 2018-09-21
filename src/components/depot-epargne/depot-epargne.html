@@ -1,11 +1,11 @@
-<h4 ion-text text-center> La liste des depôts epargne</h4>
+<h4 ion-text text-center *ngIf="!compte"> La liste des depôts epargne</h4>
 <div class="table-wrapper">
     <table>
         <thead>
             <tr>
                 <th class="counter">N°</th>
                 <th class="id">id</th>
-                <th>Client</th>
+                <th *ngIf="!compte">Client</th>
                 <th>Date de retrait</th>
                 <th>Montant</th>
                 <th>Nom déposant</th>
@@ -25,7 +25,7 @@
             <tr *ngFor="let depot of depots | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
                 <td class="id">{{depot.id}}</td>
-                <td>{{depot?.client?.name}} {{depot?.client?.firstName}}</td>
+                <td *ngIf="!compte">{{depot?.client?.name}} {{depot?.client?.firstName}}</td>
                 <td>{{depot.date | date:'medium'}}</td>
                 <td>{{depot.montant | currency:'XOF':true:'2.0'}}</td>
                 <td>{{depot?.nameDeposant}}</td>

@@ -120,6 +120,17 @@ export class EpargneComponent {
           ]
         });
         alert.present();
+      } else if (result == 'SHOW_DEPOT') {
+        let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'DepotEpargneComponent' }, {
+          enableBackdropDismiss: false
+        });
+        modal.present();
+      }
+      else if (result == 'SHOW_RETRAIT') {
+        let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'RetraitEpargneComponent' }, {
+          enableBackdropDismiss: false
+        });
+        modal.present();
       }
       else if (result == 'RETRAIT') {
         let alert = this.alertCtrl.create({
@@ -281,7 +292,9 @@ export class EpargneComponent {
   template: `
     <ion-list>
       <button ion-item (click)="close('DEPOT')">Faire un depôt</button>
+      <button ion-item (click)="close('SHOW_DEPOT')">Voir les dépôts</button>
       <button ion-item (click)="close('RETRAIT')">Faire un retrait</button>
+ <button ion-item (click)="close('SHOW_RETRAIT')">Voir les retraits</button>
       <button ion-item (click)="close('SOLDE')">Consulter solde</button>
     </ion-list>
   `
