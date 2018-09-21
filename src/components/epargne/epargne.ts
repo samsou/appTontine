@@ -131,21 +131,21 @@ export class EpargneComponent {
               type: 'text',
               name: 'montant'
             },
-            /* {
-              label: 'Nom du déposant',
+            {
+              placeholder: 'Nom du retirant',
               type: 'text',
-              name: 'nameDeposant'
+              name: 'nameRetirant'
             }, {
 
-              label: 'Téléphone du déposant',
+              placeholder: 'Téléphone du retirant',
               type: 'text',
-              name: 'phoneDeposant'
+              name: 'phoneRetirant'
             },
             {
-              label: 'numéro de pièce',
+              placeholder: 'numéro de pièce',
               type: 'text',
-              name: 'numCarteDeposant'
-            } */
+              name: 'numCarteRetirant'
+            }
           ],
           enableBackdropDismiss: false,
           buttons: [
@@ -166,9 +166,9 @@ export class EpargneComponent {
                   loading.present();
                   this.dataProvider.faireRetrait(
                     {
-                      /* numCarteDeposant: data.numCarteDeposant,
-                      phoneDeposant: data.phoneDeposant,
-                      nameDeposant: data.nameDeposant, */
+                      numCarteRetirant: data.numCarteRetirant,
+                      phoneRetirant: data.phoneRetirant,
+                      nameRetirant: data.nameRetirant,
                       montant: +data.montant,
                       compte: compte.id,
                       idClient: compte.client.id
