@@ -144,7 +144,7 @@ table {
 }
 
 .counter {
-    display: none;
+    display: block;
 }
 
 
@@ -178,7 +178,8 @@ table {
     cursor: pointer;
     background-color: #f5f5f5;
 }
-.client-search .modal-wrapper{
- max-width: 350px !important;
- margin: 5px auto !important;
+
+.client-search .modal-wrapper {
+    max-width: 350px !important;
+    margin: 5px auto !important;
 }
