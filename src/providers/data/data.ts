@@ -26,6 +26,9 @@ export class DataProvider {
     this.getProduits().subscribe(() => { }, () => { });
     this.getComptes('TONTINE').subscribe(() => { }, () => { });
     this.getComptes('EPARGNE').subscribe(() => { }, () => { });
+    this.getComptes('RECETTES').subscribe((recettes) => {
+    }, () => { });
+
 
   }
   get userData() {
@@ -133,6 +136,12 @@ export class DataProvider {
       this.userData[typeCompte] = comptes.reverse();
       return comptes;
     });
+  }
+  deduireRecette(model) {
+    if (model === true) return Promise.resolve('DEJA');
+    let recette = Object.assign({}, model);
+    recette.date = Date.now();
+    return Promise.resolve(this.db.list(`comptes/RECETTES`).push(recette));
   }
   addCompte(cpte: Compte): Promise<any> {
     let compte = Object.assign({}, cpte);

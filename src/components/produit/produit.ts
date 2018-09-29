@@ -27,7 +27,6 @@ export class ProduitComponent {
     this.dataProvider.getProduits().subscribe((produits: Produit[]) => {
       this.produits = produits;
     }, (err) => {
-      console.log(err);
     });
   }
   delete(produit: Produit) {

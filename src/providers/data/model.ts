@@ -51,6 +51,7 @@ export interface Avance {
 export interface Settings {
     id?: any;
     nbreJrAvance?: number;
+    fraisTenueDeCompte?: any;
 }
 export interface Mise {
     id?: any;

@@ -1,6 +1,19 @@
 <h3 ion-text text-center>Statistiques</h3>
-<div ion-row>
-    <ion-card ion-col col-12 text-center margin>A</ion-card>
-    <ion-card ion-col col-5 text-center margin>B</ion-card>
-    <ion-card ion-col col-6 text-center margin>C</ion-card>
+<div ion-row margin-right>
+    <ion-card ion-col col-12 text-center margin>
+        Recette mensuelle ({{recettesByMonth.length}} mois de recettes)
+        <canvas id="myChart" #myChart height="200" no-padding no-margin></canvas>
+    </ion-card>
+    <ion-card ion-col col-5 text-center margin>
+        Etat des adhérants
+        <canvas id="myChart4" #myChart4 height="200" no-padding no-margin></canvas>
+    </ion-card>
+    <ion-card ion-col col-6 text-center margin>
+        Etat des adhérants mensuel sur le(s) {{clientsByMonth.length}} mois d'adhésion
+        <canvas id="myChart2" #myChart2 height="200" no-padding no-margin></canvas>
+    </ion-card>
+    <ion-card ion-col col-12 text-center margin>
+        Etat par catégorie de montant
+        <canvas id="myChart3" #myChart3 height="200" no-padding no-margin></canvas>
+    </ion-card>
 </div>

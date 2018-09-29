@@ -162,7 +162,7 @@ export class TontineComponent {
               toast.present();
             }).catch(() => {
               let toast = this.toastCtrl.create({
-                message: `Le client ${compte.client.name} ${compte.client.firstName} n'a pas été modifié`,
+                message: `Le client ${compte.client.name} ${compte.client.firstName} n'a pas été supprimé`,
                 duration: 2000,
                 position: 'bottom'
               });

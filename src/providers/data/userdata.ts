@@ -17,8 +17,10 @@ export class UserData {
     retraits: any[] = [];
     TONTINE: Compte[] = [];
     EPARGNE: Compte[] = [];
+    RECETTES: any[] = [];
     settings: Settings = {
-        nbreJrAvance: 15
+        nbreJrAvance: 15,
+        fraisTenueDeCompte: "200"
     };
     private constructor() { }
     static getInstance() {
@@ -39,7 +41,7 @@ export class UserData {
     }
     menusStats: any[] = [
         { 'libelle': 'Statistiques', code: 'STATS', icon: 'pie' },
-        { 'libelle': 'Audits', code: 'AUDITS', icon: 'pulse' }
+        //{ 'libelle': 'Audits', code: 'AUDITS', icon: 'pulse' }
     ];
     menus: any[] = [
         {

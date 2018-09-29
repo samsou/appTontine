@@ -59,9 +59,31 @@ export class FaireMisePage {
     this.mise.mise = this.nbreMise.size || 1;
     this.mise.date = Date.now();
     this.dataProvider.addMise(this.mise).then((client) => {
-      this.dataProvider.addCompte(Object.assign({}, this.compte, { miseTontine: (this.compte.miseTontine || 0) + this.nbreMise.size })).then((client) => { }).catch((e) => { });
-      this.isSaving = false;
-      this.close(this.mise);
+      let recette: any = true;
+      if (!this.compte.miseTontine || this.compte.miseTontine == 0) {
+        recette = {
+          idClient: this.mise.idClient,
+          idCompte: this.mise.idCompte,
+          montant: this.compte.montantSouscritTontine,
+          motif: "Déduction automatique lors de la première mise"
+        }
+      }
+      this.dataProvider.deduireRecette(recette).then((res) => {
+        this.dataProvider.addCompte(Object.assign({}, this.compte, {
+          recetteDeduit: true,
+          miseTontine: (this.compte.miseTontine || 0) + this.nbreMise.size
+        })).then((client) => { }).catch((e) => { });
+        this.isSaving = false;
+        this.close(this.mise);
+      }).catch((err) => {
+        this.isSaving = false;
+        let message = `Une erreur s'est produite lors de la mise du client ${this.compte.client.name} ${this.compte.client.firstName}`;
+        let toast = this.toastCtrl.create({
+          message: message, duration: 2000,
+          position: 'bottom'
+        });
+        toast.present();
+      });
     }).catch((err) => {
       this.isSaving = false;
       let message = `Une erreur s'est produite lors de la mise du client ${this.compte.client.name} ${this.compte.client.firstName}`;

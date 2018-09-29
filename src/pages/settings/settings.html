@@ -6,7 +6,7 @@
 -->
 <ion-header>
 
-    <ion-navbar>
+    <ion-navbar color="primary">
         <ion-title>Paramètres</ion-title>
         <ion-buttons end>
             <button ion-button icon-only (click)="close()">
@@ -19,15 +19,24 @@
 
 
 <ion-content padding>
-    <ion-item>
-        <ion-label color="primary" stacked class="oblige">Nombre de jour avant de prendre avance</ion-label>
-        <ion-input type="text" [(ngModel)]="settings.nbreJrAvance" name="nbreJrAvance" required></ion-input>
-    </ion-item>
+    <form name="editForm" role="form" novalidate #editForm="ngForm">
+        <!-- <ion-item>
+            <ion-label color="primary" stacked class="oblige">Nombre de mise avant avance</ion-label>
+            <ion-input type="text" [(ngModel)]="settings.nbreJrAvance" name="nbreJrAvance" required></ion-input>
+        </ion-item> -->
+        <ion-item>
+            <ion-label color="primary" stacked class="oblige">Frais de tenue de compte</ion-label>
+            <ion-input type="text" [(ngModel)]="settings.fraisTenueDeCompte" name="fraisTenueDeCompte" required pattern="^[0-9]+$"></ion-input>
+        </ion-item>
+        <p text-right class="helper-error" [hidden]="!(editForm.controls.fraisTenueDeCompte?.dirty && editForm.controls.fraisTenueDeCompte?.invalid)">
+            Les frais de compte sont incorrect,veuillez saisir un montant
+        </p>
+    </form>
 </ion-content>
 <ion-footer>
     <ion-navbar>
         <ion-buttons end>
-            <button ion-button (click)="save()" [disabled]="!settings.nbreJrAvance || isSaving">
+            <button ion-button (click)="save(editForm.form.invalid)" [disabled]="editForm.form.invalid || isSaving">
         <ion-spinner *ngIf="isSaving"></ion-spinner> Enregistrer
       </button>
         </ion-buttons>

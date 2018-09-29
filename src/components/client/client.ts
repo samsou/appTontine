@@ -25,7 +25,6 @@ export class ClientComponent {
     this.dataProvider.getClients().subscribe((clients: Client[]) => {
       this.clients = clients;
     }, (err) => {
-      console.log(err);
     });
   }
   showComptes(client: Client) {

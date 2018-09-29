@@ -1,31 +1,27 @@
 import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { UserData } from '../../providers/data/userdata';
-
-
+/**
+ * Generated class for the RessourcesDirective directive.
+ *
+ * See https://angular.io/api/core/Directive for more info on Angular
+ * Directives.
+ */
 @Directive({
-  selector: '[hasAnyRessources]'
+  selector: '[hasRessources]' // Attribute selector
 })
-export class HasAnyRessourcesDirective {
+export class RessourcesDirective {
   constructor(
     private templateRef: TemplateRef<any>,
     private viewContainerRef: ViewContainerRef
   ) { }
 
   @Input()
-  set hasAnyRessources(value: string | string[]) {
-    if (!value) {
-      this.viewContainerRef.clear();
-      return;
-    }
+  set hasRessources(value: string | string[]) {
     this.updateView(value);
   }
 
   private updateView(value: string | string[]): void {
-    let ressources = UserData.getInstance().ressources;
-    if (Array.isArray(value) && value[0] && value.length == 1) {
-      this.viewContainerRef.clear();
-    }
+    let ressources = [];
     value = Array.isArray(value) ? value : [value];
     this.viewContainerRef.clear();
     let index = -1;
@@ -38,4 +34,5 @@ export class HasAnyRessourcesDirective {
       this.viewContainerRef.createEmbeddedView(this.templateRef);
     }
   }
+
 }
