@@ -15,6 +15,7 @@ import { RetraitEpargneComponent } from './retrait-epargne/retrait-epargne';
 import { StatsComponent } from './stats/stats';
 import { TontineComponent } from './tontine/tontine';
 import { ProduitComponent } from './produit/produit';
+import { RecettesComponent } from './recettes/recettes';
 
 @NgModule({
     declarations: [ClientComponent,
@@ -28,7 +29,8 @@ import { ProduitComponent } from './produit/produit';
         CreateEpargneComponent,
         DepotEpargneComponent,
         RetraitEpargneComponent,
-    ProduitComponent],
+    ProduitComponent,
+    RecettesComponent],
     imports: [FormsModule, IonicModule, PipesModule],
     exports: [ClientComponent,
         StatsComponent,
@@ -41,6 +43,7 @@ import { ProduitComponent } from './produit/produit';
         CreateEpargneComponent,
         DepotEpargneComponent,
         RetraitEpargneComponent,
-    ProduitComponent]
+    ProduitComponent,
+    RecettesComponent]
 })
 export class ComponentsModule { }

@@ -180,6 +180,7 @@ export class DataProvider {
     if (!client.id) return Promise.reject('No_Id');
     return this.db.object(`clients/${client.id}`).remove();
   }
+
   getProduits(): Observable<Produit[]> {
     return this.db.object(`produits`).valueChanges().map((prdts) => {
       let produits: Produit[] = [];

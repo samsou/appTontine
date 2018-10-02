@@ -90,9 +90,6 @@ export class UserData {
                     'libelle': 'Créer un Compte'
                     , code: 'CREATE_EPARGNE'
                 },
-                /* {
-                    'libelle': 'Consulter Solde'
-                }, */
                 {
                     'libelle': 'Dépôts'
                     , code: 'DEPOT_EPARGNE'
@@ -102,7 +99,12 @@ export class UserData {
                     , code: 'RETRAIT_EPARGNE'
                 }
             ]
-        }
+        },
+        {
+            'libelle': 'Nos recettes',
+            code: 'RECETTES',
+            icon: 'money',
+        },
     ];
     initialize() {
         this.ressources = [];

@@ -47,7 +47,7 @@ export class StatsComponent implements AfterViewInit {
     }
     setTimeout(() => {
       this.recettesByMonth = recettesByMonth;
-      this.buildChart(this.myChart.nativeElement, 'line', 'Nombre de recettes/mois', labels, this.recettesByMonth);
+      this.buildChart(this.myChart.nativeElement, 'line', 'Recettes du mois', labels, this.recettesByMonth);
     }, 0);
     let clients = this.dataProvider.userData.clientsMap || {};
     let byMonth2 = {}, byMonth4 = {};

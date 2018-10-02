@@ -1,0 +1,37 @@
+import { Component } from '@angular/core';
+
+import { DataProvider } from '../../providers/data/data';
+
+/**
+ * Generated class for the RecettesComponent component.
+ *
+ * See https://angular.io/api/core/Component for more info on Angular
+ * Components.
+ */
+@Component({
+  selector: 'recettes',
+  templateUrl: 'recettes.html'
+})
+export class RecettesComponent {
+  recettes: any[];
+
+  constructor(public dataProvider: DataProvider) {
+  }
+
+  ngOnInit() {
+    this.getRecettes();
+  }
+  client(idClient) {
+    let clt = this.dataProvider.getClientById(idClient);
+    if (!clt) return '';
+    return clt.name + ' ' + clt.firstName;
+  }
+
+  getRecettes() {
+    this.recettes = this.dataProvider.userData.RECETTES;
+    this.dataProvider.getComptes('RECETTES').subscribe((recettes: any[]) => {
+      this.recettes = recettes;
+    }, (err) => {
+    });
+  }
+}
