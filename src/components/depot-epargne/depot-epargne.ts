@@ -16,6 +16,7 @@ import { Compte } from '../../providers/data/model';
 export class DepotEpargneComponent {
   depots: any[];
   @Input() compte: Compte;
+  montant: number = 0;
   constructor(public dataProvider: DataProvider) {
 
   }
@@ -24,6 +25,7 @@ export class DepotEpargneComponent {
       this.depots = [];
       depots.forEach((depot) => {
         if (this.compte && this.compte.idClient != depot.idClient) return;
+        this.montant += +depot.montant;
         depot.client = this.dataProvider.getClientById(depot.idClient);
         this.depots.push(depot);
       });

@@ -16,6 +16,7 @@ import { DataProvider } from './../../providers/data/data';
 export class RetraitEpargneComponent {
   retraits: any[];
   @Input() compte: Compte;
+  montant: number = 0;
   constructor(public dataProvider: DataProvider) {
 
   }
@@ -26,6 +27,7 @@ export class RetraitEpargneComponent {
         if (this.compte && this.compte.idClient != retrait.idClient) {
 
         } else {
+          this.montant += +retrait.montant;
           retrait.client = this.dataProvider.getClientById(retrait.idClient);
           this.retraits.push(retrait);
         }

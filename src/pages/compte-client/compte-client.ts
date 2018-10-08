@@ -21,13 +21,23 @@ export class CompteClientPage {
   typeCompte: string = 'tontine';
   client: Client = {};
   comptes: Compte[] = [];
+  montantTotalTontine = 0;
+  montantTotalEpargne = 0;
   constructor(public navCtrl: NavController, private navParams: NavParams, public viewctrl: ViewController, private dataProvider: DataProvider) {
     this.client = this.navParams.get('client') || {};
   }
   ionViewDidLoad() {
     this.comptes = this.dataProvider.getClientAccounts(this.client.id);
+    this.comptes.forEach((cpte) => {
+      if (cpte.typeCompte === "TONTINE")
+        this.montantTotalTontine += (+cpte.montantSouscritTontine || 0) * (+cpte.miseTontine || 0);
+      if (cpte.typeCompte === "EPARGNE")
+        this.montantTotalEpargne += +cpte.montant || 0;
+    });
   }
-  onChanged(ev) { }
+  onChanged(ev) {
+
+  }
   close(result?: any) {
     this.viewctrl.dismiss(result);
   }

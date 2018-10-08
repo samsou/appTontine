@@ -67,3 +67,15 @@
         </table>
     </div>
 </ion-content>
+<ion-footer no-border>
+    <ion-navbar>
+        <ion-title>
+            <span *ngIf="typeCompte === 'tontine'">
+                 Au total {{montantTotalTontine| currency:'XOF':true:'2.0'}} sur les comptes tontine de ce client
+            </span>
+            <span *ngIf="typeCompte === 'epargne'">
+                Au total {{montantTotalEpargne| currency:'XOF':true:'2.0'}} sur les comptes epargne de ce client
+            </span>
+        </ion-title>
+    </ion-navbar>
+</ion-footer>

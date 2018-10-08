@@ -25,6 +25,7 @@ import { Compte } from '../../providers/data/model';
 export class TontineComponent {
   tontines: Compte[];
   cloturer: any;
+  montantTotalTontine: number = 0;
   constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {
   }
   ngAfterViewInit() {
@@ -35,6 +36,7 @@ export class TontineComponent {
       this.tontines = comptes.map((compte) => {
         compte.client = this.dataProvider.getClientById(compte.idClient);
         compte.produit = this.dataProvider.getProduitById(compte.idProduit);
+        this.montantTotalTontine += (+compte.montantSouscritTontine || 0) * (+compte.miseTontine || 0);
         return compte;
       });
     }, (err) => {

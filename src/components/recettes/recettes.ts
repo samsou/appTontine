@@ -14,6 +14,7 @@ import { DataProvider } from '../../providers/data/data';
 })
 export class RecettesComponent {
   recettes: any[];
+  montant: number = 0;
 
   constructor(public dataProvider: DataProvider) {
   }
@@ -31,6 +32,9 @@ export class RecettesComponent {
     this.recettes = this.dataProvider.userData.RECETTES;
     this.dataProvider.getComptes('RECETTES').subscribe((recettes: any[]) => {
       this.recettes = recettes;
+      this.recettes.forEach((rec) => {
+        this.montant += +rec.montant;
+      });
     }, (err) => {
     });
   }

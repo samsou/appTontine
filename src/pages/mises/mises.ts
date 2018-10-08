@@ -19,6 +19,7 @@ import { Compte, Mise } from '../../providers/data/model';
 export class MisesPage {
   compte: Compte;
   mises: Mise[] = [];
+  montantTotalTontine: number = 0;
   constructor(public viewCtrl: ViewController, public navParams: NavParams, private dataProvider: DataProvider) {
     this.compte = navParams.get('compte');
     this.getMises(this.compte);
@@ -26,6 +27,7 @@ export class MisesPage {
   getMises(compte) {
     this.dataProvider.getMises(compte).subscribe((mises) => {
       this.mises = mises;
+      this.montantTotalTontine += (+this.compte.montantSouscritTontine || 0) * (+this.compte.miseTontine || 0);
     }, () => { });
   }
   close() {

@@ -24,6 +24,7 @@ import { Compte } from '../../providers/data/model';
 })
 export class EpargneComponent {
   epargnes: Compte[];
+  montantTotalEpargne: number = 0;
 
   constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {
   }
@@ -35,6 +36,7 @@ export class EpargneComponent {
       this.epargnes = comptes.map((compte) => {
         compte.client = this.dataProvider.getClientById(compte.idClient);
         compte.produit = this.dataProvider.getProduitById(compte.idProduit);
+        this.montantTotalEpargne += +compte.montant || 0;
         return compte;
       });
     }, (err) => {

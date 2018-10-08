@@ -5,7 +5,7 @@ import { AngularFireDatabase, AngularFireObject } from 'angularfire2/database';
 import { Observable } from 'rxjs/Observable';
 
 import { Client, Compte, Mise, Produit, Settings } from './model';
-import { UserData } from './userdata';
+import { RESSOURCES, UserData } from './userdata';
 
 /*
   Generated class for the DataProvider provider.
@@ -16,6 +16,7 @@ import { UserData } from './userdata';
 @Injectable()
 export class DataProvider {
   isLogged: boolean = false;
+  ressources: any[] = [];
   user: any = {};
   //private BASE_URL: string = 'http://localhost';
   clientsCollection: AngularFireObject<any>;
@@ -28,7 +29,7 @@ export class DataProvider {
     this.getComptes('EPARGNE').subscribe(() => { }, () => { });
     this.getComptes('RECETTES').subscribe((recettes) => {
     }, () => { });
-
+    this.ressources = RESSOURCES;
 
   }
   get userData() {

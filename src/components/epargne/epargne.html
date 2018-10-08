@@ -40,6 +40,11 @@
                     <ion-icon name="md-more" (click)="openOptions($event,epargne)" class="options"></ion-icon>
                 </td>
             </tr>
+            <tr margin-bottom padding-bottom>
+                <td></td>
+                <td colspan="2">Total: {{montantTotalEpargne | currency:'XOF':true:'2.0'}}</td>
+                <td></td>
+            </tr>
         </tbody>
     </table>
 </div>

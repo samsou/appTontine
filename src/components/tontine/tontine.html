@@ -53,6 +53,12 @@
                     <ion-icon name="md-more" (click)="openOptions($event,tontine)" class="options"></ion-icon>
                 </td>
             </tr>
+            <tr margin-bottom padding-bottom>
+                <td></td>
+                <td></td>
+                <td colspan="6">Total: {{montantTotalTontine | currency:'XOF':true:'2.0'}}</td>
+                <td></td>
+            </tr>
         </tbody>
     </table>
 </div>

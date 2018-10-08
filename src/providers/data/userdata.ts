@@ -2,6 +2,28 @@ import { Subject } from 'rxjs/Subject';
 
 import { Client, Compte, Produit, Settings } from './model';
 
+const entities: string[] = ['produits', 'clients', 'tontines', 'epargnes', 'matieres', 'recettes', 'settings'];
+let ressources = [];
+entities.forEach(element => {
+    ressources.push({
+        name: `Voir les ${element}`,
+        code: `tontine/api/${element}`
+    });
+    ressources.push({
+        name: `Créer les ${element}`,
+        code: `tontine/api/${element}/create`
+    });
+    ressources.push({
+        name: `Editer les ${element}`,
+        code: `tontine/api/${element}/edit`
+    });
+    ressources.push({
+        name: `Supprimer les ${element}`,
+        code: `tontine/api/${element}/delete`
+    });
+});
+export const RESSOURCES = ressources;
+
 
 export class UserData {
     ressources: any[] = [];
