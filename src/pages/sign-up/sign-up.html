@@ -23,9 +23,9 @@
             </ion-item>
             <ion-item margin-vertical>
                 <ion-label floating class="oblige">Nom d'utilisateur</ion-label>
-                <ion-input type="text" [(ngModel)]="model.login" name="login" required></ion-input>
+                <ion-input type="text" [(ngModel)]="model.username" name="username" required></ion-input>
             </ion-item>
-            <ion-row no-margin no-padding>
+            <ion-row no-margin no-padding *ngIf="!model.id">
                 <ion-col margin-right no-padding>
                     <ion-item>
                         <ion-label floating class="oblige">Mot de passe</ion-label>

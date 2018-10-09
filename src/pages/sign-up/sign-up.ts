@@ -21,7 +21,7 @@ export class SignUpPage {
     firstName: '',
     phone: '',
     email: '',
-    login: '',
+    username: '',
     password: '',
     permissions: []
   };
@@ -29,6 +29,8 @@ export class SignUpPage {
   ressources: any[];
   isSaving: boolean = false;
   constructor(public viewCtrl: ViewController, public navParams: NavParams, private dataProvider: DataProvider) {
+    let user = this.navParams.get('user');
+    if (user) this.model = Object.assign({}, user);
     this.ressources = this.dataProvider.ressources;
   }
 
@@ -41,6 +43,12 @@ export class SignUpPage {
       return;
     }
     this.isSaving = true;
+    this.dataProvider.signUp(this.model).then((res) => {
+      console.log(res);
+      this.close(this.model);
+    }).catch((err) => {
+      console.log(err);
+    })
   }
 
 }

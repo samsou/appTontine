@@ -29,8 +29,18 @@ export class LoginPage {
     this.dataProvider.login(this.model).
       subscribe((result) => {
         loading.dismiss();
-        this.dataProvider.isLogged = true;
-        this.navCtrl.setRoot("AccueilPage");
+        if (result && result.password === this.model.password) {
+          this.dataProvider.isLogged = true;
+          this.dataProvider.user = result;
+          this.navCtrl.setRoot("AccueilPage");
+        } else {
+          const alert = this.alertCtrl.create({
+            title: "Erreur d'authentification",
+            subTitle: "Nom d'utilisateur ou mot de passe erroné.",
+            buttons: ['Ok']
+          });
+          alert.present();
+        }
       }, (error) => {
         loading.dismiss();
         const alert = this.alertCtrl.create({

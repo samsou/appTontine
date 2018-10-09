@@ -1,0 +1,7 @@
+<ion-list no-lines>
+    <span *ngFor="let item of options">
+    <button ion-item (click)="onTap(item)">
+      {{item.libelle}}
+    </button>
+  </span>
+</ion-list>

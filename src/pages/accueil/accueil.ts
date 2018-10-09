@@ -94,10 +94,10 @@ export class AccueilPage {
 @Component({
   template: `
     <ion-list>
-      <button ion-item (click)="close()" *ngIf="dataProvider.isLogged" disabled>{{dataProvider.user?.name || 'user name'}}</button>
+      <button ion-item (click)="close()" *ngIf="dataProvider.isLogged" disabled>{{dataProvider.user?.name || dataProvider.user?.username || 'user name'}}</button>
       <button ion-item (click)="close('LOGOUT')" *ngIf="dataProvider.isLogged">Se déconnecter</button>
       <button ion-item (click)="close('LOGIN')" *ngIf="!dataProvider.isLogged">Se connecter</button>
-<button ion-item (click)="close('ADD_USER')" *ngIf="dataProvider.isLogged">Les utilisateurs</button>
+<button ion-item (click)="close('ADD_USER')" *ngIf="dataProvider.isLogged && dataProvider.user?.isSuperAdmin">Les utilisateurs</button>
       </ion-list>
   `
 })

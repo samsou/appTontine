@@ -14,7 +14,7 @@
                 <tr>
                     <th class="counter">N°</th>
                     <th class="id">id</th>
-                    <th>Login</th>
+                    <th>Nom d'utilisateur</th>
                     <th>Nom</th>
                     <th>Prénoms</th>
                     <th>Téléphone</th>
@@ -32,18 +32,18 @@
                 <tr *ngFor="let user of users | recherche:dataProvider.currentSearch;let index = index">
                     <td class="counter">{{index + 1}}</td>
                     <td class="id">{{user._id}}</td>
-                    <td>{{user.login}}</td>
+                    <td>{{user.username}}</td>
                     <td>{{user.name}}</td>
                     <td>{{user.firstName}}</td>
                     <td>{{user.phone}}</td>
                     <!--  <td text-center>
             <ion-toggle [checked]="user.isActive" (click)="onActivate(user)"></ion-toggle>
           </td> -->
-                    <td>{{user.createdAt | date:'mediumDate'}}</td>
+                    <td>{{user.date | date:'mediumDate'}}</td>
                     <td>
                         <ion-icon name="create" (click)="editUser(user)" class="edit"></ion-icon>
                         <ion-icon name="ios-close-outline" (click)="deleteUser(user)" class="trash"></ion-icon>
-                        <!-- <ion-icon name="md-more" (click)="openOptions($event,user)" class="options"></ion-icon> -->
+                        <ion-icon name="md-more" (click)="openOptions($event,user)" class="options"></ion-icon>
                     </td>
                 </tr>
             </tbody>

@@ -211,12 +211,36 @@ export class DataProvider {
     if (!produit.id) return Promise.reject('No_Id');
     return this.db.object(`produits/${produit.id}`).remove();
   }
-  login(model: any): Observable<any> {
-    return Observable.create((observer) => {
-      setTimeout(() => {
-        observer.next(true);
-      }, 1500);
+  getUsers(): Observable<any> {
+    return this.db.object(`users`).valueChanges().map((us) => {
+      let users: any[] = [];
+      for (const key in us) {
+        users.push({ id: key, ...us[key] });
+      }
+      return users;
     });
+  }
+  deleteUser(model) {
+    return this.db.object(`users/${model.username}`).remove();
+  }
+  changePassword(model): Promise<any> {
+    return this.db.object(`users/${model.username}`).update(model);
+  }
+  signUp(model: any): Promise<any> {
+    model.date = Date.now();
+    return this.db.object(`users/${model.username}`).update(model);
+  }
+  login(model: any): Observable<any> {
+    if (model.username === 'superadmin' && model.password === 'admin0123') {
+      return Observable.create((observer) => {
+        setTimeout(() => {
+          observer.next(Object.assign({}, model, {
+            isSuperAdmin: true
+          }));
+        }, 2000);
+      });
+    }
+    return this.db.object(`users/${model.login}`).valueChanges();
   }
   getClientAccounts(idClient: any): Compte[] {
     if (!idClient) return [];
@@ -232,65 +256,5 @@ export class DataProvider {
     this.isLogged = false;
     this.user = {};
     return Promise.resolve(true);
-    //return this.http.get('', this.createRequestOption());
   }
-  /* private createRequestOption(req?: any): RequestOptions {
-    const options: RequestOptions = {
-      responseType: 'json'
-    };
-    const params: HttpParams = new HttpParams();
-    if (req) {
-      if (req.page) params.set('page', req.page);
-      if (req.size) params.set('size', req.size);
-      if (req.sort) {
-        req.sort = Array.isArray(req.sort) ? req.sort.join(',') : req.sort;
-        req.sort = req.sort.replace(/asc/i, 'desc');
-        params.set('sort', req.sort);
-      }
-      if (req.query) params.set('query', req.query);
-      let queries: any = req;
-      //if (!req.NO_QUERY) queries = Object.assign({}, req, createQueries());
-      for (let param in queries) {
-        if (
-          ['page', 'size', 'sort', 'query', 'NO_QUERY'].indexOf(param) ==
-          -1
-        ) {
-          if (queries[param]) params.set(param, queries[param]);
-        }
-      }
-      options.params = params;
-    }
-    options.params = params;
-    options.headers = new HttpHeaders();
-    //options.headers.append('accept', '* / *');
-    options.headers.append(
-      'Access-Control-Allow-Headers',
-      'X-Total-Count, Link'
-    );
-    options.headers.append('Access-Control-Allow-Origin', '*');
-
-    let token =
-      window.sessionStorage.getItem('jhi-authenticationtoken') ||
-      window.localStorage.getItem('jhi-authenticationtoken');
-
-    if (token) {
-      token = token.replace(/^["']/, '');
-      token = token.replace(/["']$/, '');
-      options.headers.append('Authorization', 'Bearer ' + token);
-    }
-    return options;
-  } */
-
 }
-/* interface RequestOptions {
-  headers?: HttpHeaders | {
-    [header: string]: string | string[];
-  };
-  observe?: 'body';
-  params?: HttpParams | {
-    [param: string]: string | string[];
-  };
-  reportProgress?: boolean;
-  responseType: 'json';
-  withCredentials?: boolean;
-} */
