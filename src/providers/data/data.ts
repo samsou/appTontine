@@ -246,7 +246,7 @@ export class DataProvider {
         }, 2000);
       });
     }
-    return this.db.object(`users/${model.login}`).valueChanges();
+    return this.db.object(`users/${model.username}`).valueChanges();
   }
   getClientAccounts(idClient: any): Compte[] {
     if (!idClient) return [];

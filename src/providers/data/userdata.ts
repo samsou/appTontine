@@ -142,7 +142,7 @@ export class UserData {
         {
             'libelle': 'Nos recettes',
             code: 'RECETTES',
-            icon: 'money',
+            icon: 'card',
             ressource: 'tontine/api/recettes',
         },
     ];
