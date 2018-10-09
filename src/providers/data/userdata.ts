@@ -2,25 +2,32 @@ import { Subject } from 'rxjs/Subject';
 
 import { Client, Compte, Produit, Settings } from './model';
 
-const entities: string[] = ['produits', 'clients', 'tontines', 'epargnes', 'matieres', 'recettes', 'settings'];
+const entities: string[] = ['produits', 'clients', 'tontines', 'epargnes', 'parametres', 'recettes'];
 let ressources = [];
+let tabs = ['tontines', 'epargnes', 'parametres', 'recettes'];
+let index, see;
 entities.forEach(element => {
+    index = tabs.indexOf(element);
+    see = 'Voir';
+    if (index !== -1 && element !== 'recettes') see = 'Gérer';
     ressources.push({
-        name: `Voir les ${element}`,
+        name: `${see} les ${element}`,
         code: `tontine/api/${element}`
     });
-    ressources.push({
-        name: `Créer les ${element}`,
-        code: `tontine/api/${element}/create`
-    });
-    ressources.push({
-        name: `Editer les ${element}`,
-        code: `tontine/api/${element}/edit`
-    });
-    ressources.push({
-        name: `Supprimer les ${element}`,
-        code: `tontine/api/${element}/delete`
-    });
+    if (index === -1) {
+        ressources.push({
+            name: `Créer les ${element}`,
+            code: `tontine/api/${element}/create`
+        });
+        ressources.push({
+            name: `Editer les ${element}`,
+            code: `tontine/api/${element}/edit`
+        });
+        ressources.push({
+            name: `Supprimer les ${element}`,
+            code: `tontine/api/${element}/delete`
+        });
+    }
 });
 export const RESSOURCES = ressources;
 
@@ -69,25 +76,30 @@ export class UserData {
         {
             'libelle': 'Produits',
             code: 'PRODUITS',
+            ressource: 'tontine/api/produits',
             icon: 'bookmarks'
         },
         {
             'libelle': 'Clients',
             code: 'CLIENTS',
+            ressource: 'tontine/api/clients',
             icon: 'person'
         },
         {
             'libelle': 'Tontine',
             code: 'TONTINES',
             icon: 'folder',
+            ressource: 'tontine/api/tontines',
             'breadcrumbs': [
                 {
                     'libelle': 'Les comptes tontine'
-                    , code: 'TONTINES'
+                    , code: 'TONTINES',
+                    ressource: 'tontine/api/tontines',
                 },
                 {
                     'libelle': 'Créer un compte'
-                    , code: 'CREATE_TONTINE'
+                    , code: 'CREATE_TONTINE',
+                    ressource: 'tontine/api/tontines',
                 }
                 /*  {
                      'libelle': 'Faire une mise'
@@ -103,22 +115,27 @@ export class UserData {
             'libelle': 'Epargne',
             code: 'EPARGNE',
             icon: 'paper',
+            ressource: 'tontine/api/epargnes',
             'breadcrumbs': [
                 {
                     'libelle': 'Les comptes epargne'
-                    , code: 'EPARGNE'
+                    , code: 'EPARGNE',
+                    ressource: 'tontine/api/epargnes'
                 },
                 {
                     'libelle': 'Créer un Compte'
-                    , code: 'CREATE_EPARGNE'
+                    , code: 'CREATE_EPARGNE',
+                    ressource: 'tontine/api/epargnes',
                 },
                 {
                     'libelle': 'Dépôts'
-                    , code: 'DEPOT_EPARGNE'
+                    , code: 'DEPOT_EPARGNE',
+                    ressource: 'tontine/api/epargnes',
                 },
                 {
                     'libelle': 'Retraits'
-                    , code: 'RETRAIT_EPARGNE'
+                    , code: 'RETRAIT_EPARGNE',
+                    ressource: 'tontine/api/epargnes',
                 }
             ]
         },
@@ -126,6 +143,7 @@ export class UserData {
             'libelle': 'Nos recettes',
             code: 'RECETTES',
             icon: 'money',
+            ressource: 'tontine/api/recettes',
         },
     ];
     initialize() {

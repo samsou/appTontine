@@ -50,14 +50,14 @@
                 <td *ngIf="typeCompte == 'tontine'">{{produit.nbreMisePrelever}}</td>
                 <td *ngIf="typeCompte == 'tontine'">{{produit.nbreEcheance}}</td>
                 <td>
-                    <ion-icon name="create" (click)="edit(produit)" class="edit"></ion-icon>
-                    <ion-icon name="ios-close-outline" (click)="delete(produit)" class="trash"></ion-icon>
+                    <ion-icon name="create" (click)="edit(produit)" class="edit" *hasRessources="'tontine/api/produits/edit'"></ion-icon>
+                    <ion-icon name="ios-close-outline" (click)="delete(produit)" class="trash" *hasRessources="'tontine/api/produits/delete'"></ion-icon>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-<ion-fab bottom right>
+<ion-fab bottom right *hasRessources="'tontine/api/produits/create'">
     <button ion-fab (click)="addProduit()">
     <ion-icon name="add"></ion-icon>
   </button>

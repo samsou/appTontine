@@ -35,9 +35,11 @@
         <!--  our side menu  -->
         <ion-content no-padding no-margin class="menus" [ngClass]="{isOpen:isOpen}" *ngIf='isOpen'>
             <ion-list no-lines>
-                <ion-item *ngFor="let menu of menus" (click)="toLink(menu)" [ngClass]="{active:dataProvider.userData.currentMenu == menu}">
+                <span *ngFor="let menu of menus">
+                <ion-item (click)="toLink(menu)" [ngClass]="{active:dataProvider.userData.currentMenu == menu}" *hasRessources="menu.ressource">
                     <ion-icon [name]="menu.icon" color="primary"></ion-icon> &nbsp; {{menu.libelle}}
                 </ion-item>
+                </span>
             </ion-list>
             <hr>
             <ion-list no-lines>
@@ -47,7 +49,7 @@
             </ion-list>
             <ion-footer no-border>
                 <ion-toolbar>
-                    <ion-buttons left (click)="openSettings()" style="cursor: pointer">
+                    <ion-buttons left (click)="openSettings()" style="cursor: pointer" *hasRessources="'tontine/api/parametres'">
                         <button ion-button>
                             <ion-icon name="settings"></ion-icon>
                             Paramètrage
@@ -63,7 +65,8 @@
         <!-- the main content -->
         <ion-content main no-padding no-margin>
             <ul class="breadcrumb" no-padding no-margin nowrap align-items-start justify-content-start *ngIf="dataProvider.userData.currentMenu?.breadcrumbs && dataProvider.userData.currentMenu?.breadcrumbs.length && isEnabled">
-                <li *ngFor="let bread of dataProvider.userData.currentMenu?.breadcrumbs" (click)="toBread(bread)" [ngClass]="{active:dataProvider.userData.code == bread.code}"><a>{{bread.libelle}}</a></li>
+                <span *ngFor="let bread of dataProvider.userData.currentMenu?.breadcrumbs">
+                <li (click)="toBread(bread)" [ngClass]="{active:dataProvider.userData.code == bread.code}" *hasRessources="bread.ressource"><a>{{bread.libelle}}</a></li></span>
             </ul>
             <div [ngSwitch]="dataProvider.userData.code">
                 <produit *ngSwitchCase="'PRODUITS'"></produit>

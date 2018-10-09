@@ -2,6 +2,7 @@ import { NgModule } from '@angular/core';
 import { IonicPageModule } from 'ionic-angular';
 
 import { ComponentsModule } from '../../components/components.module';
+import { DirectivesModule } from '../../directives/directives.module';
 import { AccueilPage } from './accueil';
 
 @NgModule({
@@ -10,7 +11,8 @@ import { AccueilPage } from './accueil';
   ],
   imports: [
     IonicPageModule.forChild(AccueilPage),
-    ComponentsModule
+    ComponentsModule,
+    DirectivesModule
   ]
 })
 export class AccueilPageModule { }

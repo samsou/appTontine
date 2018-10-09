@@ -31,6 +31,7 @@ export class LoginPage {
         loading.dismiss();
         if (result && result.password === this.model.password) {
           this.dataProvider.isLogged = true;
+          this.dataProvider.authenticationState.next(true);
           this.dataProvider.user = result;
           this.navCtrl.setRoot("AccueilPage");
         } else {

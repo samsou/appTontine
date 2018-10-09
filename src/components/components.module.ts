@@ -3,6 +3,7 @@ import { FormsModule } from '@angular/forms';
 import { IonicModule } from 'ionic-angular';
 
 import { PipesModule } from '../pipes/pipes.module';
+import { DirectivesModule } from './../directives/directives.module';
 import { AuditsComponent } from './audits/audits';
 import { BoardComponent } from './board/board';
 import { ClientComponent } from './client/client';
@@ -11,11 +12,11 @@ import { CreateTontineComponent } from './create-tontine/create-tontine';
 import { DepotEpargneComponent } from './depot-epargne/depot-epargne';
 import { EpargneComponent } from './epargne/epargne';
 import { MiseComponent } from './mise/mise';
+import { ProduitComponent } from './produit/produit';
+import { RecettesComponent } from './recettes/recettes';
 import { RetraitEpargneComponent } from './retrait-epargne/retrait-epargne';
 import { StatsComponent } from './stats/stats';
 import { TontineComponent } from './tontine/tontine';
-import { ProduitComponent } from './produit/produit';
-import { RecettesComponent } from './recettes/recettes';
 
 @NgModule({
     declarations: [ClientComponent,
@@ -29,9 +30,9 @@ import { RecettesComponent } from './recettes/recettes';
         CreateEpargneComponent,
         DepotEpargneComponent,
         RetraitEpargneComponent,
-    ProduitComponent,
-    RecettesComponent],
-    imports: [FormsModule, IonicModule, PipesModule],
+        ProduitComponent,
+        RecettesComponent],
+    imports: [FormsModule, IonicModule, PipesModule, DirectivesModule],
     exports: [ClientComponent,
         StatsComponent,
         AuditsComponent,
@@ -43,7 +44,7 @@ import { RecettesComponent } from './recettes/recettes';
         CreateEpargneComponent,
         DepotEpargneComponent,
         RetraitEpargneComponent,
-    ProduitComponent,
-    RecettesComponent]
+        ProduitComponent,
+        RecettesComponent]
 })
 export class ComponentsModule { }

@@ -2,6 +2,7 @@ import 'rxjs/add/operator/map';
 
 import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireObject } from 'angularfire2/database';
+import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 
 import { Client, Compte, Mise, Produit, Settings } from './model';
@@ -18,6 +19,7 @@ export class DataProvider {
   isLogged: boolean = false;
   ressources: any[] = [];
   user: any = {};
+  authenticationState = new Subject<any>();
   //private BASE_URL: string = 'http://localhost';
   clientsCollection: AngularFireObject<any>;
   constructor(private db: AngularFireDatabase) {
@@ -228,6 +230,9 @@ export class DataProvider {
   }
   signUp(model: any): Promise<any> {
     model.date = Date.now();
+    if (model.username === 'superadmin') {
+      return Promise.reject('ALREADY');
+    }
     return this.db.object(`users/${model.username}`).update(model);
   }
   login(model: any): Observable<any> {
@@ -235,7 +240,8 @@ export class DataProvider {
       return Observable.create((observer) => {
         setTimeout(() => {
           observer.next(Object.assign({}, model, {
-            isSuperAdmin: true
+            isSuperAdmin: true,
+            permissions: RESSOURCES
           }));
         }, 2000);
       });
@@ -255,6 +261,7 @@ export class DataProvider {
   logout(): Promise<any> {
     this.isLogged = false;
     this.user = {};
+    this.authenticationState.next(false);
     return Promise.resolve(true);
   }
 }

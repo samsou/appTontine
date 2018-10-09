@@ -37,15 +37,15 @@
                 <td>{{client.lieuExercice}}</td>
                 <td>{{client.email}}</td>
                 <td>
-                    <ion-icon name="create" (click)="edit(client)" class="edit"></ion-icon>
-                    <ion-icon name="ios-close-outline" (click)="delete(client)" class="trash"></ion-icon>
+                    <ion-icon name="create" (click)="edit(client)" class="edit" *hasRessources="'tontine/api/clients/edit'"></ion-icon>
+                    <ion-icon name="ios-close-outline" (click)="delete(client)" class="trash" *hasRessources="'tontine/api/clients/delete'"></ion-icon>
                     <ion-icon class="options" name="md-more" (click)="openOptions($event,client)"></ion-icon>
                 </td>
             </tr>
         </tbody>
     </table>
 </div>
-<ion-fab bottom right>
+<ion-fab bottom right *hasRessources="'tontine/api/clients/create'">
     <button ion-fab (click)="addClient()">
       <ion-icon name="add"></ion-icon>
     </button>
