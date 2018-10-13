@@ -1,3 +1,4 @@
+import { DatePipe, CurrencyPipe } from '@angular/common';
 import { NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
 import { IonicModule } from 'ionic-angular';
@@ -45,6 +46,7 @@ import { TontineComponent } from './tontine/tontine';
         DepotEpargneComponent,
         RetraitEpargneComponent,
         ProduitComponent,
-        RecettesComponent]
+        RecettesComponent],
+    providers: [DatePipe, CurrencyPipe]
 })
 export class ComponentsModule { }

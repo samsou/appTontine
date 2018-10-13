@@ -1,6 +1,9 @@
 <!-- Generated template for the ClientComponent component -->
 <h3 padding>Les comptes epargne</h3>
 <div class="table-wrapper">
+    <div class="total">
+        Total: <span>{{montantTotalEpargne | currency:'XOF':true:'2.0'}}</span>
+    </div>
     <table>
         <thead>
             <tr>
@@ -39,11 +42,6 @@
                     <ion-icon name="ios-close-outline" (click)="delete(epargne)" class="trash"></ion-icon>
                     <ion-icon name="md-more" (click)="openOptions($event,epargne)" class="options"></ion-icon>
                 </td>
-            </tr>
-            <tr margin-bottom padding-bottom>
-                <td></td>
-                <td colspan="2">Total: {{montantTotalEpargne | currency:'XOF':true:'2.0'}}</td>
-                <td></td>
             </tr>
         </tbody>
     </table>

@@ -14,6 +14,9 @@
     </ion-col>
 </ion-row>
 <div class="table-wrapper">
+    <div class="total">
+        Total: <span>{{montantTotalTontine | currency:'XOF':true:'2.0'}}</span>
+    </div>
     <table>
         <thead>
             <tr>
@@ -52,12 +55,6 @@
                     <ion-icon name="ios-close-outline" (click)="delete(tontine)" class="trash" *ngIf="!tontine.avanceTontine && !tontine.miseTontine"></ion-icon>
                     <ion-icon name="md-more" (click)="openOptions($event,tontine)" class="options"></ion-icon>
                 </td>
-            </tr>
-            <tr margin-bottom padding-bottom>
-                <td></td>
-                <td></td>
-                <td colspan="6">Total: {{montantTotalTontine | currency:'XOF':true:'2.0'}}</td>
-                <td></td>
             </tr>
         </tbody>
     </table>

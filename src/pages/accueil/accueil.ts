@@ -55,7 +55,7 @@ export class AccueilPage {
   }
 
   ionViewCanEnter() {
-    //if (true == true) return true;
+    if (true == true) return true;
     if (this.dataProvider.isLogged) return true;
     setTimeout(() => {
       this.navCtrl.setRoot('LoginPage');
