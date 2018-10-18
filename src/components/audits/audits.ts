@@ -181,7 +181,7 @@ export class AuditsComponent {
       },
       content: [
         {
-          text: "CABFA MICROFINANCE",
+          text: "GALA MICROFINANCE",
           style: 'head'
         },
         {
