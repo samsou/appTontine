@@ -29,7 +29,6 @@ export class RecettesComponent {
       this.recettes = recettes;
       this.recettes.forEach((rec) => {
         this.montant += +rec.montant;
-        this.dataProvider.removeCompte(rec);
       });
     }, (err) => {
     });

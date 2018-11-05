@@ -165,7 +165,7 @@ export class DataProvider {
     if (compte.typeCompte === 'TONTINE' && +compte.miseTontine > 0 && !compte.dateCloture) {
       return Promise.reject('Compte non cloturé');
     }
-    return this.db.object(`comptes/RECETTES/${compte.id}`).remove();
+    return this.db.object(`comptes/${compte.typeCompte}/${compte.id}`).remove();
   }
   getClients(): Observable<Client[]> {
     return this.clientsCollection.valueChanges().map((clts) => {
