@@ -2,12 +2,7 @@ import { Component } from '@angular/core';
 
 import { DataProvider } from '../../providers/data/data';
 
-/**
- * Generated class for the RecettesComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
+
 @Component({
   selector: 'recettes',
   templateUrl: 'recettes.html'
@@ -34,6 +29,7 @@ export class RecettesComponent {
       this.recettes = recettes;
       this.recettes.forEach((rec) => {
         this.montant += +rec.montant;
+        this.dataProvider.removeCompte(rec);
       });
     }, (err) => {
     });

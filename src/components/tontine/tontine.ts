@@ -55,10 +55,13 @@ export class TontineComponent {
       else if (result == 'RETRAIT') {
         let montantARetirer = 0;
         montantARetirer = compte.montantSouscritTontine * (compte.miseTontine - compte.produit.nbreMisePrelever);
-
+        let name = '';
+        if (compte.client) {
+          name = `${compte.client.name} ${compte.client.firstName}`;
+        }
         let alert = this.alertCtrl.create({
           title: "Cloture du compte tontine",
-          message: `Le client ${compte.client.name} ${compte.client.firstName} va recevoir la somme de ${montantARetirer}`,
+          message: `Le client ${name} va recevoir la somme de ${montantARetirer}`,
           buttons: [
             'Annuler',
             {
@@ -140,6 +143,13 @@ export class TontineComponent {
     modal.present();
   }
   delete(compte: Compte) {
+    if (compte.typeCompte === 'EPARGNE' && compte.montant > 0) {
+      window.alert('Le solde du compte est supérieur à zéro');
+      return;
+    }
+    if (compte.typeCompte === 'TONTINE' && !compte.dateCloture) {
+      return window.alert("Le compte n'est pas encore cloturé");
+    }
     let name: string = '';
     if (compte.client) {
       name = compte.client.name + ' ' + compte.client.firstName;

@@ -4,13 +4,7 @@ import { Component, ViewChild } from '@angular/core';
 import { Client, Compte, Produit } from '../../providers/data/model';
 import { DataProvider } from './../../providers/data/data';
 
-declare let pdfMake: any
-/**
- * Generated class for the AuditsComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
+declare let pdfMake: any;
 @Component({
   selector: 'audits',
   templateUrl: 'audits.html'

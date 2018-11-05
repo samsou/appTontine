@@ -119,7 +119,6 @@ export class UsersPage {
     });
   }
   changePassword(user) {
-    console.log(user);
     let isDeleting: boolean = false;
     let alert = this.alertCtrl.create({
       title: "Modification de mot de passe d'un utilisateur",

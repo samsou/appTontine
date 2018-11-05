@@ -159,7 +159,13 @@ export class DataProvider {
   }
   removeCompte(compte: Compte): Promise<any> {
     if (!compte.id) return Promise.reject('No_Id');
-    return this.db.object(`comptes/${compte.typeCompte}/${compte.id}`).remove();
+    if (compte.typeCompte === 'EPARGNE' && compte.montant > 0) {
+      return Promise.reject('Montant supérieur à zéro');
+    }
+    if (compte.typeCompte === 'TONTINE' && +compte.miseTontine > 0 && !compte.dateCloture) {
+      return Promise.reject('Compte non cloturé');
+    }
+    return this.db.object(`comptes/RECETTES/${compte.id}`).remove();
   }
   getClients(): Observable<Client[]> {
     return this.clientsCollection.valueChanges().map((clts) => {
@@ -179,8 +185,31 @@ export class DataProvider {
       return this.db.object(`clients/${client.id}`).update(client);
     }
   }
-  removeClient(client: Client): Promise<any> {
+  async removeClient(client: Client): Promise<any> {
     if (!client.id) return Promise.reject('No_Id');
+    let cptes = this.getClientAccounts(client.id);
+    if (cptes && cptes.length) {
+      let canDelete: boolean = true;
+      cptes.forEach((c) => {
+        if (c.typeCompte === 'EPARGNE' && +c.montant > 0) {
+          canDelete = false;
+        }
+        if (c.typeCompte === 'TONTINE' && +c.miseTontine > 0 && !c.dateCloture) {
+          canDelete = false;
+        }
+      });
+      if (!canDelete) {
+        return Promise.reject('cannotDeleteAccount');
+      }
+      for (let index = 0, len = cptes.length; index < len; index++) {
+        try {
+          await this.removeCompte(cptes[index]);
+        } catch (error) {
+
+        }
+      }
+    }
+
     return this.db.object(`clients/${client.id}`).remove();
   }
 

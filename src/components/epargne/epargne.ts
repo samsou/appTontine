@@ -1,3 +1,4 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component } from '@angular/core';
 import {
   Alert,
@@ -26,7 +27,7 @@ export class EpargneComponent {
   epargnes: Compte[];
   montantTotalEpargne: number = 0;
 
-  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {
+  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController, private currencyPipe: CurrencyPipe) {
   }
   ngAfterViewInit() {
     this.getComptes();
@@ -170,8 +171,8 @@ export class EpargneComponent {
               handler: (data) => {
                 data.montant = data.montant.replace(/[ -]+/g, '');
                 if (data.montant && +data.montant) {
-                  if (+data.montant >= compte.montant) {
-                    resultIssue.setMessage(`Vous ne pouvez pas retirer cette somme.Le montant est insuffisant.`);
+                  if (+data.montant > +compte.montant) {
+                    resultIssue.setMessage(`Vous ne pouvez pas retirer cette somme.Le montant est insuffisant sur le compte.`);
                     resultIssue.present();
                     return;
                   }
@@ -222,7 +223,7 @@ export class EpargneComponent {
               text: 'Consulter',
               handler: () => {
                 let alert = this.alertCtrl.create({
-                  message: `Le solde sur le compte epargne du client ${name} est ${compte.montant || '00'}`,
+                  message: `Le solde sur le compte epargne du client ${name} est ${this.currencyPipe.transform(compte.montant, 'XOF', true, '2.0') || '00'}`,
                   enableBackdropDismiss: false,
                   buttons: [
                     {
@@ -252,6 +253,13 @@ export class EpargneComponent {
     modal.present();
   }
   delete(compte: Compte) {
+    if (compte.typeCompte === 'EPARGNE' && compte.montant > 0) {
+      window.alert('Le solde du compte est supérieur à zéro');
+      return;
+    }
+    if (compte.typeCompte === 'TONTINE' && !compte.dateCloture) {
+      return window.alert("Le compte n'est pas encore cloturé");
+    }
     let name: string = '';
     if (compte.client) {
       name = compte.client.name + ' ' + compte.client.firstName;

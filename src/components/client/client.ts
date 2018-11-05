@@ -64,9 +64,13 @@ export class ClientComponent {
                 position: 'bottom'
               });
               toast.present();
-            }).catch(() => {
+            }).catch((e) => {
+              let msg = `Le client ${client.name} ${client.firstName} n'a pas été supprimé`;
+              if (e === 'cannotDeleteAccount') {
+                msg = "Ce client ne peut être supprimer,les soldes de ses comptes ne sont pas à zéro";
+              }
               let toast = this.toastCtrl.create({
-                message: `Le client ${client.name} ${client.firstName} n'a pas été supprimé`,
+                message: msg,
                 duration: 2000,
                 position: 'bottom'
               });
