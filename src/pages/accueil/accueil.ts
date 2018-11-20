@@ -31,7 +31,9 @@ export class AccueilPage {
     this.onLine = navigator.onLine;
   }
   clotureDay() {
-    this.dataProvider.user.clotureDate = Date.now();
+    let date = new Date();
+    date.setDate(date.getDate() + 1);
+    this.dataProvider.user.clotureDate = date.getTime();
     this.dataProvider.updateUser(this.dataProvider.user).then((r) => {
 
     }).catch((e) => {
