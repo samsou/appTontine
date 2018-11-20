@@ -1,5 +1,5 @@
 import { Component, Input } from '@angular/core';
-import { ToastController, ViewController,ModalController } from 'ionic-angular';
+import { ModalController, ToastController, ViewController } from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
 import { Client, Compte, Produit } from '../../providers/data/model';
@@ -23,7 +23,7 @@ export class CreateEpargneComponent {
   client: Client = {};
   isSaving: boolean = false;
   produit: Produit = {};
-  constructor(public dataProvider: DataProvider, private toastCtrl: ToastController, private viewCtrl: ViewController,private modalCtrl: ModalController) {
+  constructor(public dataProvider: DataProvider, private toastCtrl: ToastController, private viewCtrl: ViewController, private modalCtrl: ModalController) {
   }
 
   getSelected(clt: Client): any {
@@ -34,16 +34,16 @@ export class CreateEpargneComponent {
     this.produit = produit;
     return produit.id;
   }
-  openSearch(){
-    if(!(this.dataProvider.userData.clients && this.dataProvider.userData.clients.length > 3)) return ;
-     let modal = this.modalCtrl.create('ClientSearchPage', { items:this.dataProvider.userData.clients, title: 'Sélectionnez le client',id: this.client}, {
+  openSearch() {
+    if (!(this.dataProvider.userData.clients && this.dataProvider.userData.clients.length > 3)) return;
+    let modal = this.modalCtrl.create('ClientSearchPage', { items: this.dataProvider.userData.clients, title: 'Sélectionnez le client', id: this.client }, {
       enableBackdropDismiss: false,
-      'cssClass':'client-search'
+      'cssClass': 'client-search'
     });
-    modal.onDidDismiss((result)=>{
-      if(result){
-this.client = result;
-this.epargne.idClient = result.id;
+    modal.onDidDismiss((result) => {
+      if (result) {
+        this.client = result;
+        this.epargne.idClient = result.id;
       }
     });
     modal.present();
@@ -53,6 +53,7 @@ this.epargne.idClient = result.id;
     this.isSaving = true;
     if (!this.epargne.id) {
       this.epargne.typeCompte = 'EPARGNE';
+      this.epargne.montantAdhesion = this.epargne.montant + '';
       this.epargne.dateCompte = Date.now();
     } else
       this.client = this.epargne.client;

@@ -58,7 +58,7 @@ export class DataProvider {
     });
   }
   faireDepot(model: any, montantTotal: number, typeCompte: string = 'EPARGNE'): Promise<any> {
-    model.date = Date.now();
+    model.date = this.user.clotureDate || Date.now();
     return new Promise((resolve, reject) => {
       this.db.list(`depots`).push(model).then(() => {
         resolve(this.db.object(`comptes/${typeCompte}/${model.compte}`).update({ montant: montantTotal }));
@@ -68,7 +68,7 @@ export class DataProvider {
     });
   }
   faireRetrait(model: any, montantRestant: number, typeCompte: string = 'EPARGNE'): Promise<any> {
-    model.date = Date.now();
+    model.date = this.user.clotureDate || Date.now();
     return new Promise((resolve, reject) => {
       this.db.list(`retraits`).push(model).then(() => {
         resolve(this.db.object(`comptes/${typeCompte}/${model.compte}`).update({ montant: montantRestant }));
@@ -108,17 +108,17 @@ export class DataProvider {
     let mise = Object.assign({}, ms);
     delete mise.client;
     delete mise.compte;
-    mise.date = Date.now();
+    mise.date = this.user.clotureDate || Date.now();
     return Promise.resolve(this.db.list(`mises/${ms.idCompte}`).push(mise));
   }
   cloturerCompte(cpte: Compte): Promise<any> {
     let compte = Object.assign({}, cpte);
-    compte.dateCloture = Date.now();
+    compte.dateCloture = this.user.clotureDate || Date.now();
     return this.addCompte(compte);
   }
   accordAvance(cpte: Compte): Promise<any> {
     let compte = Object.assign({}, cpte);
-    compte.avanceDate = Date.now();
+    compte.avanceDate = this.user.clotureDate || Date.now();
     compte.avanceTontine = true;
     return this.addCompte(compte);
   }
@@ -143,7 +143,7 @@ export class DataProvider {
   deduireRecette(model) {
     if (model === true) return Promise.resolve('DEJA');
     let recette = Object.assign({}, model);
-    recette.date = Date.now();
+    recette.date = this.user.clotureDate || Date.now();
     return Promise.resolve(this.db.list(`comptes/RECETTES`).push(recette));
   }
   addCompte(cpte: Compte): Promise<any> {
@@ -151,7 +151,7 @@ export class DataProvider {
     delete compte.client;
     delete compte.produit;
     if (!compte.id) {
-      compte.dateCompte = Date.now();
+      compte.dateCompte = this.user.clotureDate || Date.now();
       return Promise.resolve(this.db.list(`comptes/${compte.typeCompte}`).push(compte));
     } else {
       return this.db.object(`comptes/${compte.typeCompte}/${compte.id}`).update(compte);
@@ -179,7 +179,7 @@ export class DataProvider {
   }
   addClient(client: Client): Promise<any> {
     if (!client.id) {
-      client.date = Date.now();
+      client.date = this.user.clotureDate || Date.now();
       return Promise.resolve(this.db.list('clients').push(client));
     } else {
       return this.db.object(`clients/${client.id}`).update(client);
@@ -200,6 +200,26 @@ export class DataProvider {
       });
       if (!canDelete) {
         return Promise.reject('cannotDeleteAccount');
+      }
+      let retraits: any[] = this.userData.retraits || [];
+      let depots: any[] = this.userData.depots || [];
+      for (let index = 0, len = depots.length; index < len; index++) {
+        if (depots[index].client && depots[index].client.id === client.id) {
+          try {
+            await this.db.object(`depots/${depots[index].id}`).remove();
+          } catch (error) {
+
+          }
+        }
+      }
+      for (let index = 0, len = retraits.length; index < len; index++) {
+        if (retraits[index].client && retraits[index].client.id === client.id) {
+          try {
+            await this.db.object(`retraits/${retraits[index].id}`).remove();
+          } catch (error) {
+
+          }
+        }
       }
       for (let index = 0, len = cptes.length; index < len; index++) {
         try {
@@ -232,7 +252,7 @@ export class DataProvider {
     produit.nbreMiseTotal = +produit.nbreMiseTotal || 0;
 
     if (!produit.id) {
-      produit.date = Date.now();
+      produit.date = this.user.clotureDate || Date.now();
       return Promise.resolve(this.db.list('produits').push(produit));
     } else {
       return this.db.object(`produits/${produit.id}`).update(produit);
@@ -251,14 +271,17 @@ export class DataProvider {
       return users;
     });
   }
-  deleteUser(model) {
+  deleteUser(model): Promise<any> {
     return this.db.object(`users/${model.username}`).remove();
+  }
+  updateUser(model): Promise<any> {
+    return this.db.object(`users/${model.username}`).update(model);
   }
   changePassword(model): Promise<any> {
     return this.db.object(`users/${model.username}`).update(model);
   }
   signUp(model: any): Promise<any> {
-    model.date = Date.now();
+    model.date = this.user.clotureDate || Date.now();
     if (model.username === 'superadmin') {
       return Promise.reject('ALREADY');
     }

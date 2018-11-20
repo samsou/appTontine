@@ -33,6 +33,9 @@ export class LoginPage {
           this.dataProvider.isLogged = true;
           this.dataProvider.authenticationState.next(true);
           this.dataProvider.user = result;
+          if (!this.dataProvider.user.clotureDate) {
+            this.dataProvider.user.clotureDate = Date.now();
+          }
           this.navCtrl.setRoot("AccueilPage");
         } else {
           const alert = this.alertCtrl.create({

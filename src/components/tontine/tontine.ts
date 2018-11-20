@@ -3,6 +3,7 @@ import {
   AlertController,
   LoadingController,
   ModalController,
+  NavController,
   NavParams,
   PopoverController,
   ToastController,
@@ -26,7 +27,7 @@ export class TontineComponent {
   tontines: Compte[];
   cloturer: any;
   montantTotalTontine: number = 0;
-  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController) {
+  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController, private navCtrl: NavController) {
   }
   ngAfterViewInit() {
     this.getComptes();
@@ -45,16 +46,101 @@ export class TontineComponent {
   openOptions(myEvent, compte: Compte) {
     let popover = this.popoverCtrl.create(TontineOptions, { compte });
     popover.onDidDismiss((result) => {
-      if (result == 'MISE') {
+      if (result === 'PRINTER') {
+        this.navCtrl.push(
+          'RelevePage', {
+            action: 'RELEVE',
+            model: {
+              ...compte,
+              type: 'TONTINE'
+            }
+          }
+        );
+      }
+      else if (result == 'MISE') {
         let modal = this.modalCtrl.create('FaireMisePage', { compte }, {
           enableBackdropDismiss: false
         });
         //modal.
         modal.present();
-      }
-      else if (result == 'RETRAIT') {
+      } else if (result === 'RETRAIT_SUR_MISE') {
+        let nbPre = 0;
+        if (compte.produit)
+          nbPre = compte.produit.nbreMisePrelever || 0;
+        let nbM: number = (compte.miseTontine || 0) - (compte.nbMiseRetirer || 0) - nbPre;
+        if (!compte.miseTontine || 0 >= nbM) {
+          window.alert("Impossible de retirer,pas de mises");
+          return;
+        }
+        let name = '';
+        if (compte.client) {
+          name = `${compte.client.name} ${compte.client.firstName}`;
+        }
         let montantARetirer = 0;
-        montantARetirer = compte.montantSouscritTontine * (compte.miseTontine - compte.produit.nbreMisePrelever);
+        let alert = this.alertCtrl.create({
+          title: "Retrait sur les mises du compte tontine",
+          subTitle: `du client ${name}`,
+          message: `Le client veut retirer combien de mises sur les ${nbM} mises qui peuvent être retiré?`,
+          inputs: [
+            {
+              placeholder: 'Le nombre de mise ici..',
+              type: 'number',
+              min: 1,
+              max: nbM,
+              name: 'nbMise'
+            }
+          ],
+          buttons: [
+            'Annuler',
+            {
+              text: 'OK',
+              handler: (data) => {
+                if (!/^[0-9]+$/.test(data.nbMise)) {
+                  window.alert('Saisissez un nombre de mise valide !!!');
+                  return;
+                }
+                let nb: number = parseInt(data.nbMise) || 0;
+                if (!nb) {
+                  window.alert('Aucun retrait ne sera effectué');
+                  return;
+                }
+                if (1 > nb || nb > nbM) {
+                  window.alert(`Le client ne peut pas retirer plus de ${nbM} mises`);
+                  return;
+                }
+                compte.nbMiseRetirer = (compte.nbMiseRetirer || 0) + nb;
+                montantARetirer = compte.montantSouscritTontine * nb;
+                let loading = this.loadingCtrl.create({
+                  content: `Retrait sur mise du compte, somme: ${montantARetirer} ...`,
+                  enableBackdropDismiss: false
+                });
+                loading.present();
+                this.dataProvider.addCompte(compte).then(() => {
+                  loading.dismiss();
+                  alert = this.alertCtrl.create({
+                    buttons: ['OK']
+                  });
+                  alert.setMessage(`${nb} mises ont été retiré sur le compte du client ${name}`);
+                  alert.present();
+                }).catch(() => {
+                  loading.dismiss();
+                  alert = this.alertCtrl.create({
+                    buttons: ['OK']
+                  });
+                  alert.setMessage("Une erreur s'est produite lors du retrait sur mise, veuillez réessayer!!!");
+                  alert.present();
+                });
+              }
+            }]
+        });
+        alert.present();
+      } else if (result == 'RETRAIT') {
+        let nbPre = 0;
+        if (compte.produit)
+          nbPre = compte.produit.nbreMisePrelever || 0;
+        let montantARetirer = 0;
+        montantARetirer = compte.montantSouscritTontine * (compte.miseTontine - nbPre - (compte.nbMiseRetirer || 0));
+        console.log(compte.montantSouscritTontine, compte.miseTontine, nbPre, compte.nbMiseRetirer, montantARetirer);
         let name = '';
         if (compte.client) {
           name = `${compte.client.name} ${compte.client.firstName}`;
@@ -192,10 +278,12 @@ export class TontineComponent {
   template: `
     <ion-list>
       <button ion-item (click)="close('MISE')" *ngIf="isNotFull">Faire une mise</button>
+      <button ion-item (click)="close('RETRAIT_SUR_MISE')" *ngIf="isNotFull && compte.miseTontine >= 2">Retrait sur mise</button>
       <button ion-item (click)="close('RETRAIT')" *ngIf="(compte.miseTontine >= 2 || isRetrait) && (!compte.avanceTontine || compte.produit.nbreMiseTotal <= compte.miseTontine) && !compte.dateCloture">Cloturer le compte</button>
       <button ion-item (click)="close('AVANCE')" *ngIf="!compte.avanceTontine && compte.typeCompte == 'TONTINE' && isAvance && !compte.dateCloture && ((compte.miseTontine || 0) < compte.produit.nbreMiseTotal)">Faire une avance</button>
       <button ion-item (click)="close('MISES')" *ngIf="compte && compte.miseTontine">Voir les mises</button>
-    </ion-list>
+<button ion-item (click)="close('PRINTER')" *ngIf="compte.miseTontine >= 1">Relevé de compte</button>
+      </ion-list>
   `
 })
 export class TontineOptions {

@@ -35,6 +35,7 @@ export interface Compte {
     montantSouscritTontine?: number;
     dateCompte?: any;
     miseTontine?: number;
+    nbMiseRetirer?: number;
     avanceTontine?: boolean;
     avanceDate?: any;
     montantAdhesion?: string;

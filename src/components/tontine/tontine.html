@@ -44,11 +44,11 @@
                 <td class="id">{{tontine.id}}</td>
                 <td>{{tontine?.client?.name}} {{tontine?.client?.firstName}}</td>
                 <td>{{tontine.dateCompte | date:'mediumDate'}}</td>
-                <td>{{tontine.montantSouscritTontine| currency:'XOF':true:'2.0'}}</td>
+                <td>{{tontine.montantSouscritTontine?(tontine.montantSouscritTontine| currency:'XOF':true:'2.0'):'0'}}</td>
                 <td>{{tontine.miseTontine}}</td>
                 <td>{{tontine.avanceTontine?'Oui':'Non'}}</td>
-                <td>{{tontine.avanceDate | date:'mediumDate'}}</td>
-                <td class="hide">{{tontine.montantAdhesion| currency:'XOF':true:'2.0'}}</td>
+                <td>{{tontine.avanceDate?(tontine.avanceDate | date:'mediumDate'):''}}</td>
+                <td class="hide">{{tontine.montantAdhesion?(tontine.montantAdhesion| currency:'XOF':true:'2.0'):''}}</td>
                 <td>{{tontine.dateCloture | date:'mediumDate'}}</td>
                 <td>
                     <ion-icon name="create" (click)="edit(tontine)" class="edit" *ngIf="!tontine.avanceTontine && !tontine.miseTontine"></ion-icon>

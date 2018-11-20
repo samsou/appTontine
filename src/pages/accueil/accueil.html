@@ -1,9 +1,3 @@
-<!--
-  Generated template for the AccueilPage page.
-
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
 <ion-header no-border>
 
     <ion-navbar color='primary'>
@@ -35,11 +29,18 @@
         <!--  our side menu  -->
         <ion-content no-padding no-margin class="menus" [ngClass]="{isOpen:isOpen}" *ngIf='isOpen'>
             <ion-list no-lines>
+
                 <span *ngFor="let menu of menus">
                 <ion-item (click)="toLink(menu)" [ngClass]="{active:dataProvider.userData.currentMenu == menu}" *hasRessources="menu.ressource">
                     <ion-icon [name]="menu.icon" color="primary"></ion-icon> &nbsp; {{menu.libelle}}
                 </ion-item>
                 </span>
+                <ion-item (click)="clotureDay()" *hasRessources="['tontine/api/tontines','tontine/api/epargnes']">
+                    <ion-icon color="primary"></ion-icon> &nbsp; Cloturer la journée du <br>
+                    <p text-center style="font-size: 0.9em">
+                        {{dataProvider.user.clotureDate | date:'mediumDate'}}
+                    </p>
+                </ion-item>
             </ion-list>
             <hr>
             <ion-list no-lines>

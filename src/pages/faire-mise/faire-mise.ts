@@ -5,12 +5,6 @@ import { Compte } from '../../providers/data/model';
 import { DataProvider } from './../../providers/data/data';
 import { Mise } from './../../providers/data/model';
 
-/**
- * Generated class for the FaireMisePage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -57,7 +51,7 @@ export class FaireMisePage {
     this.mise.idClient = this.compte.idClient;
     this.mise.idCompte = this.compte.id;
     this.mise.mise = this.nbreMise.size || 1;
-    this.mise.date = Date.now();
+    this.mise.date = this.dataProvider.user.clotureDate || Date.now();
     this.dataProvider.addMise(this.mise).then((client) => {
       let recette: any = true;
       if (!this.compte.miseTontine || this.compte.miseTontine == 0) {

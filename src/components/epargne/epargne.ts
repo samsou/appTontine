@@ -5,6 +5,7 @@ import {
   AlertController,
   LoadingController,
   ModalController,
+  NavController,
   PopoverController,
   ToastController,
   ViewController,
@@ -27,7 +28,7 @@ export class EpargneComponent {
   epargnes: Compte[];
   montantTotalEpargne: number = 0;
 
-  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController, private currencyPipe: CurrencyPipe) {
+  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController, private currencyPipe: CurrencyPipe, private navCtrl: NavController) {
   }
   ngAfterViewInit() {
     this.getComptes();
@@ -59,7 +60,18 @@ export class EpargneComponent {
       enableBackdropDismiss: false,
     });
     popover.onDidDismiss((result) => {
-      if (result == 'DEPOT') {
+      if (result === 'PRINTER') {
+        this.navCtrl.push(
+          'RelevePage', {
+            action: 'RELEVE',
+            model: {
+              ...compte,
+              type: 'EPARGNE'
+            }
+          }
+        );
+      }
+      else if (result == 'DEPOT') {
         let alert = this.alertCtrl.create({
           title: `Dépôt sur le compte de ${compte.client.name}`,
           message: `Voulez-vous déposer combien?`,
@@ -110,6 +122,16 @@ export class EpargneComponent {
                     loading.dismiss();
                     resultIssue.setMessage(`Le dépôt de ${data.montant} a été effectué avec succès sur le compte du client ${compte.client.name} ${compte.client.firstName}`);
                     resultIssue.present();
+                    this.navCtrl.push(
+                      'RelevePage', {
+                        action: 'QUITTANCE',
+                        model: {
+                          ...compte,
+                          ...data,
+                          type: 'DEPOT'
+                        }
+                      }
+                    );
                   }).catch(() => {
                     resultIssue.setMessage(`Le dépôt de ${data.montant} sur le compte du client ${compte.client.name} ${compte.client.firstName} a échoué `);
                     resultIssue.present();
@@ -192,6 +214,16 @@ export class EpargneComponent {
                     loading.dismiss();
                     resultIssue.setMessage(`Le retrait de ${data.montant} a été effectué avec succès sur le compte du client ${compte.client.name} ${compte.client.firstName}`);
                     resultIssue.present();
+                    this.navCtrl.push(
+                      'RelevePage', {
+                        action: 'QUITTANCE',
+                        model: {
+                          ...compte,
+                          ...data,
+                          type: 'RETRAIT'
+                        }
+                      }
+                    );
                   }).catch(() => {
                     resultIssue.setMessage(`Le retrait de ${data.montant} sur le compte du client ${compte.client.name} ${compte.client.firstName} a échoué `);
                     resultIssue.present();
@@ -306,6 +338,7 @@ export class EpargneComponent {
       <button ion-item (click)="close('RETRAIT')">Faire un retrait</button>
  <button ion-item (click)="close('SHOW_RETRAIT')">Voir les retraits</button>
       <button ion-item (click)="close('SOLDE')">Consulter solde</button>
+      <button ion-item (click)="close('PRINTER')">Relevé de compte</button>
     </ion-list>
   `
 })

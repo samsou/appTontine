@@ -2,12 +2,6 @@ import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
 import { DataProvider } from './../../providers/data/data';
 
-/**
- * Generated class for the RessourcesDirective directive.
- *
- * See https://angular.io/api/core/Directive for more info on Angular
- * Directives.
- */
 @Directive({
   selector: '[hasRessources]' // Attribute selector
 })

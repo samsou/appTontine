@@ -4,12 +4,7 @@ import { AlertController, ModalController, PopoverController, ToastController, V
 import { Client } from '../../providers/data/model';
 import { DataProvider } from './../../providers/data/data';
 
-/**
- * Generated class for the ClientComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
+
 @Component({
   selector: 'client',
   templateUrl: 'client.html'

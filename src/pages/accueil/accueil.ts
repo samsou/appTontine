@@ -4,12 +4,6 @@ import { IonicPage, ModalController, NavController, Platform, PopoverController,
 import { DataProvider } from '../../providers/data/data';
 import { UserData } from './../../providers/data/userdata';
 
-/**
- * Generated class for the AccueilPage page.
- *
- * See https://ionicframework.com/docs/components/#navigation for more info on
- * Ionic pages and navigation.
- */
 
 @IonicPage()
 @Component({
@@ -36,6 +30,14 @@ export class AccueilPage {
     }
     this.onLine = navigator.onLine;
   }
+  clotureDay() {
+    this.dataProvider.user.clotureDate = Date.now();
+    this.dataProvider.updateUser(this.dataProvider.user).then((r) => {
+
+    }).catch((e) => {
+
+    });
+  }
   toggle() {
     this.isOpen = !this.isOpen;
   }
@@ -55,7 +57,7 @@ export class AccueilPage {
   }
 
   ionViewCanEnter() {
-    //if (true == true) return true;
+    if (true == true) return true;
     if (this.dataProvider.isLogged) return true;
     setTimeout(() => {
       this.navCtrl.setRoot('LoginPage');
