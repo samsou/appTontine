@@ -37,7 +37,7 @@ export class AccueilPage {
     this.dataProvider.updateUser(this.dataProvider.user).then((r) => {
 
     }).catch((e) => {
-
+      this.dataProvider.user.clotureDate = Date.now();
     });
   }
   toggle() {
