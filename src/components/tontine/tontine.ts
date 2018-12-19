@@ -191,6 +191,14 @@ export class TontineComponent {
           buttons: ['Annuler', {
             text: 'OK',
             handler: (data) => {
+              if (!data.montant) {
+                  window.alert('Saisissez un montant !!!');
+                  return;
+              }
+              if (!/^[0-9]+$/.test(data.montant)) {
+                  window.alert('Saisissez un montant valide !!!');
+                  return;
+              }
               let loading = this.loadingCtrl.create({
                 content: "demande d'avance ...",
                 enableBackdropDismiss: false
