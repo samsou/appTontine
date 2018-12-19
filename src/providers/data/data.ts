@@ -116,7 +116,7 @@ export class DataProvider {
     compte.dateCloture = this.user.clotureDate || Date.now();
     return this.addCompte(compte);
   }
-  accordAvance(cpte: Compte): Promise<any> {
+  accordAvance(cpte: Compte,montant): Promise<any> {
     let compte = Object.assign({}, cpte);
     compte.avanceDate = this.user.clotureDate || Date.now();
     compte.avanceTontine = true;
