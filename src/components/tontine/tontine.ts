@@ -182,15 +182,21 @@ export class TontineComponent {
         let alert = this.alertCtrl.create({
           title: "Operation de demande d'avance",
           message: `Le client ${compte.client.name} ${compte.client.firstName} souhaitant faire une avance sur son compte à déjà fait ${compte.miseTontine} mise(s)`,
+          inputs:[
+           {
+             name:"montant",
+             placeholder:"Montant à retirer"
+           }
+          ],
           buttons: ['Annuler', {
             text: 'OK',
-            handler: () => {
+            handler: (data) => {
               let loading = this.loadingCtrl.create({
                 content: "demande d'avance ...",
                 enableBackdropDismiss: false
               });
               loading.present();
-              this.dataProvider.accordAvance(compte).then(() => {
+              this.dataProvider.accordAvance(compte,data.montant).then(() => {
                 loading.dismiss();
                 alert = this.alertCtrl.create({
                   buttons: ['OK']
