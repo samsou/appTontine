@@ -38,6 +38,7 @@ export interface Compte {
     nbMiseRetirer?: number;
     avanceTontine?: boolean;
     avanceDate?: any;
+    montantAvance?:number;
     montantAdhesion?: string;
     dateCloture?: number;
     montant?: number;
