@@ -4,7 +4,6 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireObject } from 'angularfire2/database';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
-
 import { Client, Compte, Mise, Produit, Settings } from './model';
 import { RESSOURCES, UserData } from './userdata';
 
@@ -120,6 +119,7 @@ export class DataProvider {
     let compte = Object.assign({}, cpte);
     compte.avanceDate = this.user.clotureDate || Date.now();
     compte.avanceTontine = true;
+    compte.montantAvance = montant;
     return this.addCompte(compte);
   }
   getClientById(idClient: any) {
