@@ -70,23 +70,22 @@ export class EpargneComponent {
             }
           }
         );
-      }
-      else if (result == 'DEPOT') {
+      }else if (result == 'DEPOT') {
         let alert = this.alertCtrl.create({
           title: `Dépôt sur le compte de ${compte.client.name}`,
           message: `Voulez-vous déposer combien?`,
           inputs: [
             {
               placeholder: 'Montant',
-              type: 'text',
+              type: 'number',
               name: 'montant'
             },
             {
               placeholder: 'Nom du déposant',
               type: 'text',
               name: 'nameDeposant'
-            }, {
-
+            }, 
+            {
               placeholder: 'Téléphone du déposant',
               type: 'text',
               name: 'phoneDeposant'
@@ -105,8 +104,9 @@ export class EpargneComponent {
             {
               text: 'Valider',
               handler: (data) => {
-                data.montant = data.montant.replace(/[ -]+/g, '');
+                // data.montant = data.montant.replace(/[ -_a-zA-Z]+/g, '');
                 if (data.montant && +data.montant) {
+                  // console.log(data.montant);
                   loading.present();
                   this.dataProvider.faireDepot(
                     {
@@ -137,7 +137,8 @@ export class EpargneComponent {
                     resultIssue.present();
                   });
                 } else {
-                  resultIssue.setMessage(`Le montant est incorrect`);
+                  console.log(data.montant);
+                  resultIssue.setMessage(`Le montant ${data.montant} est incorrect`);
                   resultIssue.present();
                 }
               }
@@ -150,21 +151,19 @@ export class EpargneComponent {
           enableBackdropDismiss: false
         });
         modal.present();
-      }
-      else if (result == 'SHOW_RETRAIT') {
+      }else if (result == 'SHOW_RETRAIT') {
         let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'RetraitEpargneComponent' }, {
           enableBackdropDismiss: false
         });
         modal.present();
-      }
-      else if (result == 'RETRAIT') {
+      }else if (result == 'RETRAIT') {
         let alert = this.alertCtrl.create({
           title: `Retrait sur le compte de ${compte.client.name}`,
           message: `Voulez-vous retirer combien?`,
           inputs: [
             {
               placeholder: 'Montant',
-              type: 'text',
+              type: 'number',
               name: 'montant'
             },
             {
@@ -191,7 +190,7 @@ export class EpargneComponent {
             {
               text: 'Valider',
               handler: (data) => {
-                data.montant = data.montant.replace(/[ -]+/g, '');
+                // data.montant = data.montant.replace(/[ -_a-zA-Z]+/g, '');
                 if (data.montant && +data.montant) {
                   if (+data.montant > +compte.montant) {
                     resultIssue.setMessage(`Vous ne pouvez pas retirer cette somme.Le montant est insuffisant sur le compte.`);

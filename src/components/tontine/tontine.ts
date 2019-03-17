@@ -26,17 +26,20 @@ import { Compte } from '../../providers/data/model';
 export class TontineComponent {
   tontines: Compte[];
   cloturer: any;
+  avance: any;
   montantTotalTontine: number = 0;
   constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController, private navCtrl: NavController) {
   }
   ngAfterViewInit() {
     this.getComptes();
   }
-  getComptes() {
-    this.dataProvider.getComptes('TONTINE').subscribe((comptes: Compte[]) => {
-      this.tontines = comptes.map((compte) => {
+  async getComptes() {
+    await this.dataProvider.getComptes('TONTINE').subscribe((comptes: Compte[]) => {
+        this.tontines = comptes.map((compte) => {
         compte.client = this.dataProvider.getClientById(compte.idClient);
         compte.produit = this.dataProvider.getProduitById(compte.idProduit);
+        compte.montantSouscritTontine = +compte.montantSouscritTontine;
+        compte.miseTontine = +compte.miseTontine;
         this.montantTotalTontine += (+compte.montantSouscritTontine || 0) * (+compte.miseTontine || 0);
         return compte;
       });
@@ -56,8 +59,7 @@ export class TontineComponent {
             }
           }
         );
-      }
-      else if (result == 'MISE') {
+      } else if (result == 'MISE') {
         let modal = this.modalCtrl.create('FaireMisePage', { compte }, {
           enableBackdropDismiss: false
         });
@@ -105,7 +107,7 @@ export class TontineComponent {
                   return;
                 }
                 if (1 > nb || nb > nbM) {
-                  window.alert(`Le client ne peut pas retirer plus de ${nbM} mises`);
+                  window.alert(`Le client ne peut retirer plus de ${nbM} mises`);
                   return;
                 }
                 compte.nbMiseRetirer = (compte.nbMiseRetirer || 0) + nb;
@@ -177,15 +179,14 @@ export class TontineComponent {
             }]
         });
         alert.present();
-      }
-      else if (result == 'AVANCE') {
+      } else if (result == 'AVANCE') {
         let alert = this.alertCtrl.create({
           title: "Operation de demande d'avance",
           message: `Le client ${compte.client.name} ${compte.client.firstName} souhaitant faire une avance sur son compte à déjà fait ${compte.miseTontine} mise(s)`,
           inputs:[
            {
              name:"montant",
-             placeholder:"Montant à retirer"
+             placeholder:"Montant à avancer"
            }
           ],
           buttons: ['Annuler', {
@@ -223,8 +224,7 @@ export class TontineComponent {
           }]
         });
         alert.present();
-      }
-      else if (result == 'MISES') {
+      } else if (result == 'MISES') {
         let modal = this.modalCtrl.create('MisesPage', { compte }, {
           enableBackdropDismiss: false
         });

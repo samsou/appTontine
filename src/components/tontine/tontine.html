@@ -51,7 +51,8 @@
                 <td class="hide">{{tontine.montantAdhesion?(tontine.montantAdhesion| currency:'XOF':true:'2.0'):''}}</td>
                 <td>{{tontine.dateCloture | date:'mediumDate'}}</td>
                 <td>
-                    <ion-icon name="create" (click)="edit(tontine)" class="edit" *ngIf="!tontine.avanceTontine && !tontine.miseTontine"></ion-icon>
+                    <!-- <ion-icon name="create" (click)="edit(tontine)" class="edit" *ngIf="!tontine.avanceTontine && !tontine.miseTontine"></ion-icon> -->
+                    <ion-icon name="create" (click)="edit(tontine)" class="edit"></ion-icon>
                     <ion-icon name="ios-close-outline" (click)="delete(tontine)" class="trash" *ngIf="!tontine.avanceTontine && !tontine.miseTontine"></ion-icon>
                     <ion-icon name="md-more" (click)="openOptions($event,tontine)" class="options"></ion-icon>
                 </td>

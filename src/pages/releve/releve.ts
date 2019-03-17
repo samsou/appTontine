@@ -247,7 +247,7 @@ export class RelevePage {
           {
             date: this.model.avanceDate,
             operation: 'Avance sur le compte',
-            solde: ''
+            solde:this.model.montantAvance
           }
         );
       }
