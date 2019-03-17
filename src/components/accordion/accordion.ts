@@ -1,4 +1,5 @@
 import { Component, ElementRef, Input, Renderer, ViewChild } from '@angular/core';
+import { MenuController } from 'ionic-angular';
 
 /**
  * Generated class for the AccordionComponent component.
@@ -15,6 +16,7 @@ export class AccordionComponent {
   @Input() textColor: string = '#FFF';
   @Input() contentColor: string = '#F9F9F9';
   @Input() title: string;
+  @Input() icon: string;
   @Input() hasMargin: boolean = true;
   @Input() expanded: boolean;
   @Input() hasContent: boolean = true;
@@ -23,7 +25,7 @@ export class AccordionComponent {
 
   viewHeight: number;
 
-  constructor(public renderer: Renderer) { }
+  constructor(public renderer: Renderer, private menuCtrl: MenuController) { }
 
   ngAfterViewInit() {
     this.viewHeight = this.elementView.nativeElement.offsetHeight;
@@ -31,6 +33,10 @@ export class AccordionComponent {
     if (!this.expanded) {
       this.renderer.setElementStyle(this.elementView.nativeElement, 'height', 0 + 'px');
     }
+  }
+  closeMenu() {
+    if (!this.hasContent)
+      this.menuCtrl.close();
   }
 
   toggleAccordion() {

@@ -1,6 +1,35 @@
 import { Subject } from 'rxjs/Subject';
 
-import { Client, Compte, Settings } from './model';
+import { Client, Compte, Produit, Settings } from './model';
+
+const entities: string[] = ['produits', 'clients', 'tontines', 'epargnes', 'parametres', 'recettes'];
+let ressources = [];
+let tabs = ['tontines', 'epargnes', 'parametres', 'recettes'];
+let index, see;
+entities.forEach(element => {
+    index = tabs.indexOf(element);
+    see = 'Voir';
+    if (index !== -1 && element !== 'recettes') see = 'Gérer';
+    ressources.push({
+        name: `${see} les ${element}`,
+        code: `tontine/api/${element}`
+    });
+    if (index === -1) {
+        ressources.push({
+            name: `Créer les ${element}`,
+            code: `tontine/api/${element}/create`
+        });
+        ressources.push({
+            name: `Editer les ${element}`,
+            code: `tontine/api/${element}/edit`
+        });
+        ressources.push({
+            name: `Supprimer les ${element}`,
+            code: `tontine/api/${element}/delete`
+        });
+    }
+});
+export const RESSOURCES = ressources;
 
 
 export class UserData {
@@ -12,10 +41,15 @@ export class UserData {
     code = '';
     currentMenu: any;
     clientsMap: any = {};
+    produits: Produit[] = [];
+    depots: any[] = [];
+    retraits: any[] = [];
     TONTINE: Compte[] = [];
     EPARGNE: Compte[] = [];
+    RECETTES: any[] = [];
     settings: Settings = {
-        nbreJrAvance: 15
+        nbreJrAvance: 15,
+        fraisTenueDeCompte: "200"
     };
     private constructor() { }
     static getInstance() {
@@ -35,25 +69,37 @@ export class UserData {
         return 'Plateforme';
     }
     menusStats: any[] = [
-        { 'libelle': 'Statistiques', code: 'STATS' },
-        { 'libelle': 'Audits', code: 'AUDITS' }
+        { 'libelle': 'Statistiques', code: 'STATS', icon: 'pie' },
+        { 'libelle': 'Etats', code: 'AUDITS', icon: 'pulse' }
     ];
     menus: any[] = [
         {
+            'libelle': 'Produits',
+            code: 'PRODUITS',
+            ressource: 'tontine/api/produits',
+            icon: 'bookmarks'
+        },
+        {
             'libelle': 'Clients',
-            code: 'CLIENTS'
+            code: 'CLIENTS',
+            ressource: 'tontine/api/clients',
+            icon: 'person'
         },
         {
             'libelle': 'Tontine',
             code: 'TONTINES',
+            icon: 'folder',
+            ressource: 'tontine/api/tontines',
             'breadcrumbs': [
                 {
                     'libelle': 'Les comptes tontine'
-                    , code: 'TONTINES'
+                    , code: 'TONTINES',
+                    ressource: 'tontine/api/tontines',
                 },
                 {
                     'libelle': 'Créer un compte'
-                    , code: 'CREATE_TONTINE'
+                    , code: 'CREATE_TONTINE',
+                    ressource: 'tontine/api/tontines',
                 }
                 /*  {
                      'libelle': 'Faire une mise'
@@ -68,28 +114,37 @@ export class UserData {
         {
             'libelle': 'Epargne',
             code: 'EPARGNE',
+            icon: 'paper',
+            ressource: 'tontine/api/epargnes',
             'breadcrumbs': [
                 {
                     'libelle': 'Les comptes epargne'
-                    , code: 'EPARGNE'
+                    , code: 'EPARGNE',
+                    ressource: 'tontine/api/epargnes'
                 },
                 {
                     'libelle': 'Créer un Compte'
-                    , code: 'CREATE_EPARGNE'
+                    , code: 'CREATE_EPARGNE',
+                    ressource: 'tontine/api/epargnes',
                 },
-                /* {
-                    'libelle': 'Consulter Solde'
-                }, */
                 {
                     'libelle': 'Dépôts'
-                    , code: 'DEPOT_EPARGNE'
+                    , code: 'DEPOT_EPARGNE',
+                    ressource: 'tontine/api/epargnes',
                 },
                 {
                     'libelle': 'Retraits'
-                    , code: 'RETRAIT_EPARGNE'
+                    , code: 'RETRAIT_EPARGNE',
+                    ressource: 'tontine/api/epargnes',
                 }
             ]
-        }
+        },
+        {
+            'libelle': 'Nos recettes',
+            code: 'RECETTES',
+            icon: 'card',
+            ressource: 'tontine/api/recettes',
+        },
     ];
     initialize() {
         this.ressources = [];

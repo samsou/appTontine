@@ -1,10 +1,12 @@
 import { NgModule } from '@angular/core';
 
-import { HasAnyRessourcesDirective } from './ressources/ressources';
+import { RessourcesDirective } from './ressources/ressources';
 
 @NgModule({
-	declarations: [HasAnyRessourcesDirective],
+	declarations: [
+		RessourcesDirective],
 	imports: [],
-	exports: [HasAnyRessourcesDirective]
+	exports: [
+		RessourcesDirective]
 })
 export class DirectivesModule { }

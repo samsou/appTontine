@@ -1,12 +1,6 @@
-<!--
-  Generated template for the AccueilPage page.
+<ion-header no-border>
 
-  See http://ionicframework.com/docs/components/#navigation for more info on
-  Ionic pages and navigation.
--->
-<ion-header>
-
-    <ion-navbar>
+    <ion-navbar color='primary'>
         <ion-buttons left *ngIf="isEnabled">
             <button ion-button icon-only (click)="toggle()">
           <ion-icon name="menu"></ion-icon>
@@ -20,6 +14,11 @@
             <ion-searchbar [(ngModel)]="dataProvider.userData.currentSearch" mode="wp" placeholder="rechercher">
             </ion-searchbar>
         </ion-buttons>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="presentAccount($event)">
+            <ion-icon name="md-more"></ion-icon>
+            </button>
+        </ion-buttons>
     </ion-navbar>
 
 </ion-header>
@@ -30,21 +29,35 @@
         <!--  our side menu  -->
         <ion-content no-padding no-margin class="menus" [ngClass]="{isOpen:isOpen}" *ngIf='isOpen'>
             <ion-list no-lines>
-                <ion-item *ngFor="let menu of menus" (click)="toLink(menu)" [ngClass]="{active:dataProvider.userData.currentMenu == menu}">
-                    {{menu.libelle}}
+
+                <span *ngFor="let menu of menus">
+                <ion-item (click)="toLink(menu)" [ngClass]="{active:dataProvider.userData.currentMenu == menu}" *hasRessources="menu.ressource">
+                    <ion-icon [name]="menu.icon" color="primary"></ion-icon> &nbsp; {{menu.libelle}}
+                </ion-item>
+                </span>
+                <ion-item (click)="clotureDay()" *hasRessources="['tontine/api/tontines','tontine/api/epargnes']">
+                    <ion-icon color="primary"></ion-icon> &nbsp; Cloturer la journée du <br>
+                    <p text-center style="font-size: 0.9em">
+                        {{dataProvider.user.clotureDate | date:'mediumDate'}}
+                    </p>
                 </ion-item>
             </ion-list>
             <hr>
             <ion-list no-lines>
                 <ion-item *ngFor="let menu of menusStats" (click)="toLink(menu)" [ngClass]="{active:dataProvider.userData.currentMenu == menu}">
-                    {{menu.libelle}}
+                    <ion-icon [name]="menu.icon" color="primary"></ion-icon> &nbsp; {{menu.libelle}}
                 </ion-item>
             </ion-list>
             <ion-footer no-border>
                 <ion-toolbar>
-                    <ion-title (click)="openSettings()" style="cursor: pointer">
-                        <ion-icon name="settings"></ion-icon>
-                        Paramètrage
+                    <ion-buttons left (click)="openSettings()" style="cursor: pointer" *hasRessources="'tontine/api/parametres'">
+                        <button ion-button>
+                            <ion-icon name="settings"></ion-icon>
+                            Paramètrage
+                        </button>
+                    </ion-buttons>
+                    <ion-title *ngIf="!onLine" class="onLine">
+                        <ion-icon name="warning"></ion-icon> Pas de connexion
                     </ion-title>
                 </ion-toolbar>
             </ion-footer>
@@ -53,11 +66,14 @@
         <!-- the main content -->
         <ion-content main no-padding no-margin>
             <ul class="breadcrumb" no-padding no-margin nowrap align-items-start justify-content-start *ngIf="dataProvider.userData.currentMenu?.breadcrumbs && dataProvider.userData.currentMenu?.breadcrumbs.length && isEnabled">
-                <li *ngFor="let bread of dataProvider.userData.currentMenu?.breadcrumbs" (click)="toBread(bread)" [ngClass]="{active:dataProvider.userData.code == bread.code}"><a>{{bread.libelle}}</a></li>
+                <span *ngFor="let bread of dataProvider.userData.currentMenu?.breadcrumbs">
+                <li (click)="toBread(bread)" [ngClass]="{active:dataProvider.userData.code == bread.code}" *hasRessources="bread.ressource"><a>{{bread.libelle}}</a></li></span>
             </ul>
             <div [ngSwitch]="dataProvider.userData.code">
+                <produit *ngSwitchCase="'PRODUITS'"></produit>
                 <client *ngSwitchCase="'CLIENTS'"></client>
                 <tontine *ngSwitchCase="'TONTINES'"></tontine>
+                <recettes *ngSwitchCase="'RECETTES'"></recettes>
                 <create-tontine *ngSwitchCase="'CREATE_TONTINE'"></create-tontine>
                 <mise *ngSwitchCase="'MISE'"></mise>
                 <!-- <tontine *ngSwitchCase="'RETRAIT_TONTINE'"></tontine> -->
@@ -76,13 +92,18 @@
     </ion-split-pane>
     <div *ngIf="!isEnabled">
         <div [ngSwitch]="dataProvider.userData.code">
+            <produit *ngSwitchCase="'PRODUITS'"></produit>
             <client *ngSwitchCase="'CLIENTS'"></client>
             <tontine *ngSwitchCase="'TONTINES'"></tontine>
             <create-tontine *ngSwitchCase="'CREATE_TONTINE'"></create-tontine>
             <mise *ngSwitchCase="'MISE'"></mise>
             <!-- <tontine *ngSwitchCase="'RETRAIT_TONTINE'"></tontine> -->
             <epargne *ngSwitchCase="'EPARGNE'"></epargne>
-            <create-epargne *ngSwitchCase="'CREATE_EPARGNE'"></create-epargne>
+            <recettes *ngSwitchCase="'RECETTES'"></recettes>
+            <div margin *ngSwitchCase="'CREATE_EPARGNE'">
+                <create-epargne>
+                </create-epargne>
+            </div>
             <depot-epargne *ngSwitchCase="'DEPOT_EPARGNE'"></depot-epargne>
             <retrait-epargne *ngSwitchCase="'RETRAIT_EPARGNE'"></retrait-epargne>
             <stats *ngSwitchCase="'STATS'"></stats>

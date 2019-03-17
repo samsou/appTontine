@@ -4,18 +4,13 @@ import { AlertController, ModalController, PopoverController, ToastController, V
 import { Client } from '../../providers/data/model';
 import { DataProvider } from './../../providers/data/data';
 
-/**
- * Generated class for the ClientComponent component.
- *
- * See https://angular.io/api/core/Component for more info on Angular
- * Components.
- */
+
 @Component({
   selector: 'client',
   templateUrl: 'client.html'
 })
 export class ClientComponent {
-  clients: Client[] = [];
+  clients: Client[];
   constructor(private dataProvider: DataProvider, private modalCtrl: ModalController, private toastCtrl: ToastController, private popoverCtrl: PopoverController, private alertCtrl: AlertController) {
   }
   ngAfterViewInit() {
@@ -25,7 +20,6 @@ export class ClientComponent {
     this.dataProvider.getClients().subscribe((clients: Client[]) => {
       this.clients = clients;
     }, (err) => {
-      console.log(err);
     });
   }
   showComptes(client: Client) {
@@ -65,9 +59,13 @@ export class ClientComponent {
                 position: 'bottom'
               });
               toast.present();
-            }).catch(() => {
+            }).catch((e) => {
+              let msg = `Le client ${client.name} ${client.firstName} n'a pas été supprimé`;
+              if (e === 'cannotDeleteAccount') {
+                msg = "Ce client ne peut être supprimer,les soldes de ses comptes ne sont pas à zéro";
+              }
               let toast = this.toastCtrl.create({
-                message: `Le client ${client.name} ${client.firstName} n'a pas été modifié`,
+                message: msg,
                 duration: 2000,
                 position: 'bottom'
               });

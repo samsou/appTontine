@@ -12,26 +12,31 @@
                 {{menu.libelle}}
                 <ion-note item-end *ngIf="menu.breadcrumbs"></ion-note>
             </ion-item> -->
-            <accordion-list *ngFor="let menu of menus; let index = index" [title]="menu.libelle" hasMargin="false" [expanded]="index === 0" no-padding no-margin [hasContent]="menu.breadcrumbs && menu.breadcrumbs.length" (click)="toLink(menu)">
-                <ion-item *ngFor="let bread of menu.breadcrumbs" (click)="toBread(bread)" [ngClass]="{active:userData.code == bread.code}">
+            <span *ngFor="let menu of menus; let index = index">
+            <accordion-list [title]="menu.libelle" [icon]="menu.icon" hasMargin="false" [expanded]="index === 0" no-padding no-margin [hasContent]="menu.breadcrumbs && menu.breadcrumbs.length" (click)="toLink(menu)" [attr.menuToggle]="menu.breadcrumbs && menu.breadcrumbs.length?'':null" *hasRessources="menu.ressource">
+                <span *ngFor="let bread of menu.breadcrumbs">
+                <ion-item text-center (click)="toBread(bread)" [ngClass]="{active:userData.code == bread.code}" menuToggle *hasRessources="bread.ressource">
                     {{bread.libelle}}
                 </ion-item>
+                </span>
             </accordion-list>
+            </span>
         </ion-list>
 
         <ion-list no-lines>
             <ion-item *ngFor="let menu of menusStats" (click)="toLink(menu)" [ngClass]="{active:userData.currentMenu == menu}" menuToggle>
+                <ion-icon [name]="menu.icon" color="primary"></ion-icon>
                 {{menu.libelle}}
             </ion-item>
         </ion-list>
     </ion-content>
-    <ion-footer no-border>
+    <!-- <ion-footer no-border>
         <ion-toolbar>
             <ion-title (click)="openSettings()" menuToggle>
                 <ion-icon name="settings"></ion-icon>
                 Paramètrage
             </ion-title>
         </ion-toolbar>
-    </ion-footer>
+    </ion-footer> -->
 </ion-menu>
 <ion-nav [root]="rootPage" #mycontent></ion-nav>

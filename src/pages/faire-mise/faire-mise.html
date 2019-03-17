@@ -20,7 +20,12 @@
 
 <ion-content padding>
     <p>
-        Le montant souscrit pour ce compte: {{compte?.montantSouscritTontine | currency:'XOF':true:'2.0'}} <br> Le nombre de mise: {{compte.miseTontine}} <br> Le client a faire une avance sur ce compte? {{compte.avanceTontine?'Oui':'Non'}} <br>
+        Le montant souscrit pour ce compte: <em>{{compte?.montantSouscritTontine | currency:'XOF':true:'2.0'}}</em> <br> Le nombre de mise: {{compte.miseTontine}}
+        <br>
+        <span *ngIf="compte.produit && compte.produit.nbreMiseTotal">
+        Nombre de mise restant : {{compte.produit.nbreMiseTotal - compte.miseTontine < 0?0:compte.produit.nbreMiseTotal - compte.miseTontine}}
+        </span>
+        <br> Le client a faire une avance sur ce compte? <strong>{{compte.avanceTontine?'Oui':'Non'}}</strong><br>
         <span *ngIf="compte.avanceTontine && compte.avanceDate">
       Date de l'avance: {{compte.avanceDate | date:'mediumDate'}}
     </span>
@@ -56,8 +61,8 @@
             {{(nbreMise.size * (compte.montantSouscritTontine || 0)) | currency:'XOF':true:'2.0'}} à payer
         </ion-title>
         <ion-buttons end>
-            <button ion-button (click)="save()">
-        Enregistrer
+            <button ion-button (click)="save()" [disabled]="isSaving || !nbreMise.size">
+        <ion-spinner *ngIf="isSaving"></ion-spinner> Enregistrer
       </button>
         </ion-buttons>
     </ion-navbar>

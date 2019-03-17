@@ -1,8 +1,8 @@
 import { Component, Input } from '@angular/core';
-import { ToastController, ViewController } from 'ionic-angular';
+import { ModalController, ToastController, ViewController } from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
-import { Client, Compte } from '../../providers/data/model';
+import { Client, Compte, Produit } from '../../providers/data/model';
 
 /**
  * Generated class for the CreateEpargneComponent component.
@@ -22,18 +22,38 @@ export class CreateEpargneComponent {
 
   client: Client = {};
   isSaving: boolean = false;
-
-  constructor(public dataProvider: DataProvider, private toastCtrl: ToastController, private viewCtrl: ViewController) {
+  produit: Produit = {};
+  constructor(public dataProvider: DataProvider, private toastCtrl: ToastController, private viewCtrl: ViewController, private modalCtrl: ModalController) {
   }
 
   getSelected(clt: Client): any {
     this.client = clt;
     return clt.id;
   }
+  getSelectedProduit(produit: Produit): any {
+    this.produit = produit;
+    return produit.id;
+  }
+  openSearch() {
+    if (!(this.dataProvider.userData.clients && this.dataProvider.userData.clients.length > 3)) return;
+    let modal = this.modalCtrl.create('ClientSearchPage', { items: this.dataProvider.userData.clients, title: 'Sélectionnez le client', id: this.client }, {
+      enableBackdropDismiss: false,
+      'cssClass': 'client-search'
+    });
+    modal.onDidDismiss((result) => {
+      if (result) {
+        this.client = result;
+        this.epargne.idClient = result.id;
+      }
+    });
+    modal.present();
+  }
+
   save() {
     this.isSaving = true;
     if (!this.epargne.id) {
       this.epargne.typeCompte = 'EPARGNE';
+      this.epargne.montantAdhesion = this.epargne.montant + '';
       this.epargne.dateCompte = Date.now();
     } else
       this.client = this.epargne.client;
@@ -48,6 +68,7 @@ export class CreateEpargneComponent {
       this.epargne.idClient = null;
       this.epargne.montantSouscritTontine = null;
       this.client = null;
+      this.epargne.idProduit = null;
       if (this.epargne.id) this.viewCtrl.dismiss();
     }).catch(() => {
       this.isSaving = false;

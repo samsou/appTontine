@@ -7,9 +7,7 @@
                     <ion-icon name="person"></ion-icon>
                 </ion-avatar>
                 <p>Nombre de clients</p>
-                <ion-note item-end>
-                    <ion-badge mode="ios">{{dataProvider.userData.clients.length || 0}}</ion-badge>
-                </ion-note>
+                <ion-badge item-end mode="ios" text-center>{{dataProvider.userData.clients.length || 0}}</ion-badge>
             </ion-item>
         </ion-card>
     </ion-col>
@@ -20,9 +18,7 @@
                     <ion-icon name="ios-copy-outline"></ion-icon>
                 </ion-avatar>
                 <p>Nombre de comptes tontine</p>
-                <ion-note item-end>
-                    <ion-badge mode="ios">{{dataProvider.userData['TONTINE'].length || 0}}</ion-badge>
-                </ion-note>
+                <ion-badge item-end mode="ios" text-center>{{dataProvider.userData['TONTINE'].length || 0}}</ion-badge>
             </ion-item>
         </ion-card>
     </ion-col>
@@ -33,25 +29,25 @@
                     <ion-icon name="ios-document-outline"></ion-icon>
                 </ion-avatar>
                 <p>Nombre de compte epargne</p>
-                <ion-note item-end>
-                    <ion-badge mode="ios">{{dataProvider.userData['EPARGNE'].length || 0}}</ion-badge>
-                </ion-note>
+                <ion-badge item-end mode="ios" text-center>{{dataProvider.userData['EPARGNE'].length || 0}}</ion-badge>
             </ion-item>
         </ion-card>
     </ion-col>
 </ion-row>
 <div ion-row margin padding>
     <ion-card ion-col col-12 text-center margin no-padding>
-        <canvas id="myChart" #myChart width="400" height="200" no-padding no-margin></canvas>
+        <canvas id="myChart" #myChart height="200" no-padding no-margin></canvas>
     </ion-card>
     <ion-card ion-col col-5 text-center margin>
-        <canvas id="myChart2" #myChart2 width="400" height="200" no-padding no-margin></canvas>
+        <h5>Compte tontine/mois</h5>
+        <canvas id="myChart2" #myChart2 height="200" no-padding no-margin></canvas>
     </ion-card>
     <ion-card ion-col col-6 text-center margin>
-        <canvas id="myChart3" #myChart3 width="400" height="200" no-padding no-margin></canvas>
+        <h5>Compte epargne/mois</h5>
+        <canvas id="myChart3" #myChart3 height="200" no-padding no-margin></canvas>
     </ion-card>
 
     <ion-card ion-col col-12 text-center margin>
-        <canvas id="myChart4" #myChart4 width="400" height="200" no-padding no-margin></canvas>
+        <canvas id="myChart4" #myChart4 height="200" no-padding no-margin></canvas>
     </ion-card>
 </div>

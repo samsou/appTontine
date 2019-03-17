@@ -17,10 +17,11 @@ import { Settings } from '../../providers/data/model';
   templateUrl: 'settings.html',
 })
 export class SettingsPage {
-  settings:Settings = {
-    nbreJrAvance:15
+  settings: Settings = {
+    nbreJrAvance: 15,
+    fraisTenueDeCompte: "200"
   };
-  isSaving:boolean = false;
+  isSaving: boolean = false;
   constructor(public dataProvider: DataProvider, public viewCtrl: ViewController) {
     this.settings = dataProvider.userData.settings || this.settings;
     this.settings = Object.assign({}, this.settings);
@@ -29,9 +30,13 @@ export class SettingsPage {
   close() {
     this.viewCtrl.dismiss();
   }
-  save() {
-    this.isSaving =true;
-    this.dataProvider.updateSettings(this.settings).then(()=>{
+  save(invalid) {
+    if (invalid) {
+      alert("Le formulaire est incorrect");
+      return;
+    }
+    this.isSaving = true;
+    this.dataProvider.updateSettings(this.settings).then(() => {
       this.isSaving = false;
       this.close();
     }).catch(() => {

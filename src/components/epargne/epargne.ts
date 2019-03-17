@@ -1,5 +1,15 @@
+import { CurrencyPipe } from '@angular/common';
 import { Component } from '@angular/core';
-import { AlertController, ModalController, PopoverController, ToastController, ViewController } from 'ionic-angular';
+import {
+  Alert,
+  AlertController,
+  LoadingController,
+  ModalController,
+  NavController,
+  PopoverController,
+  ToastController,
+  ViewController,
+} from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
 import { Compte } from '../../providers/data/model';
@@ -15,9 +25,10 @@ import { Compte } from '../../providers/data/model';
   templateUrl: 'epargne.html'
 })
 export class EpargneComponent {
-  epargnes: Compte[] = [];
+  epargnes: Compte[];
+  montantTotalEpargne: number = 0;
 
-  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController) {
+  constructor(private popoverCtrl: PopoverController, public dataProvider: DataProvider, private modalCtrl: ModalController, private alertCtrl: AlertController, private toastCtrl: ToastController, private loadingCtrl: LoadingController, private currencyPipe: CurrencyPipe, private navCtrl: NavController) {
   }
   ngAfterViewInit() {
     this.getComptes();
@@ -26,18 +37,206 @@ export class EpargneComponent {
     this.dataProvider.getComptes('EPARGNE').subscribe((comptes: Compte[]) => {
       this.epargnes = comptes.map((compte) => {
         compte.client = this.dataProvider.getClientById(compte.idClient);
+        compte.produit = this.dataProvider.getProduitById(compte.idProduit);
+        this.montantTotalEpargne += +compte.montant || 0;
         return compte;
       });
-      console.log(this.epargnes);
     }, (err) => {
-      console.log(err);
     });
   }
   openOptions(myEvent, compte: Compte) {
     let popover = this.popoverCtrl.create(EpargneOptions);
+    let resultIssue: Alert = this.alertCtrl.create({
+      buttons: [
+        {
+          text: 'Ok',
+          handler: () => {
+
+          }
+        }
+      ]
+    });
+    let loading = this.loadingCtrl.create({
+      enableBackdropDismiss: false,
+    });
     popover.onDidDismiss((result) => {
-      if (result == 'DEPOT') { }
-      else if (result == 'RETRAIT') { }
+      if (result === 'PRINTER') {
+        this.navCtrl.push(
+          'RelevePage', {
+            action: 'RELEVE',
+            model: {
+              ...compte,
+              type: 'EPARGNE'
+            }
+          }
+        );
+      }else if (result == 'DEPOT') {
+        let alert = this.alertCtrl.create({
+          title: `Dépôt sur le compte de ${compte.client.name}`,
+          message: `Voulez-vous déposer combien?`,
+          inputs: [
+            {
+              placeholder: 'Montant',
+              type: 'number',
+              name: 'montant'
+            },
+            {
+              placeholder: 'Nom du déposant',
+              type: 'text',
+              name: 'nameDeposant'
+            }, 
+            {
+              placeholder: 'Téléphone du déposant',
+              type: 'text',
+              name: 'phoneDeposant'
+            },
+            {
+              placeholder: 'numéro de pièce',
+              type: 'text',
+              name: 'numCarteDeposant'
+            }
+          ],
+          enableBackdropDismiss: false,
+          buttons: [
+            {
+              text: 'Annuler'
+            },
+            {
+              text: 'Valider',
+              handler: (data) => {
+                // data.montant = data.montant.replace(/[ -_a-zA-Z]+/g, '');
+                if (data.montant && +data.montant) {
+                  // console.log(data.montant);
+                  loading.present();
+                  this.dataProvider.faireDepot(
+                    {
+                      numCarteDeposant: data.numCarteDeposant,
+                      phoneDeposant: data.phoneDeposant,
+                      nameDeposant: data.nameDeposant,
+                      montant: +data.montant,
+                      compte: compte.id,
+                      idClient: compte.client.id,
+                    },
+                    (+data.montant) + (+compte.montant)
+                  ).then(() => {
+                    loading.dismiss();
+                    resultIssue.setMessage(`Le dépôt de ${data.montant} a été effectué avec succès sur le compte du client ${compte.client.name} ${compte.client.firstName}`);
+                    resultIssue.present();
+                    this.navCtrl.push(
+                      'RelevePage', {
+                        action: 'QUITTANCE',
+                        model: {
+                          ...compte,
+                          ...data,
+                          type: 'DEPOT'
+                        }
+                      }
+                    );
+                  }).catch(() => {
+                    resultIssue.setMessage(`Le dépôt de ${data.montant} sur le compte du client ${compte.client.name} ${compte.client.firstName} a échoué `);
+                    resultIssue.present();
+                  });
+                } else {
+                  console.log(data.montant);
+                  resultIssue.setMessage(`Le montant ${data.montant} est incorrect`);
+                  resultIssue.present();
+                }
+              }
+            }
+          ]
+        });
+        alert.present();
+      } else if (result == 'SHOW_DEPOT') {
+        let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'DepotEpargneComponent' }, {
+          enableBackdropDismiss: false
+        });
+        modal.present();
+      }else if (result == 'SHOW_RETRAIT') {
+        let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'RetraitEpargneComponent' }, {
+          enableBackdropDismiss: false
+        });
+        modal.present();
+      }else if (result == 'RETRAIT') {
+        let alert = this.alertCtrl.create({
+          title: `Retrait sur le compte de ${compte.client.name}`,
+          message: `Voulez-vous retirer combien?`,
+          inputs: [
+            {
+              placeholder: 'Montant',
+              type: 'number',
+              name: 'montant'
+            },
+            {
+              placeholder: 'Nom du retirant',
+              type: 'text',
+              name: 'nameRetirant'
+            }, {
+
+              placeholder: 'Téléphone du retirant',
+              type: 'text',
+              name: 'phoneRetirant'
+            },
+            {
+              placeholder: 'numéro de pièce',
+              type: 'text',
+              name: 'numCarteRetirant'
+            }
+          ],
+          enableBackdropDismiss: false,
+          buttons: [
+            {
+              text: 'Annuler'
+            },
+            {
+              text: 'Valider',
+              handler: (data) => {
+                // data.montant = data.montant.replace(/[ -_a-zA-Z]+/g, '');
+                if (data.montant && +data.montant) {
+                  if (+data.montant > +compte.montant) {
+                    resultIssue.setMessage(`Vous ne pouvez pas retirer cette somme.Le montant est insuffisant sur le compte.`);
+                    resultIssue.present();
+                    return;
+                  }
+                  loading.setContent("Retrait ...");
+                  loading.present();
+                  this.dataProvider.faireRetrait(
+                    {
+                      numCarteRetirant: data.numCarteRetirant,
+                      phoneRetirant: data.phoneRetirant,
+                      nameRetirant: data.nameRetirant,
+                      montant: +data.montant,
+                      compte: compte.id,
+                      idClient: compte.client.id
+                    },
+                    (+compte.montant) - (+data.montant)
+                  ).then((result) => {
+                    loading.dismiss();
+                    resultIssue.setMessage(`Le retrait de ${data.montant} a été effectué avec succès sur le compte du client ${compte.client.name} ${compte.client.firstName}`);
+                    resultIssue.present();
+                    this.navCtrl.push(
+                      'RelevePage', {
+                        action: 'QUITTANCE',
+                        model: {
+                          ...compte,
+                          ...data,
+                          type: 'RETRAIT'
+                        }
+                      }
+                    );
+                  }).catch(() => {
+                    resultIssue.setMessage(`Le retrait de ${data.montant} sur le compte du client ${compte.client.name} ${compte.client.firstName} a échoué `);
+                    resultIssue.present();
+                  });
+                } else {
+                  resultIssue.setMessage(`Le montant est incorrect`);
+                  resultIssue.present();
+                }
+              }
+            }
+          ]
+        });
+        alert.present();
+      }
       else if (result == 'SOLDE') {
         let name: string = '';
         if (compte.client) {
@@ -55,7 +254,7 @@ export class EpargneComponent {
               text: 'Consulter',
               handler: () => {
                 let alert = this.alertCtrl.create({
-                  message: `Le solde sur le compte epargne du client ${name} est ${compte.montant || '00'}`,
+                  message: `Le solde sur le compte epargne du client ${name} est ${this.currencyPipe.transform(compte.montant, 'XOF', true, '2.0') || '00'}`,
                   enableBackdropDismiss: false,
                   buttons: [
                     {
@@ -85,6 +284,13 @@ export class EpargneComponent {
     modal.present();
   }
   delete(compte: Compte) {
+    if (compte.typeCompte === 'EPARGNE' && compte.montant > 0) {
+      window.alert('Le solde du compte est supérieur à zéro');
+      return;
+    }
+    if (compte.typeCompte === 'TONTINE' && !compte.dateCloture) {
+      return window.alert("Le compte n'est pas encore cloturé");
+    }
     let name: string = '';
     if (compte.client) {
       name = compte.client.name + ' ' + compte.client.firstName;
@@ -127,8 +333,11 @@ export class EpargneComponent {
   template: `
     <ion-list>
       <button ion-item (click)="close('DEPOT')">Faire un depôt</button>
+      <button ion-item (click)="close('SHOW_DEPOT')">Voir les dépôts</button>
       <button ion-item (click)="close('RETRAIT')">Faire un retrait</button>
+ <button ion-item (click)="close('SHOW_RETRAIT')">Voir les retraits</button>
       <button ion-item (click)="close('SOLDE')">Consulter solde</button>
+      <button ion-item (click)="close('PRINTER')">Relevé de compte</button>
     </ion-list>
   `
 })

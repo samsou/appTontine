@@ -1,0 +1,97 @@
+<ion-header no-border margin-bottom>
+
+    <ion-navbar color="primary">
+        <ion-title text-center>Compte utilisateur</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="close()" [disabled]="isSaving">
+        <ion-icon name="close"></ion-icon>
+      </button>
+        </ion-buttons>
+    </ion-navbar>
+</ion-header>
+<ion-content padding>
+
+    <form name="editForm" role="form" novalidate #editForm="ngForm" margin>
+        <ion-list>
+            <ion-item margin-vertical>
+                <ion-label floating class="oblige">Nom</ion-label>
+                <ion-input type="text" [(ngModel)]="model.name" name="nom" required></ion-input>
+            </ion-item>
+            <ion-item margin-vertical>
+                <ion-label floating class="oblige">Prénoms</ion-label>
+                <ion-input type="text" [(ngModel)]="model.firstName" name="firstName" required></ion-input>
+            </ion-item>
+            <ion-item margin-vertical>
+                <ion-label floating class="oblige">Nom d'utilisateur</ion-label>
+                <ion-input type="text" [(ngModel)]="model.username" name="username" required></ion-input>
+            </ion-item>
+            <ion-row no-margin no-padding *ngIf="!model.id">
+                <ion-col margin-right no-padding>
+                    <ion-item>
+                        <ion-label floating class="oblige">Mot de passe</ion-label>
+                        <ion-input type="password" [(ngModel)]="model.password" name="password" required minlength='6'></ion-input>
+                    </ion-item>
+                    <p text-right class="helper-error" [hidden]="!(editForm.controls.password?.dirty && editForm.controls.password?.errors?.minlength)">
+                        Au minimum 06 caractères
+                    </p>
+                </ion-col>
+                <ion-col margin-left no-padding>
+                    <ion-item>
+                        <ion-label floating class="oblige">Confirmer mot de passe</ion-label>
+                        <ion-input type="password" [(ngModel)]="confirmPass" name="confirmPass" required minlength='6'></ion-input>
+                    </ion-item>
+                    <p text-right class="helper-error" [hidden]="!(editForm.controls.password?.dirty && editForm.controls.password?.value != confirmPass)">
+                        N'est pas conforme au mot de passe
+                    </p>
+                </ion-col>
+            </ion-row>
+            <ion-row no-margin no-padding>
+                <ion-col margin-right no-padding>
+                    <ion-item>
+                        <ion-label floating>Numéro de téléphone</ion-label>
+                        <ion-input type="text" [(ngModel)]="model.phone" name="phone" pattern="^(00[1-9][0-9]{0,2})?[ ]?([0-9]{2}[- ]?){3}[0-9]{2}$"></ion-input>
+                    </ion-item>
+                    <p text-right class="helper-error" [hidden]="!(editForm.controls.phone?.dirty && editForm.controls.phone?.invalid)">
+                        Le numéro de téléphone n'est pas correct
+                    </p>
+                </ion-col>
+                <ion-col margin-left no-padding>
+                    <ion-item>
+                        <ion-label floating>Adresse email</ion-label>
+                        <ion-input type="email" [(ngModel)]="model.email" name="email" pattern="[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[a-z]{2,3}$"></ion-input>
+                    </ion-item>
+                    <p text-right class="helper-error" [hidden]="!(editForm.controls.email?.dirty && editForm.controls.email?.invalid)">
+                        veuillez entrer un email valide
+                    </p>
+                </ion-col>
+            </ion-row>
+            <!--  <ion-item margin-vertical>
+        <ion-label floating>Adresse</ion-label>
+        <ion-textarea [(ngModel)]="model.adresse" name="adresse" rows="2"></ion-textarea>
+      </ion-item> -->
+            <ion-item>
+                <ion-label class="oblige">Les droits</ion-label>
+                <ion-select multiple [(ngModel)]="model.permissions" required name="ressources">
+                    <ion-option *ngFor="let auth of ressources" [value]="auth.code">
+                        {{auth.name}}
+                    </ion-option>
+                </ion-select>
+            </ion-item>
+        </ion-list>
+    </form>
+</ion-content>
+<ion-footer no-border>
+    <ion-navbar>
+        <ion-buttons end>
+            <button ion-button (click)="close()" [disabled]="isSaving">
+        Annuler
+      </button>
+        </ion-buttons>
+        <ion-buttons end>
+            <button ion-button (click)="save(editForm.form.invalid)" [disabled]="editForm.form.invalid || isSaving">
+        <ion-spinner *ngIf="isSaving"></ion-spinner> Enregistrer
+      </button>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-footer>

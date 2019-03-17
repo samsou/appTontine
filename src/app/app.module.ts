@@ -1,5 +1,4 @@
 import { registerLocaleData } from '@angular/common';
-import { HttpClientModule } from '@angular/common/http';
 import localeFr from '@angular/common/locales/fr';
 import { ErrorHandler, LOCALE_ID, NgModule } from '@angular/core';
 import { FormsModule } from '@angular/forms';
@@ -12,6 +11,8 @@ import { AccordionComponent } from '../components/accordion/accordion';
 import { ClientOptions } from '../components/client/client';
 import { EpargneOptions } from '../components/epargne/epargne';
 import { TontineOptions } from '../components/tontine/tontine';
+import { DirectivesModule } from '../directives/directives.module';
+import { AccountOptions } from '../pages/accueil/accueil';
 import { HomePage } from '../pages/home/home';
 import { DataProvider } from '../providers/data/data';
 import { MyApp } from './app.component';
@@ -36,12 +37,13 @@ let firebaseConfig = {
     AccordionComponent,
     ClientOptions,
     TontineOptions,
-    EpargneOptions
+    EpargneOptions,
+    AccountOptions
   ],
   imports: [
     BrowserModule,
     IonicModule.forRoot(MyApp),
-    HttpClientModule,
+    DirectivesModule,
     FormsModule,
     AngularFireModule.initializeApp(firebaseConfig),
     AngularFireDatabaseModule
@@ -53,7 +55,8 @@ let firebaseConfig = {
     AccordionComponent,
     ClientOptions,
     TontineOptions,
-    EpargneOptions
+    EpargneOptions,
+    AccountOptions
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

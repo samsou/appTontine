@@ -2,8 +2,12 @@ page-accueil {
     .menus {
         transition: all transform 2s;
         border-right: 1px solid rgba(141, 135, 135, 0.5);
-        width: 25%;
+        width: 23%;
+        .scroll-content {
+            background: rgba(3, 169, 244, 0.08) !important;
+        }
         ion-item {
+            background: transparent !important;
             cursor: pointer;
         }
     }

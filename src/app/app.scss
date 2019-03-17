@@ -2,6 +2,31 @@
     width: auto !important;
 }
 
+.total {
+    font-size: 1.4em;
+    font-weight: 300;
+    text-align: center;
+    padding: 4px 6px;
+    margin: 5px 25px;
+    border: #6d6767 solid;
+    &:hover {
+        background: #f5f5f5;
+    }
+    span {
+        font-weight: bold;
+        font-size: 1.5em;
+    }
+}
+
+body {
+    background: #e6ecf0;
+}
+
+.onLine * {
+    color: orangered;
+    font-size: 0.8em;
+}
+
 table thead tr th {
     white-space: nowrap;
 }
@@ -26,7 +51,7 @@ ion-icon.icon.item-icon::before {
     position: absolute;
     top: 50%;
     left: 15px;
-    right: 15px;
+    right: 35px;
     transform: translateY(-50%);
 }
 
@@ -91,8 +116,19 @@ span.oblige:after {
     color: red;
 }
 
+.loading {
+    position: absolute !important;
+    left: 50% !important;
+}
+
 .table-wrapper {
     overflow-x: auto;
+}
+
+.helper-error {
+    color: red;
+    font-size: 0.8em;
+    font-style: italic;
 }
 
 table {
@@ -124,7 +160,7 @@ table {
 }
 
 .counter {
-    display: none;
+    display: block;
 }
 
 
@@ -157,4 +193,9 @@ table {
 .options:hover {
     cursor: pointer;
     background-color: #f5f5f5;
+}
+
+.client-search .modal-wrapper {
+    max-width: 350px !important;
+    margin: 5px auto !important;
 }

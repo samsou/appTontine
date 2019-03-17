@@ -1,0 +1,19 @@
+<ion-header no-border>
+
+    <ion-navbar>
+        <ion-title text-center>{{'Impression'}}</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <div class="isLoading" [hidden]="!isLoading">
+        <ion-spinner></ion-spinner> <br>
+        <ion-note>
+            {{'veuillez patienter'}}
+            <ion-spinner name="dots"></ion-spinner>
+        </ion-note>
+    </div>
+    <iframe frameborder="0" #frameElement [hidden]="isLoading"></iframe>
+</ion-content>

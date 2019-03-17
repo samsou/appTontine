@@ -1,0 +1,37 @@
+<h3 padding>Les recettes</h3>
+<div class="table-wrapper">
+    <div class="total">
+        Total: <span>{{montant | currency:'XOF':true:'2.0'}}</span>
+    </div>
+    <table>
+        <thead>
+            <tr>
+                <th class="counter">N°</th>
+                <th class="id">id</th>
+                <th>Date</th>
+                <th>Client</th>
+                <th>Montant</th>
+                <th>Motif</th>
+                <th></th>
+            </tr>
+        </thead>
+        <ng-template #elseBlock>
+            <tbody text-center margin padding>
+                <ion-spinner class="loading" margin padding></ion-spinner>
+            </tbody>
+        </ng-template>
+        <tbody *ngIf="recettes;else elseBlock">
+            <tr *ngFor="let recette of recettes | recherche:dataProvider.userData.currentSearch;let index = index">
+                <td class="counter">{{index + 1}}</td>
+                <td class="id">{{recette.id}}</td>
+                <td>{{recette.date | date:'mediumDate'}}</td>
+                <td>{{client(recette.idClient)}}</td>
+                <td>{{recette.montant | currency:'XOF':true:'2.0'}}</td>
+                <td>{{recette.motif}}</td>
+                <td>
+
+                </td>
+            </tr>
+        </tbody>
+    </table>
+</div>

@@ -1,14 +1,14 @@
-<ion-content padding>
+<ion-content padding [ngStyle]="{'background-image': 'url(' + backgroundImage +')'}" class="transparent-header">
     <!-- [ngStyle]="{'background-image': 'url(' + backgroundImage +')'}"  class="transparent-header" -->
-    <h6 text-center padding style="color:rgb(36, 34, 34)">
+    <h6 text-center padding>
         Connexion</h6>
-    <div class="abs2">
+    <div class="abs2" margin padding>
         <!--  <img class="logo" src="assets/imgs/culte.png" style="width:90px;height: 90;border-radius: 50%;" /> -->
-        <ion-item>
+        <ion-item margin-left margin-right>
             <ion-input type="text" [(ngModel)]="model.username" (keyup)="onkeyup($event)" placeholder="Nom d'utilisateur"></ion-input>
         </ion-item>
         <br><br>
-        <ion-item>
+        <ion-item margin-left margin-right>
             <ion-input type="password" [(ngModel)]="model.password" (keyup)="onkeyup($event)" placeholder="Mot de passe"></ion-input>
         </ion-item>
         <br>

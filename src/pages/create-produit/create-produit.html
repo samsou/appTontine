@@ -1,0 +1,94 @@
+<ion-header>
+
+    <ion-navbar color="primary">
+        <ion-title>{{produit.id?"Modifiation d'un produit":"Ajout d'un produit"}}</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="close()">
+            <ion-icon name="close"></ion-icon>
+          </button>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <form name="editForm" role="form" novalidate #editForm="ngForm">
+        <ion-item *ngIf="!produit.id">
+            <ion-label class="oblige">Selectionnez le type de produit</ion-label>
+            <ion-select [(ngModel)]="produit.typeProduit" required name="produit">
+                <ion-option value="TONTINE"> Produit tontine</ion-option>
+                <ion-option value="EPARGNE"> Produit Epargne</ion-option>
+            </ion-select>
+        </ion-item>
+        <p margin-left *ngIf="produit.id">
+            Produit {{produit.typeProduit}}
+        </p>
+        <ion-item>
+            <ion-label color="primary" stacked class="oblige">Libellé du produit</ion-label>
+            <ion-input type="text" required [(ngModel)]="produit.libelle" name="libelle"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="produit.typeProduit == 'TONTINE'">
+            <ion-label color="primary" stacked class="oblige">Montant minimum</ion-label>
+            <ion-input type="number" required [(ngModel)]="produit.montantMin" name="montantMin" pattern="[0-9]+$"></ion-input>
+        </ion-item>
+        <p text-right class="helper-error" *ngIf="produit.montantMin && produit.montantMax && (+produit.montantMin > +produit.montantMax)">
+            Le montant minimum ne peut pas dépasser le montant maximum
+        </p>
+        <ion-item *ngIf="produit.typeProduit == 'TONTINE'">
+            <ion-label color="primary" stacked>Montant maximum</ion-label>
+            <ion-input type="number" [(ngModel)]="produit.montantMax" name="montantMax" pattern="[0-9]+$"></ion-input>
+        </ion-item>
+        <!-- <p text-right class="helper-error" *ngIf="produit.montantMin && produit.montantMax && (produit.montantMin > produit.montantMax)">
+            Le montant maximum ne peut pas être inférieur au montant miminum
+        </p> -->
+        <ion-item *ngIf="produit.typeProduit == 'TONTINE'">
+            <ion-label color="primary" stacked class="oblige">Nombre de mise avant avance</ion-label>
+            <ion-input type="number" required [(ngModel)]="produit.nbreMiseAvance" name="nbreMiseAvance" pattern="[0-9]+$"></ion-input>
+        </ion-item>
+        <p text-right class="helper-error" *ngIf="produit.nbreMiseAvance && produit.nbreMiseTotal && (+produit.nbreMiseAvance > +produit.nbreMiseTotal)">
+            Le nombre de mise avant avance ne peut pas dépasser le nombre de mise total
+        </p>
+        <ion-item *ngIf="produit.typeProduit == 'TONTINE'">
+            <ion-label color="primary" stacked class="oblige">Nombre de mise totale</ion-label>
+            <ion-input type="number" [(ngModel)]="produit.nbreMiseTotal" name="nbreMiseTotal" pattern="[0-9]+$" required></ion-input>
+        </ion-item>
+        <ion-item *ngIf="produit.typeProduit == 'TONTINE'">
+            <ion-label color="primary" stacked class="oblige">Nombre de mise à prélever</ion-label>
+            <ion-input type="number" [(ngModel)]="produit.nbreMisePrelever" name="nbreMisePrelever" pattern="[0-9]+$" required></ion-input>
+        </ion-item>
+        <p text-right class="helper-error" *ngIf="produit.nbreMisePrelever && produit.nbreMiseTotal && (+produit.nbreMisePrelever >= +produit.nbreMiseTotal)">
+            Le nombre de mise à prélever ne peut pas dépasser le nombre de mise total
+        </p>
+        <ion-item *ngIf="produit.typeProduit == 'TONTINE'">
+            <ion-label class="oblige">Périodicité</ion-label>
+            <ion-select [(ngModel)]="produit.periodicite" required name="periodicite">
+                <ion-option value="JOURNALIERE"> Journalière</ion-option>
+                <ion-option value="HEBDOMADAIRE"> Hebdomadaire</ion-option>
+                <ion-option value="MENSUELLE"> Mensuelle</ion-option>
+                <ion-option value="SEMESTRIELLE"> Semestrielle</ion-option>
+                <ion-option value="ANNUELLE"> Annuelle</ion-option>
+            </ion-select>
+        </ion-item>
+        <!-- <ion-item>
+            <ion-label color="primary" stacked class="oblige">Nombre d'écheances</ion-label>
+            <ion-input type="text" [(ngModel)]="produit.nbreEcheance" name="nbreEcheance" pattern="[0-9]+$" required></ion-input>
+        </ion-item> -->
+    </form>
+</ion-content>
+<ion-footer>
+    <ion-navbar>
+        <ion-buttons end>
+            <button ion-button (click)="close()">
+        Annuler
+      </button>
+        </ion-buttons>
+        <ion-buttons end>
+            <button ion-button [disabled]="editForm.form.invalid || isSaving || (produit.montantMin && produit.montantMax && (+produit.montantMin > +produit.montantMax)) || (produit.nbreMisePrelever && produit.nbreMiseTotal && (+produit.nbreMisePrelever >= +produit.nbreMiseTotal)) || (produit.nbreMiseAvance && produit.nbreMiseTotal && (+produit.nbreMiseAvance > +produit.nbreMiseTotal))"
+                (click)="save()">
+        <ion-spinner *ngIf="isSaving"></ion-spinner> Enregistrer
+      </button>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-footer>

@@ -1,41 +1,48 @@
 import { Directive, Input, TemplateRef, ViewContainerRef } from '@angular/core';
 
-import { UserData } from '../../providers/data/userdata';
-
+import { DataProvider } from './../../providers/data/data';
 
 @Directive({
-  selector: '[hasAnyRessources]'
+  selector: '[hasRessources]' // Attribute selector
 })
-export class HasAnyRessourcesDirective {
+export class RessourcesDirective {
   constructor(
     private templateRef: TemplateRef<any>,
-    private viewContainerRef: ViewContainerRef
+    private viewContainerRef: ViewContainerRef,
+    private dataProvider: DataProvider
   ) { }
 
   @Input()
-  set hasAnyRessources(value: string | string[]) {
-    if (!value) {
-      this.viewContainerRef.clear();
-      return;
-    }
+  set hasRessources(value: string | string[]) {
     this.updateView(value);
+    this.dataProvider.authenticationState.subscribe(() => {
+      this.updateView(value);
+    });
   }
 
   private updateView(value: string | string[]): void {
-    let ressources = UserData.getInstance().ressources;
-    if (Array.isArray(value) && value[0] && value.length == 1) {
-      this.viewContainerRef.clear();
-    }
+    let ressources = [];
     value = Array.isArray(value) ? value : [value];
+    if (!this.dataProvider.isLogged || !this.dataProvider.user || !this.dataProvider.user.permissions) {
+      value = [];
+    }
+    if (this.dataProvider.user)
+      ressources = this.dataProvider.user.permissions;
     this.viewContainerRef.clear();
     let index = -1;
     for (let item of value) {
       item = item ? item.trim() : item;
-      if (ressources.indexOf(item) != -1) index = 1;
+      let findexIndex = ressources.findIndex((each) => {
+        return each === item || each.code === item;
+      });
+      if (findexIndex !== -1)
+        index = 1;
     }
     if (!value[0]) index = 1;
-    if (index != -1) {
+    if (index !== -1) {
       this.viewContainerRef.createEmbeddedView(this.templateRef);
     }
   }
+
 }
+

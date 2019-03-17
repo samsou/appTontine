@@ -1,0 +1,57 @@
+<ion-header no-border>
+
+    <ion-navbar color="primary">
+        <ion-title>Les utilisateurs</ion-title>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th class="counter">N°</th>
+                    <th class="id">id</th>
+                    <th>Nom d'utilisateur</th>
+                    <th>Nom</th>
+                    <th>Prénoms</th>
+                    <th>Téléphone</th>
+                    <!-- <th text-left>Actif/Désactif</th> -->
+                    <th>Date de création</th>
+                    <th>Actions</th>
+                </tr>
+            </thead>
+            <ng-template #elseBlock>
+                <tbody text-center margin padding>
+                    <ion-spinner class="loading" margin padding></ion-spinner>
+                </tbody>
+            </ng-template>
+            <tbody *ngIf="users;else elseBlock">
+                <tr *ngFor="let user of users | recherche:dataProvider.currentSearch;let index = index">
+                    <td class="counter">{{index + 1}}</td>
+                    <td class="id">{{user._id}}</td>
+                    <td>{{user.username}}</td>
+                    <td>{{user.name}}</td>
+                    <td>{{user.firstName}}</td>
+                    <td>{{user.phone}}</td>
+                    <!--  <td text-center>
+            <ion-toggle [checked]="user.isActive" (click)="onActivate(user)"></ion-toggle>
+          </td> -->
+                    <td>{{user.date | date:'mediumDate'}}</td>
+                    <td>
+                        <ion-icon name="create" (click)="editUser(user)" class="edit"></ion-icon>
+                        <ion-icon name="ios-close-outline" (click)="deleteUser(user)" class="trash"></ion-icon>
+                        <ion-icon name="md-more" (click)="openOptions($event,user)" class="options"></ion-icon>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+    <ion-fab bottom right>
+        <button ion-fab color="primary" (click)="editUser()">
+      <ion-icon name="add"></ion-icon>
+    </button>
+    </ion-fab>
+</ion-content>
