@@ -16,6 +16,7 @@ export class AccueilPage {
   menus: any[] = [];
   menusStats: any[] = [];
   plateforme: string;
+  code: string;
   onLine: boolean = false;
   constructor(public navCtrl: NavController, public dataProvider: DataProvider, public platForm: Platform, private modalCtrl: ModalController, private popoverCtrl: PopoverController) {
     this.plateforme = UserData.getInstance().plateforme;
@@ -101,8 +102,8 @@ export class AccueilPage {
       <button ion-item (click)="close()" *ngIf="dataProvider.isLogged" disabled>{{dataProvider.user?.name || dataProvider.user?.username || 'user name'}}</button>
       <button ion-item (click)="close('LOGOUT')" *ngIf="dataProvider.isLogged">Se déconnecter</button>
       <button ion-item (click)="close('LOGIN')" *ngIf="!dataProvider.isLogged">Se connecter</button>
-<button ion-item (click)="close('ADD_USER')" *ngIf="dataProvider.isLogged && dataProvider.user?.isSuperAdmin">Les utilisateurs</button>
-      </ion-list>
+      <button ion-item (click)="close('ADD_USER')" *ngIf="dataProvider.isLogged && dataProvider.user?.isSuperAdmin">Les utilisateurs</button>
+    </ion-list>
   `
 })
 export class AccountOptions {

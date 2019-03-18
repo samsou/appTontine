@@ -2,9 +2,9 @@ import { Subject } from 'rxjs/Subject';
 
 import { Client, Compte, Produit, Settings } from './model';
 
-const entities: string[] = ['produits', 'clients', 'tontines', 'epargnes', 'parametres', 'recettes'];
+const entities: string[] = ['produits', 'clients', 'tontines', 'epargnes', 'credits', 'parametres', 'recettes'];
 let ressources = [];
-let tabs = ['tontines', 'epargnes', 'parametres', 'recettes'];
+let tabs = ['tontines', 'epargnes', 'credits', 'parametres', 'recettes'];
 let index, see;
 entities.forEach(element => {
     index = tabs.indexOf(element);
@@ -139,6 +139,37 @@ export class UserData {
                 }
             ]
         },
+
+        {
+          'libelle': 'Crédit',
+          code: 'CREDIT',
+          icon: 'paper',
+          ressource: 'tontine/api/credits',
+          'breadcrumbs': [
+              {
+                  'libelle': 'Les comptes crédits'
+                  , code: 'CREDIT',
+                  ressource: 'tontine/api/credits'
+              },
+              {
+                  'libelle': 'Créer un Compte'
+                  , code: 'CREATE_CREDIT',
+                  ressource: 'tontine/api/credits',
+              },
+              {
+                  'libelle': 'Dépôts'
+                  , code: 'DEPOT_CREDIT',
+                  ressource: 'tontine/api/credits',
+              },
+              {
+                  'libelle': 'Retraits'
+                  , code: 'RETRAIT_CREDIT',
+                  ressource: 'tontine/api/credits',
+              }
+          ]
+        },
+
+
         {
             'libelle': 'Nos recettes',
             code: 'RECETTES',
