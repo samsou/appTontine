@@ -1,7 +1,7 @@
 <!-- Generated template for the ClientComponent component -->
 <ion-row>
     <ion-col col-xs-12 col-md-6 col-lg-8 col-xl-8>
-        <h3 padding>Les comptes tontine</h3>
+        <h3 padding>Les Comptes Tontines</h3>
     </ion-col>
     <ion-col col-xs-12 col-md-6 col-lg-4 col-xl-4>
         <h6 padding text-right>
@@ -42,7 +42,7 @@
             <tr *ngFor="let tontine of tontines | cloturer: cloturer |cloturer:avance:'avanceTontine' | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
                 <td class="id">{{tontine.id}}</td>
-                <td>{{tontine?.client?.name}} {{tontine?.client?.firstName}}</td>
+                <td style="text-align:left">{{tontine?.client?.name}} {{tontine?.client?.firstName}}</td>
                 <td>{{tontine.dateCompte | date:'mediumDate'}}</td>
                 <td>{{tontine.montantSouscritTontine?(tontine.montantSouscritTontine| currency:'XOF':true:'2.0'):'0'}}</td>
                 <td>{{tontine.miseTontine}}</td>

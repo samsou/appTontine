@@ -11,7 +11,7 @@ import { DataProvider } from './../../providers/data/data';
 })
 export class ClientComponent {
   clients: Client[];
-  constructor(private dataProvider: DataProvider, private modalCtrl: ModalController, private toastCtrl: ToastController, private popoverCtrl: PopoverController, private alertCtrl: AlertController) {
+  constructor(public dataProvider: DataProvider, private modalCtrl: ModalController, private toastCtrl: ToastController, private popoverCtrl: PopoverController, private alertCtrl: AlertController) {
   }
   ngAfterViewInit() {
     this.getClients();

@@ -10,12 +10,14 @@ import { IonicApp, IonicErrorHandler, IonicModule } from 'ionic-angular';
 import { AccordionComponent } from '../components/accordion/accordion';
 import { ClientOptions } from '../components/client/client';
 import { EpargneOptions } from '../components/epargne/epargne';
+import { CreditOptions } from '../components/credit/credit';
 import { TontineOptions } from '../components/tontine/tontine';
 import { DirectivesModule } from '../directives/directives.module';
 import { AccountOptions } from '../pages/accueil/accueil';
 import { HomePage } from '../pages/home/home';
 import { DataProvider } from '../providers/data/data';
 import { MyApp } from './app.component';
+
 
 // the second parameter 'fr' is optional
 registerLocaleData(localeFr, 'fr');
@@ -38,6 +40,7 @@ let firebaseConfig = {
     ClientOptions,
     TontineOptions,
     EpargneOptions,
+    CreditOptions,
     AccountOptions
   ],
   imports: [
@@ -56,7 +59,9 @@ let firebaseConfig = {
     ClientOptions,
     TontineOptions,
     EpargneOptions,
-    AccountOptions
+    CreditOptions,
+    AccountOptions,
+    CreditOptions
   ],
   providers: [
     { provide: ErrorHandler, useClass: IonicErrorHandler },

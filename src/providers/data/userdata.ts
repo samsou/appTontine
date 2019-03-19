@@ -45,6 +45,7 @@ export class UserData {
     depots: any[] = [];
     retraits: any[] = [];
     TONTINE: Compte[] = [];
+    CREDIT: Compte[] = [];
     EPARGNE: Compte[] = [];
     RECETTES: any[] = [];
     settings: Settings = {
@@ -66,7 +67,7 @@ export class UserData {
         return clts.reverse();
     }
     get plateforme(): string {
-        return 'Plateforme';
+        return 'GALA';
     }
     menusStats: any[] = [
         { 'libelle': 'Statistiques', code: 'STATS', icon: 'pie' },
@@ -92,12 +93,12 @@ export class UserData {
             ressource: 'tontine/api/tontines',
             'breadcrumbs': [
                 {
-                    'libelle': 'Les comptes tontine'
+                    'libelle': 'Les Comptes Tontines'
                     , code: 'TONTINES',
                     ressource: 'tontine/api/tontines',
                 },
                 {
-                    'libelle': 'Créer un compte'
+                    'libelle': 'Créer un Compte'
                     , code: 'CREATE_TONTINE',
                     ressource: 'tontine/api/tontines',
                 }
@@ -118,7 +119,7 @@ export class UserData {
             ressource: 'tontine/api/epargnes',
             'breadcrumbs': [
                 {
-                    'libelle': 'Les comptes epargne'
+                    'libelle': 'Les Comptes Epargne'
                     , code: 'EPARGNE',
                     ressource: 'tontine/api/epargnes'
                 },
@@ -147,7 +148,7 @@ export class UserData {
           ressource: 'tontine/api/credits',
           'breadcrumbs': [
               {
-                  'libelle': 'Les comptes crédits'
+                  'libelle': 'Les Comptes Crédits'
                   , code: 'CREDIT',
                   ressource: 'tontine/api/credits'
               },
@@ -157,19 +158,12 @@ export class UserData {
                   ressource: 'tontine/api/credits',
               },
               {
-                  'libelle': 'Dépôts'
-                  , code: 'DEPOT_CREDIT',
+                  'libelle': 'Les Demandes'
+                  , code: 'DEMANDE_CREDIT',
                   ressource: 'tontine/api/credits',
               },
-              {
-                  'libelle': 'Retraits'
-                  , code: 'RETRAIT_CREDIT',
-                  ressource: 'tontine/api/credits',
-              }
           ]
         },
-
-
         {
             'libelle': 'Nos recettes',
             code: 'RECETTES',

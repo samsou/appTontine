@@ -18,7 +18,7 @@ export class ProduitComponent {
 
   typeCompte: string = 'tontine';
   produits: Produit[];
-  constructor(private dataProvider: DataProvider, private modalCtrl: ModalController, private toastCtrl: ToastController, private alertCtrl: AlertController) {
+  constructor(public dataProvider: DataProvider, private modalCtrl: ModalController, private toastCtrl: ToastController, private alertCtrl: AlertController) {
   }
   ngAfterViewInit() {
     this.getProduits();
@@ -26,6 +26,7 @@ export class ProduitComponent {
   getProduits() {
     this.dataProvider.getProduits().subscribe((produits: Produit[]) => {
       this.produits = produits;
+      console.log(produits);
     }, (err) => {
     });
   }

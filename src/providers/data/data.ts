@@ -244,9 +244,9 @@ export class DataProvider {
     });
   }
   addProduit(produit: Produit): Promise<any> {
-    produit.montantMax = +produit.montantMax || 0;
-    produit.montantMin = +produit.montantMin || 0;
-    produit.nbreEcheance = +produit.nbreEcheance || 0;
+    // produit.montantMax = +produit.montantMax || 0;
+    // produit.montantMin = +produit.montantMin || 0;
+    // produit.nbreEcheance = +produit.nbreEcheance || 0;
     produit.nbreMiseAvance = +produit.nbreMiseAvance || 0;
     produit.nbreMisePrelever = +produit.nbreMisePrelever || 0;
     produit.nbreMiseTotal = +produit.nbreMiseTotal || 0;

@@ -18,6 +18,8 @@ import { RecettesComponent } from './recettes/recettes';
 import { RetraitEpargneComponent } from './retrait-epargne/retrait-epargne';
 import { StatsComponent } from './stats/stats';
 import { TontineComponent } from './tontine/tontine';
+import { CreditComponent } from './credit/credit';
+import { CreateCreditComponent } from './create-credit/create-credit';
 
 @NgModule({
     declarations: [ClientComponent,
@@ -28,7 +30,9 @@ import { TontineComponent } from './tontine/tontine';
         CreateTontineComponent,
         MiseComponent,
         EpargneComponent,
+        CreditComponent,
         CreateEpargneComponent,
+        CreateCreditComponent,
         DepotEpargneComponent,
         RetraitEpargneComponent,
         ProduitComponent,
@@ -42,7 +46,9 @@ import { TontineComponent } from './tontine/tontine';
         CreateTontineComponent,
         MiseComponent,
         EpargneComponent,
+        CreditComponent,
         CreateEpargneComponent,
+        CreateCreditComponent,
         DepotEpargneComponent,
         RetraitEpargneComponent,
         ProduitComponent,

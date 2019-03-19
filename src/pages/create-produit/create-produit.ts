@@ -27,7 +27,7 @@ export class CreateProduitPage {
     this.isSaving = true;
     if (this.produit.typeProduit == 'TONTINE') {
       this.produit.nbreEcheance = this.produit.nbreMiseTotal - this.produit.nbreMisePrelever;
-    } else {
+    } else if (this.produit.typeProduit == 'EPARGNE')  {
       this.produit.nbreEcheance = null;
       this.produit.montantMax = null;
       this.produit.montantMin = null;
@@ -35,6 +35,7 @@ export class CreateProduitPage {
       this.produit.nbreMisePrelever = null;
       this.produit.nbreMiseTotal = null;
     }
+    console.log(this.produit);
     this.dataProvider.addProduit(this.produit).then((client) => {
       this.isSaving = false;
       this.close(this.produit);

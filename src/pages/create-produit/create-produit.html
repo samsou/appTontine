@@ -17,8 +17,9 @@
         <ion-item *ngIf="!produit.id">
             <ion-label class="oblige">Selectionnez le type de produit</ion-label>
             <ion-select [(ngModel)]="produit.typeProduit" required name="produit">
-                <ion-option value="TONTINE"> Produit tontine</ion-option>
+                <ion-option value="TONTINE"> Produit Tontine</ion-option>
                 <ion-option value="EPARGNE"> Produit Epargne</ion-option>
+                <ion-option value="CREDIT"> Produit Crédit</ion-option>
             </ion-select>
         </ion-item>
         <p margin-left *ngIf="produit.id">
@@ -28,20 +29,40 @@
             <ion-label color="primary" stacked class="oblige">Libellé du produit</ion-label>
             <ion-input type="text" required [(ngModel)]="produit.libelle" name="libelle"></ion-input>
         </ion-item>
-        <ion-item *ngIf="produit.typeProduit == 'TONTINE'">
+        <ion-item *ngIf="produit.typeProduit == 'TONTINE' || produit.typeProduit == 'CREDIT'">
             <ion-label color="primary" stacked class="oblige">Montant minimum</ion-label>
             <ion-input type="number" required [(ngModel)]="produit.montantMin" name="montantMin" pattern="[0-9]+$"></ion-input>
         </ion-item>
         <p text-right class="helper-error" *ngIf="produit.montantMin && produit.montantMax && (+produit.montantMin > +produit.montantMax)">
             Le montant minimum ne peut pas dépasser le montant maximum
         </p>
-        <ion-item *ngIf="produit.typeProduit == 'TONTINE'">
+        <ion-item *ngIf="produit.typeProduit == 'TONTINE' || produit.typeProduit == 'CREDIT'">
             <ion-label color="primary" stacked>Montant maximum</ion-label>
             <ion-input type="number" [(ngModel)]="produit.montantMax" name="montantMax" pattern="[0-9]+$"></ion-input>
         </ion-item>
         <!-- <p text-right class="helper-error" *ngIf="produit.montantMin && produit.montantMax && (produit.montantMin > produit.montantMax)">
             Le montant maximum ne peut pas être inférieur au montant miminum
         </p> -->
+        <ion-item *ngIf="produit.typeProduit == 'CREDIT'">
+          <ion-label color="primary" stacked class="oblige">Nombre d'écheances</ion-label>
+          <ion-input type="number" required [(ngModel)]="produit.nbreEcheance" name="nbreEcheance" pattern="[0-9]+$"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="produit.typeProduit == 'CREDIT'">
+          <ion-label color="primary" stacked class="oblige">Taux annuel(%)</ion-label>
+          <ion-input type="number" required [(ngModel)]="produit.tauxAnnuel" name="tauxAnnuel" pattern="[0-9]+$"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="produit.typeProduit == 'CREDIT'">
+          <ion-label color="primary" stacked class="oblige">Frais de Dossier</ion-label>
+          <ion-input type="number" required [(ngModel)]="produit.fraisDossier" name="fraisDossier" pattern="[0-9]+$"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="produit.typeProduit == 'CREDIT'">
+            <ion-label color="primary" stacked class="oblige">Frais de Tenue de Compte(%)</ion-label>
+            <ion-input type="number" required [(ngModel)]="produit.fraisTenueCompte" name="fraisTenueCompte" pattern="[0-9]+$"></ion-input>
+        </ion-item>
+        <ion-item *ngIf="produit.typeProduit == 'CREDIT'">
+            <ion-label color="primary" stacked class="oblige">Déposite(%)</ion-label>
+            <ion-input type="number" required [(ngModel)]="produit.deposite" name="deposite" pattern="[0-9]+$"></ion-input>
+        </ion-item>
         <ion-item *ngIf="produit.typeProduit == 'TONTINE'">
             <ion-label color="primary" stacked class="oblige">Nombre de mise avant avance</ion-label>
             <ion-input type="number" required [(ngModel)]="produit.nbreMiseAvance" name="nbreMiseAvance" pattern="[0-9]+$"></ion-input>
@@ -60,7 +81,7 @@
         <p text-right class="helper-error" *ngIf="produit.nbreMisePrelever && produit.nbreMiseTotal && (+produit.nbreMisePrelever >= +produit.nbreMiseTotal)">
             Le nombre de mise à prélever ne peut pas dépasser le nombre de mise total
         </p>
-        <ion-item *ngIf="produit.typeProduit == 'TONTINE'">
+        <ion-item *ngIf="produit.typeProduit == 'TONTINE' || produit.typeProduit == 'CREDIT'">
             <ion-label class="oblige">Périodicité</ion-label>
             <ion-select [(ngModel)]="produit.periodicite" required name="periodicite">
                 <ion-option value="JOURNALIERE"> Journalière</ion-option>

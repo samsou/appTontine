@@ -10,6 +10,9 @@
             <ion-segment-button value="epargne">
                 Epargne
             </ion-segment-button>
+            <ion-segment-button value="credit">
+              Crédit
+          </ion-segment-button>
         </ion-segment>
     </ion-col>
 </div>
@@ -22,12 +25,12 @@
                 <th>Date</th>
                 <!-- <th>type de produit</th> -->
                 <th>Libellé</th>
-                <th *ngIf="typeCompte == 'tontine'">Périodicité</th>
-                <th *ngIf="typeCompte == 'tontine'">montant min.</th>
+                <th *ngIf="typeCompte == 'tontine' || typeCompte == 'credit'">Périodicité</th>
+                <th *ngIf="typeCompte == 'tontine' || typeCompte == 'credit'">montant min.</th>
                 <th *ngIf="typeCompte == 'tontine'">nbre de mise avance</th>
                 <th *ngIf="typeCompte == 'tontine'">nbre de mise total</th>
                 <th *ngIf="typeCompte == 'tontine'">nbre de mise prélever</th>
-                <th *ngIf="typeCompte == 'tontine'">nbre d'écheances</th>
+                <th *ngIf="typeCompte == 'tontine' || typeCompte == 'credit'">nbre d'écheances</th>
                 <th>Actions</th>
             </tr>
         </thead>
@@ -43,12 +46,12 @@
                 <td>{{produit.date | date:'mediumDate'}}</td>
                 <!-- <td>{{produit.typeProduit}}</td> -->
                 <td>{{produit.libelle}}</td>
-                <td *ngIf="typeCompte == 'tontine'">{{produit.periodicite}}</td>
-                <td *ngIf="typeCompte == 'tontine'">{{produit.montantMin | currency:'XOF':true:'2.0'}}</td>
+                <td *ngIf="typeCompte == 'tontine' || typeCompte == 'credit'">{{produit.periodicite}}</td>
+                <td *ngIf="typeCompte == 'tontine' || typeCompte == 'credit'">{{produit.montantMin | currency:'XOF':true:'2.0'}}</td>
                 <td *ngIf="typeCompte == 'tontine'">{{produit.nbreMiseAvance}}</td>
                 <td *ngIf="typeCompte == 'tontine'">{{produit.nbreMiseTotal}}</td>
                 <td *ngIf="typeCompte == 'tontine'">{{produit.nbreMisePrelever}}</td>
-                <td *ngIf="typeCompte == 'tontine'">{{produit.nbreEcheance}}</td>
+                <td *ngIf="typeCompte == 'tontine' || typeCompte == 'credit'">{{produit.nbreEcheance}}</td>
                 <td>
                     <ion-icon name="create" (click)="edit(produit)" class="edit" *hasRessources="'tontine/api/produits/edit'"></ion-icon>
                     <ion-icon name="ios-close-outline" (click)="delete(produit)" class="trash" *hasRessources="'tontine/api/produits/delete'"></ion-icon>

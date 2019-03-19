@@ -1,5 +1,5 @@
 <!-- Generated template for the ClientComponent component -->
-<h3 padding>Les comptes epargne</h3>
+<h3 padding>Les comptes epargnes</h3>
 <div class="table-wrapper">
     <div class="total">
         Total: <span>{{montantTotalEpargne | currency:'XOF':true:'2.0'}}</span>
@@ -29,7 +29,7 @@
             <tr *ngFor="let epargne of epargnes | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
                 <td class="id">{{epargne.id}}</td>
-                <td>{{epargne?.client?.name}} {{epargne?.client?.firstName}}</td>
+                <td style="text-align:left">{{epargne?.client?.name}} {{epargne?.client?.firstName}}</td>
                 <td>{{epargne.dateCompte | date:'mediumDate'}}</td>
                 <!-- <td>{{epargne.montantSouscrit}}</td>
                 <td>{{epargne.mise}}</td>

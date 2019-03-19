@@ -26,9 +26,9 @@
         <tbody *ngIf="clients;else elseBlock">
             <tr *ngFor="let client of clients | recherche:dataProvider.userData.currentSearch;let index = index">
                 <td class="counter">{{index + 1}}</td>
-                <td class="id">{{client.id}}</td>
-                <td>{{client.date | date:'mediumDate'}}</td>
-                <td>{{client.name}} {{client.firstName}}</td>
+                <td class="id" style="width:100px">{{client.id}}</td>
+                <td>{{client.date | date:'dd/MM/yyyy'}}</td>
+                <td style="text-align:left">{{client.name}} {{client.firstName}}</td>
                 <td>{{client.numCarte}}</td>
                 <td>{{client.quartier}} {{client.maison}}</td>
                 <td>{{client.telephone}}</td>

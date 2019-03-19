@@ -11,12 +11,17 @@ export interface Client {
     numCarte?: string;
     email?: string;
     date?: number;
+    fraisOuverture?:number;
 }
 export interface Produit {
     id?: any;
     typeProduit?: any;
     periodicite?: any;
     montantMin?: number;
+    tauxAnnuel?: number;
+    fraisDossier?: number;
+    fraisTenueCompte?: number;
+    deposite?: number;
     montantMax?: number;
     nbreMiseAvance?: number;
     nbreMiseTotal?: number;
@@ -42,6 +47,9 @@ export interface Compte {
     montantAdhesion?: string;
     dateCloture?: number;
     montant?: number;
+    montantDemande?:number;
+    accordeCredit?:boolean;
+    accordDate?:any;
 }
 export interface Avance {
     id?: any;

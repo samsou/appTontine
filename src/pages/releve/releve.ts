@@ -17,6 +17,9 @@ export class RelevePage {
   action: any;
   model: any;
   mises: any;
+  footer : any;
+  pageOrientation:any;
+  pageMargins: any;
   constructor(public navCtrl: NavController, public navParams: NavParams, private dataProvider: DataProvider, public datePipe: DatePipe, private currencyPipe: CurrencyPipe) {
     this.action = navParams.get('action');
     this.model = Object.assign({}, navParams.get('model'));
@@ -37,7 +40,7 @@ export class RelevePage {
       this._buildPrintContent();
   }
   private async _buildPrintContent() {
-    let data;
+    let data:any;
     if (this.action === 'RELEVE')
       data = await this._buildReleve();
     else if (this.action === 'QUITTANCE')
@@ -94,18 +97,18 @@ export class RelevePage {
   }
   _buildQuittance(): any {
     return {
-      footer: (currentPage, pageCount) => {
-        return {
-          margin: [40, 1, 40, 2],
-          columns: [
-            {
-              with: '*',
-              text: `Généré le ${this.datePipe.transform(new Date(), "mediumDate")}`
-            },
-            { text: `${currentPage}/${pageCount}`, alignment: 'right', with: '*' }
-          ]
-        };
-      },
+      // footer: (currentPage, pageCount) => {
+      //   return {
+      //     margin: [40, 1, 40, 2],
+      //     columns: [
+      //       {
+      //         with: '*',
+      //         text: `Généré le ${this.datePipe.transform(new Date(), "mediumDate")}`
+      //       },
+      //       { text: `${currentPage}/${pageCount}`, alignment: 'right', with: '*' }
+      //     ]
+      //   };
+      // },
       watermark: { text: `QUITTANCE DE ${this.model.type}`, color: 'blue', opacity: 0.05, bold: true, italics: true },
       content: [
         {
@@ -301,18 +304,18 @@ export class RelevePage {
       ops.reverse();
     }
     return {
-      footer: (currentPage, pageCount) => {
-        return {
-          margin: [40, 1, 40, 2],
-          columns: [
-            {
-              with: '*',
-              text: `Généré le ${this.datePipe.transform(new Date(), "mediumDate")}`
-            },
-            { text: `${currentPage}/${pageCount}`, alignment: 'right', with: '*' }
-          ]
-        };
-      },
+      // footer: (currentPage, pageCount) => {
+      //   return {
+      //     margin: [40, 1, 40, 2],
+      //     columns: [
+      //       {
+      //         with: '*',
+      //         text: `Généré le ${this.datePipe.transform(new Date(), "mediumDate")}`
+      //       },
+      //       { text: `${currentPage}/${pageCount}`, alignment: 'right', with: '*' }
+      //     ]
+      //   };
+      // },
       watermark: { text: 'RELEVE DE COMPTE', color: 'blue', opacity: 0.05, bold: true, italics: true, fontSize: 10 },
       content: [
         {

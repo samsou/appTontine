@@ -13,6 +13,9 @@
         <ion-title *ngIf="type == 'CreateEpargneComponent'">
             Modifier le compte epargne
         </ion-title>
+        <ion-title *ngIf="type == 'CreateCreditComponent'">
+            Modifier le compte Crédit
+        </ion-title>
         <ion-title *ngIf="type == 'DepotEpargneComponent'">
             Les dépôts sur le compte épargne du client {{compte.client?.name}} {{compte.client?.firstName}}
         </ion-title>
@@ -42,5 +45,7 @@
     <div *ngIf="type == 'RetraitEpargneComponent'">
         <retrait-epargne [compte]="compte"></retrait-epargne>
     </div>
-
+    <div *ngIf="type == 'CreateCreditComponent'">
+        <create-credit [compte]="compte"></create-credit>
+    </div>
 </ion-content>
