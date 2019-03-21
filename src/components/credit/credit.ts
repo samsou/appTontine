@@ -74,7 +74,7 @@ export class CreditComponent {
           }
         );
       }else if (result == 'REMBOURSER') {
-        let modal = this.modalCtrl.create('RembourserPage', { compte }, {
+        let modal = this.modalCtrl.create('RembPage', { compte }, {
           enableBackdropDismiss: false
         });
         modal.present();

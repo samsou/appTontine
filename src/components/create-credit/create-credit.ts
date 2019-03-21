@@ -18,9 +18,15 @@ export class CreateCreditComponent {
   @Input('compte') credit: Compte = {
     typeCompte: 'CREDIT'
   };
+  isOk=false;
+  // //if(this.credit.client.fraisOuverture==undefined); //|| (this.credit.client.fraisOuverture==null) || this.credit.client.isFraisOk==false
+  // if(typeof this.credit.client.fraisOuverture==undefined !== "undefined") {
+  //   // do something with foo
+  // }
   client: Client = {};
   private _produit: Produit = {};
   constructor(public dataProvider: DataProvider, private toastCtrl: ToastController, private viewCtrl: ViewController,private modalCtrl: ModalController) {
+
   }
   get produit() {
     if (this.credit && this.credit.id)
@@ -107,6 +113,7 @@ this.credit.idClient = result.id;
             tau=this.credit.produit.tauxAnnuel;
           }
           e.interet=this.credit.montantDemande*tau/100;
+          e.payer=false;
           //echs.push(e);
           this.dataProvider.addEcheance(e).then(() => {}).catch(()=> {});
           console.log(e);

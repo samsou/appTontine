@@ -9,9 +9,7 @@
     <ion-navbar>
         <ion-title>Remboursement de Crédit du client: {{compte.client.name}} {{compte.client.firstName}}</ion-title>
         <ion-buttons end>
-            <button ion-button icon-only (click)="close()">
-        <ion-icon name="close"></ion-icon>
-      </button>
+            <button ion-button icon-only (click)="close()"><ion-icon name="close"></ion-icon></button>
         </ion-buttons>
     </ion-navbar>
 
@@ -36,7 +34,7 @@
             <thead>
                 <tr>
                     <th class="counter2">N°</th>
-                    <th class="id">Echéance N°</th>
+                    <th>Echéance N°</th>
                     <th>Nominal</th>
                     <th>Interet</th>
                     <th>Date</th>
@@ -47,13 +45,12 @@
             <tbody>
                 <tr *ngFor="let echeance of echeances;let index = index">
                     <td class="counter2">{{index + 1}}</td>
-                    <td class="id">{{echeance.num}}</td>
-                    <td class="id">{{echeance.nominal}}</td>
-                    <td class="id">{{echeance.interet}}</td>
-                    <td class="id">{{echeance.date}}</td>
-                    <td class="id">{{echeance.payer}}</td>
+                    <td >Echéance N° {{echeance.num}}</td>
+                    <td >{{echeance.nominal}}</td>
+                    <td >{{echeance.interet}}</td>
+                    <td >{{echeance.date|date:'dd/MM/yyyy'}}</td>
                     <td>
-                        <!-- <ion-checkbox [(ngModel)]="echeance.payer" name="checked" [disabled]="echeance" (ionChange)="onChange(echeance)"></ion-checkbox> -->
+                        <ion-checkbox [(ngModel)]="echeance.payer" [checked]="echeance.payer" name="checked" [disabled]="echeance.payer" (ionChange)="onChange(echeance)"></ion-checkbox>
                     </td>
                 </tr>
             </tbody>

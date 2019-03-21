@@ -84,7 +84,7 @@ export class EpargneComponent {
               placeholder: 'Nom du déposant',
               type: 'text',
               name: 'nameDeposant'
-            }, 
+            },
             {
               placeholder: 'Téléphone du déposant',
               type: 'text',
@@ -174,7 +174,7 @@ export class EpargneComponent {
 
               placeholder: 'Téléphone du retirant',
               type: 'text',
-              name: 'phoneRetirant'
+              name: 'phoneRetirant',
             },
             {
               placeholder: 'numéro de pièce',

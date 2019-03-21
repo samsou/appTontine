@@ -12,15 +12,22 @@ import { DataProvider } from './../../providers/data/data';
 })
 export class ClientComponent {
   clients: Client[];
-  constructor(public dataProvider: DataProvider, public setting: Settings, private modalCtrl: ModalController, private toastCtrl: ToastController, private popoverCtrl: PopoverController, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
+  setting : Settings;
+  constructor(public dataProvider: DataProvider, private modalCtrl: ModalController, private toastCtrl: ToastController, private popoverCtrl: PopoverController, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
   }
   ngAfterViewInit() {
     this.getClients();
-    //setting.get
+    this.getSetting();
   }
   getClients() {
     this.dataProvider.getClients().subscribe((clients: Client[]) => {
       this.clients = clients;
+    }, (err) => {
+    });
+  }
+  getSetting() {
+    this.dataProvider.getSettings().subscribe((sett: Settings) => {
+      this.setting = sett;
     }, (err) => {
     });
   }
@@ -42,7 +49,7 @@ export class ClientComponent {
           inputs:[
            {
              name:"montant",
-             value=setting.fraisou
+             value: this.setting.fraisOuvertureDeCompte
            }
           ],
           buttons: ['Annuler', {
@@ -61,19 +68,34 @@ export class ClientComponent {
                 enableBackdropDismiss: false
               });
               loading.present();
-              this.dataProvider.accordAvance(compte,data.montant).then(() => {
+              this.dataProvider.payerFraisOuverture(client,data.montant).then(() => {
+
+                let recette = {
+                  idClient: client.id,
+                  montant: data.montant,
+                  motif: "Recettes des frais d'ouverture de compte"
+                }
+                this.dataProvider.deduireRecette(recette).then(() => {})
+                .catch(() => {
+                    loading.dismiss();
+                    alert = this.alertCtrl.create({
+                    buttons: ['OK']
+                    });
+                    alert.setMessage("Une erreur s'est produite lors de l'enregistrement des frais d'ouverture de compte, veuillez réessayer!!!");
+                    alert.present();
+                });
                 loading.dismiss();
                 alert = this.alertCtrl.create({
                   buttons: ['OK']
                 });
-                alert.setMessage("L'avance a été accordé au client");
+                alert.setMessage("Les frais d'ouverture ont été payés avec succès");
                 alert.present();
               }).catch(() => {
                 loading.dismiss();
                 alert = this.alertCtrl.create({
                   buttons: ['OK']
                 });
-                alert.setMessage("Une erreur s'est produite lors de l'accord de l'avance sur le compte, veuillez réessayer!!!");
+                alert.setMessage("Une erreur s'est produite lors de l'enregistrement des frais d'ouverture de compte, veuillez réessayer!!!");
                 alert.present();
               });
             }
@@ -159,7 +181,7 @@ export class ClientComponent {
 @Component({
   template: `
     <ion-list no-padding no-margin>
-      <button no-padding no-margin ion-item *ngIf="isFraisPaye" (click)="close('PAYER')"> Payer Frais Ouvrture </button>
+      <button no-padding no-margin ion-item *ngIf="!isFraisPaye" (click)="close('PAYER')"> Payer Frais Ouvrture </button>
       <button no-padding no-margin ion-item (click)="close('COMPTES')"> Voir ses comptes</button>
     </ion-list>
   `

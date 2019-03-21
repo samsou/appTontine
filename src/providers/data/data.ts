@@ -145,12 +145,11 @@ export class DataProvider {
     compte.montantAvance = montant;
     return this.addCompte(compte);
   }
-  payerFraisOuverture(cpte: Compte,montant): Promise<any> {
-    let compte = Object.assign({}, cpte);
-    compte.avanceDate = this.user.clotureDate || Date.now();
-    compte.avanceTontine = true;
-    compte.montantAvance = montant;
-    return this.addCompte(compte);
+  payerFraisOuverture(client: Client,montant): Promise<any> {
+    let clt = Object.assign({}, client);
+    clt.fraisOuverture=montant;
+    clt.isFraisOk=true;
+    return this.addClient(clt);
   }
   getClientById(idClient: any) {
     return this.userData.clientsMap[idClient];
@@ -210,6 +209,7 @@ export class DataProvider {
   addClient(client: Client): Promise<any> {
     if (!client.id) {
       client.date = this.user.clotureDate || Date.now();
+      client.isFraisOk=false;
       return Promise.resolve(this.db.list('clients').push(client));
     } else {
       return this.db.object(`clients/${client.id}`).update(client);
@@ -289,6 +289,7 @@ export class DataProvider {
 
   getEcheances(compte: Compte): Observable<Echeance[]> {
     return this.db.object(`echeances/${compte.id}`).valueChanges().map((prdts) => {
+      this.echeances=[];
       for (const key in prdts) {
         this.echeances.push({ id: key, ...prdts[key] });
       }
@@ -364,6 +365,7 @@ export class DataProvider {
     });
     return comptes.concat(...comptes2);
   }
+
   logout(): Promise<any> {
     this.isLogged = false;
     this.user = {};

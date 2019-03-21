@@ -12,6 +12,7 @@ export interface Client {
     email?: string;
     date?: number;
     fraisOuverture?:number;
+    isFraisOk?:boolean;
 }
 export interface Produit {
     id?: any;
