@@ -1,0 +1,75 @@
+<!--
+  Generated template for the RembourserPage page.
+
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+
+    <ion-navbar>
+        <ion-title>Remboursement de Crédit du client: {{compte.client.name}} {{compte.client.firstName}}</ion-title>
+        <ion-buttons end>
+            <button ion-button icon-only (click)="close()">
+        <ion-icon name="close"></ion-icon>
+      </button>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-header>
+
+
+<ion-content padding>
+    <p>
+        Le montant accorde : <strong>{{compte.montantDemande | currency:'XOF':true:'2.0'}}</strong>
+        <br>
+        <!-- <span *ngIf="compte.produit && compte.produit.nbreMiseTotal">         -->
+        <span>
+          Nombre d'Echéances:  <strong>{{compte.produit.nbreEcheance}}</strong>
+        </span>
+        <br> Périodicité :<strong>{{compte.produit.periodicite}}</strong><br>
+      <span>
+      Date de l'accord: <strong>{{compte.accordDate | date:'mediumDate'}}</strong>
+    </span>
+    </p> <br>
+    <div class="table-wrapper">
+        <table>
+            <thead>
+                <tr>
+                    <th class="counter2">N°</th>
+                    <th class="id">Echéance N°</th>
+                    <th>Nominal</th>
+                    <th>Interet</th>
+                    <th>Date</th>
+                    <th>Payé</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr *ngFor="let echeance of echeances;let index = index">
+                    <td class="counter2">{{index + 1}}</td>
+                    <td class="id">{{echeance.num}}</td>
+                    <td class="id">{{echeance.nominal}}</td>
+                    <td class="id">{{echeance.interet}}</td>
+                    <td class="id">{{echeance.date}}</td>
+                    <td class="id">{{echeance.payer}}</td>
+                    <td>
+                        <!-- <ion-checkbox [(ngModel)]="echeance.payer" name="checked" [disabled]="echeance" (ionChange)="onChange(echeance)"></ion-checkbox> -->
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </div>
+</ion-content>
+<ion-footer>
+    <ion-navbar>
+        <!-- <ion-title *ngIf="nbreMise.size">
+            {{(nbreMise.size * (compte.montantSouscritTontine || 0)) | currency:'XOF':true:'2.0'}} à payer
+        </ion-title> -->
+        <ion-buttons end>
+            <button ion-button (click)="save()" [disabled]="isSaving">
+        <ion-spinner *ngIf="isSaving"></ion-spinner> Enregistrer
+      </button>
+        </ion-buttons>
+    </ion-navbar>
+
+</ion-footer>

@@ -1,28 +1,9 @@
 <!-- Generated template for the CreateTontineComponent component -->
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm" padding>
     <ion-list no-lines>
+      <!-- *ngIf="!credit.id"  -->
+      <!--  [disabled]="credit.id" -->
         <ion-item padding-bottom>
-            <ion-label class="oblige">Selectionnez le produit de crédit</ion-label>
-            <ion-select [(ngModel)]="credit.idProduit" required name="produit" [disabled]="credit.id">
-                <ion-option [value]="getSelectedProduit(pdt)" *ngFor="let pdt of dataProvider.userData.produits | typed:'CREDIT'"> {{pdt.libelle}}</ion-option>
-                <ion-option value='' *ngIf="!dataProvider.userData.produits">Pas de produits crédits</ion-option>
-            </ion-select>
-        </ion-item>
-        <ion-item *ngIf="!credit.id" padding-bottom (click)="openSearch()" style="cursor:pointer">
-            <ion-label class="oblige">Selectionnez le client</ion-label>
-            <span item-end
-        *ngIf="dataProvider.userData.clients && dataProvider.userData.clients.length > 3">
-        {{client?.name}} {{client?.firstName}}
-    </span>
-            <ion-select [(ngModel)]="credit.idClient" required name="client" [disabled]="credit.id" *ngIf="!dataProvider.userData.clients || dataProvider.userData.clients.length <= 3">
-            <ion-option [value]="getSelected(clt)" *ngFor="let clt of dataProvider.userData.clients" [disabled]="credit.id"> {{clt.name}} {{clt.firstName}}</ion-option>
-                <ion-option value='' *ngIf="!dataProvider.userData.clients">Pas de clients</ion-option>
-            </ion-select>
-        </ion-item>
-        <ion-item *ngIf="credit.id" padding-bottom>
-            Nom client: <strong>{{credit.client?.name}} {{credit.client?.firstName}}</strong>
-            <br><br><br>
-            Produit: <strong><em>{{credit.produit?.libelle}}</em></strong> <br><br>
             <ion-label class="oblige">Selectionnez le produit de crédit</ion-label>
             <ion-select [(ngModel)]="credit.idProduit" required name="produit">
                 <ion-option [value]="getSelectedProduit(pdt)" *ngFor="let pdt of dataProvider.userData.produits | typed:'CREDIT'"> {{pdt.libelle}}</ion-option>
@@ -30,25 +11,50 @@
             </ion-select>
         </ion-item>
         <ion-item *ngIf="credit.id" padding-bottom>
+            --------------- Détail du Produit Crédit: <br>
+             Nbre Echéances: <strong><em>{{credit.produit?.nbreEcheance}}</em></strong> <br>
+             Périodicité: <strong><em>{{credit.produit?.periodicite}}</em></strong>
+            ---------------
+        </ion-item>
+        <ion-item *ngIf="!credit.id" padding-bottom (click)="openSearch()" style="cursor:pointer">
+            <ion-label class="oblige">Selectionnez le client</ion-label>
+            <span item-end
+        *ngIf="dataProvider.userData.clients && dataProvider.userData.clients.length > 3">
+        {{client?.name}} {{client?.firstName}}
+      </span>
+            <ion-select [(ngModel)]="credit.idClient" required name="client" [disabled]="credit.id" *ngIf="!dataProvider.userData.clients || dataProvider.userData.clients.length <= 3">
+            <ion-option [value]="getSelected(clt)" *ngFor="let clt of dataProvider.userData.clients" [disabled]="credit.id"> {{clt.name}} {{clt.firstName}}</ion-option>
+                <ion-option value='' *ngIf="!dataProvider.userData.clients">Pas de clients</ion-option>
+            </ion-select>
+        </ion-item>
+        <ion-item *ngIf="credit.id" padding-bottom>
+            Nom client: <strong>{{credit.client?.name}} {{credit.client?.firstName}}</strong>
+        </ion-item>
+        <ion-item >
             <ion-label color="primary" stacked class="oblige">Montant demandé</ion-label>
             <ion-input type="text" required pattern="[0-9 ]+" [(ngModel)]="credit.montantDemande" name="montantDemande"></ion-input>
+            <!--  [attr.readonly]="credit.id?'':null" -->
         </ion-item>
-        <!-- <ion-item *ngIf="!credit.montantDemande">
-            <ion-label color="primary" stacked class="oblige">Montant demandé</ion-label>
-            <ion-input type="text" required pattern="[0-9 ]+" [(ngModel)]="credit.montantDemande" name="montantDemande" [attr.readonly]="credit.id?'':null"></ion-input>
-        </ion-item> -->
-        <!-- <p *ngIf="credit.id && credit.fraisDossier">
-            Le montant souscrit est : {{credit.fraisDossier | currency:'XOF':true:'2.0'}} <br><br>
-        </p> -->
-        <p *ngIf="credit.montantDemande && credit.montantDemande < produit?.montantMin" class="helper-error" text-right>
+        <p *ngIf="credit.montantDemande && credit.montantDemande < +produit?.montantMin" class="helper-error" text-right>
             Le montant souscrit doit dépasser le montant minimum du produit ({{produit?.montantMin | currency:'XOF':true:'2.0'}})
         </p>
-        <p *ngIf="credit.montantDemande && credit.montantDemande > produit?.montantMax" class="helper-error" text-right>
+        <p *ngIf="credit.montantDemande && credit.montantDemande > +produit?.montantMax" class="helper-error" text-right>
             Le montant souscrit ne peut pas dépasser le montant maximum du produit ({{produit?.montantMax | currency:'XOF':true:'2.0'}})
         </p>
 
+
+        <ion-item *ngIf="credit.id">
+            <ion-label>Etat</ion-label>
+            <ion-select [(ngModel)]="credit.etatDemande"  name="etat" placeholder="Selectionnez">
+              <ion-option value="EN ETUDE">EN ETUDE</ion-option>
+              <ion-option value="EN ATTENTE">EN ATTENTE</ion-option>
+              <ion-option value="ACCORDE">ACCORDE</ion-option>
+              <ion-option value="REJETTE">REJETTE</ion-option>
+            </ion-select>
+        </ion-item>
+
     </ion-list>
-    <button ion-button outline margin float-right [disabled]="editForm.form.invalid || isSaving || credit.montantDemande < produit?.montantMin || credit.montantDemande > produit?.montantMax">
+    <button ion-button outline margin float-right [disabled]="editForm.form.invalid || isSaving || credit.montantDemande < +produit?.montantMin || credit.montantDemande > +produit?.montantMax">
         <ion-spinner *ngIf="isSaving"></ion-spinner>
         {{this.credit.id?'Modifier compte':'Créer compte'}}</button>
 </form>

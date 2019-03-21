@@ -20,16 +20,19 @@
 
 <ion-content padding>
     <form name="editForm" role="form" novalidate #editForm="ngForm">
-        <!-- <ion-item>
-            <ion-label color="primary" stacked class="oblige">Nombre de mise avant avance</ion-label>
-            <ion-input type="text" [(ngModel)]="settings.nbreJrAvance" name="nbreJrAvance" required></ion-input>
-        </ion-item> -->
         <ion-item>
             <ion-label color="primary" stacked class="oblige">Frais de tenue de compte</ion-label>
             <ion-input type="text" [(ngModel)]="settings.fraisTenueDeCompte" name="fraisTenueDeCompte" required pattern="^[0-9]+$"></ion-input>
         </ion-item>
         <p text-right class="helper-error" [hidden]="!(editForm.controls.fraisTenueDeCompte?.dirty && editForm.controls.fraisTenueDeCompte?.invalid)">
-            Les frais de compte sont incorrect,veuillez saisir un montant
+            Les frais de tenue de compte sont incorrect,veuillez saisir un montant
+        </p>
+        <ion-item>
+            <ion-label color="primary" stacked class="oblige">Frais d'ouverture de compte</ion-label>
+            <ion-input type="text" [(ngModel)]="settings.fraisOuvertureDeCompte" name="fraisOuvertureDeCompte" required pattern="^[0-9]+$"></ion-input>
+        </ion-item>
+        <p text-right class="helper-error" [hidden]="!(editForm.controls.fraisOuvertureDeCompte?.dirty && editForm.controls.fraisOuvertureDeCompte?.invalid)">
+            Les frais d'ouverture de compte sont incorrect,veuillez saisir un montant
         </p>
     </form>
 </ion-content>

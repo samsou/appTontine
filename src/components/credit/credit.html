@@ -5,8 +5,8 @@
     </ion-col>
     <ion-col col-xs-12 col-md-6 col-lg-4 col-xl-4>
         <h6 padding text-right>
-            <span>En attentes</span>
-            <ion-checkbox [(ngModel)]="enAttente" name="enAttente"></ion-checkbox>
+            <!-- <span>En attentes</span>
+            <ion-checkbox [(ngModel)]="enAttente" name="enAttente"></ion-checkbox> -->
             &nbsp;
             <span>Accordés</span>
             <ion-checkbox [(ngModel)]="accorde" name="accorde"></ion-checkbox>
@@ -23,9 +23,11 @@
                 <th class="counter">N°</th>
                 <th class="id">id</th>
                 <th align='text-left'>Client</th>
-                <th>Date de création</th>
-                <th>Montant Demande</th>
+                <th>Date Création</th>
+                <th>Mont. accodé</th>
+                <th>Mont. restant</th>
                 <th>Produit</th>
+                <th>Etat</th>
                 <th>Accordé</th>
                 <th>Date accord</th>
                 <!-- <th>Avance</th>
@@ -42,24 +44,27 @@
         </ng-template>
         <tbody *ngIf="credits;else elseBlock">
             <tr *ngFor="let credit of credits | recherche:dataProvider.userData.currentSearch;let index = index">
-                <tr *ngFor="let credit of credits|accorde:accorde|accorde:enAttente:'enAttente' | recherche:dataProvider.userData.currentSearch;let index = index">
+                <tr *ngFor="let credit of credits|accorde:accorde| recherche:dataProvider.userData.currentSearch;let index = index">
+                  <!-- |accorde:enAttente:'enAttente' -->
                 <td class="counter">{{index + 1}}</td>
                 <td class="id">{{credit.id}}</td>
                 <td style="text-align:left">{{credit?.client?.name}} {{credit?.client?.firstName}}</td>
                 <td>{{credit.dateCompte | date:'dd/MM/yyyy'}}</td>
                 <td>{{credit.montantDemande}}</td>
+                <td>{{credit.montant}}</td>
                 <td style="text-align:left">{{credit.produit.libelle}}</td>
-                <td>{{credit.accordeCredit}}</td>
-                <td>{{credit.accordDate}}</td>
+                <td>{{credit.etatDemande}}</td>
+                <td>{{credit.accordeCredit?'Oui':'Non'}}</td>
+                <td>{{credit.accordDate | date:'dd/MM/yyyy'}}</td>
                 <!-- <td>{{credit.mise}}</td>
                 <td>{{credit.avance}}</td>
                 <td>{{credit.dateAvance}}</td>  -->
                 <!-- <td class="hide">{{credit.montantAdhesion}}</td>
                 <td>{{credit.dateCloture}}</td> -->
                 <td>
-                    <ion-icon name="create" (click)="edit(credit)" class="edit"></ion-icon>
+                    <ion-icon *ngIf="!credit.accordeCredit" name="create" (click)="edit(credit)" class="edit"></ion-icon>
                     <ion-icon name="ios-close-outline" (click)="delete(credit)" class="trash"></ion-icon>
-                    <ion-icon name="md-more" (click)="openOptions($event,credit)" class="options"></ion-icon>
+                    <ion-icon *ngIf="credit.accordeCredit" name="md-more" (click)="openOptions($event,credit)" class="options"></ion-icon>
                 </td>
             </tr>
         </tbody>

@@ -44,6 +44,7 @@ export class UserData {
     produits: Produit[] = [];
     depots: any[] = [];
     retraits: any[] = [];
+    echeances: any[] = [];
     TONTINE: Compte[] = [];
     CREDIT: Compte[] = [];
     EPARGNE: Compte[] = [];

@@ -296,8 +296,8 @@ export class TontineComponent {
       <button ion-item (click)="close('RETRAIT')" *ngIf="(compte.miseTontine >= 2 || isRetrait) && (!compte.avanceTontine || compte.produit.nbreMiseTotal <= compte.miseTontine) && !compte.dateCloture">Cloturer le compte</button>
       <button ion-item (click)="close('AVANCE')" *ngIf="!compte.avanceTontine && compte.typeCompte == 'TONTINE' && isAvance && !compte.dateCloture && ((compte.miseTontine || 0) < compte.produit.nbreMiseTotal)">Faire une avance</button>
       <button ion-item (click)="close('MISES')" *ngIf="compte && compte.miseTontine">Voir les mises</button>
-<button ion-item (click)="close('PRINTER')" *ngIf="compte.miseTontine >= 1">Relevé de compte</button>
-      </ion-list>
+      <button ion-item (click)="close('PRINTER')" *ngIf="compte.miseTontine >= 1">Relevé de compte</button>
+    </ion-list>
   `
 })
 export class TontineOptions {

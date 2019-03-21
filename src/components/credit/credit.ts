@@ -9,6 +9,7 @@ import {
   PopoverController,
   ToastController,
   ViewController,
+  NavParams,
 } from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
@@ -47,7 +48,7 @@ export class CreditComponent {
     });
   }
   openOptions(myEvent, compte: Compte) {
-    let popover = this.popoverCtrl.create(CreditOptions);
+    let popover = this.popoverCtrl.create(CreditOptions, { compte });
     let resultIssue: Alert = this.alertCtrl.create({
       buttons: [
         {
@@ -72,6 +73,11 @@ export class CreditComponent {
             }
           }
         );
+      }else if (result == 'REMBOURSER') {
+        let modal = this.modalCtrl.create('RembourserPage', { compte }, {
+          enableBackdropDismiss: false
+        });
+        modal.present();
       }else if (result == 'DEPOT') {
         let alert = this.alertCtrl.create({
           title: `Dépôt sur le compte de ${compte.client.name}`,
@@ -154,13 +160,13 @@ export class CreditComponent {
         });
         modal.present();
       }else if (result == 'SHOW_RETRAIT') {
-        let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'RetraitEpargneComponent' }, {
+        let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'RetraitCreditComponent' }, {
           enableBackdropDismiss: false
         });
         modal.present();
       }else if (result == 'RETRAIT') {
         let alert = this.alertCtrl.create({
-          title: `Retrait sur le compte de ${compte.client.name}`,
+          title: `Retrait de Crédit de ${compte.client.name}`,
           message: `Voulez-vous retirer combien?`,
           inputs: [
             {
@@ -195,13 +201,13 @@ export class CreditComponent {
                 // data.montant = data.montant.replace(/[ -_a-zA-Z]+/g, '');
                 if (data.montant && +data.montant) {
                   if (+data.montant > +compte.montant) {
-                    resultIssue.setMessage(`Vous ne pouvez pas retirer cette somme.Le montant est insuffisant sur le compte.`);
+                    resultIssue.setMessage(`Vous ne pouvez pas retirer cette somme.Le solde est insuffisant sur le compte.`);
                     resultIssue.present();
                     return;
                   }
                   loading.setContent("Retrait ...");
                   loading.present();
-                  this.dataProvider.faireRetrait(
+                  this.dataProvider.faireRetraitCredit(
                     {
                       numCarteRetirant: data.numCarteRetirant,
                       phoneRetirant: data.phoneRetirant,
@@ -213,7 +219,7 @@ export class CreditComponent {
                     (+compte.montant) - (+data.montant)
                   ).then((result) => {
                     loading.dismiss();
-                    resultIssue.setMessage(`Le retrait de ${data.montant} a été effectué avec succès sur le compte du client ${compte.client.name} ${compte.client.firstName}`);
+                    resultIssue.setMessage(`Le retrait de ${data.montant} a été effectué avec succès sur le compte crédit du client ${compte.client.name} ${compte.client.firstName}`);
                     resultIssue.present();
                     this.navCtrl.push(
                       'RelevePage', {
@@ -246,7 +252,7 @@ export class CreditComponent {
         }
         let alert = this.alertCtrl.create({
           title: "Consulter solde",
-          message: `du compte epargne du client ${name}?`,
+          message: `du compte crédit du client ${name} ?`,
           enableBackdropDismiss: false,
           buttons: [
             {
@@ -334,19 +340,40 @@ export class CreditComponent {
 @Component({
   template: `
     <ion-list>
-      <button ion-item (click)="close('DEPOT')">Faire un depôt</button>
-      <button ion-item (click)="close('SHOW_DEPOT')">Voir les dépôts</button>
-      <button ion-item (click)="close('RETRAIT')">Faire un retrait</button>
-      <button ion-item (click)="close('SHOW_RETRAIT')">Voir les retraits</button>
+      <button ion-item (click)="close('REMBOURSER')">Rembourser</button>
+      <button ion-item (click)="close('SHOW_DEPOT')">Les Rembour.</button>
+      <button ion-item *ngIf="isRetrait" (click)="close('RETRAIT')">Retirer</button>
+      <button ion-item (click)="close('SHOW_RETRAIT')">Les Retraits</button>
       <button ion-item (click)="close('SOLDE')">Consulter solde</button>
+      <button ion-item (click)="close('PRINTER_ECHEANCIER')">L'Echeancier</button>
       <button ion-item (click)="close('PRINTER')">Relevé de compte</button>
     </ion-list>
   `
 })
 export class CreditOptions {
-  constructor(public viewCtrl: ViewController) { }
-
-  close(result?) {
+  compte: Compte;
+  isAvance: boolean = false;
+  isRetrait: boolean = false;
+  isNotFull: boolean = false;
+  constructor(public viewCtrl: ViewController, private navParams: NavParams) {
+    this.compte = this.navParams.get('compte');
+    this.isAvance = this.canAvance();
+    this.isRetrait = this.canRetrait();
+    this.isNotFull = this.isNotCloture();
+  }
+  canRetrait(): boolean {
+    if (!this.compte) return false;
+    return  this.compte.montant>0;
+  }
+  isNotCloture(): boolean {
+    if (!this.compte || this.compte.dateCloture || this.compte.miseTontine >= this.compte.produit.nbreMiseTotal) return false;
+    return !this.compte.miseTontine || this.compte.miseTontine < this.compte.produit.nbreMiseTotal;
+  }
+  canAvance(): boolean {
+    if (!this.compte) return false;
+    return this.compte.montant <= this.compte.miseTontine;
+  }
+  close(result?: any) {
     this.viewCtrl.dismiss(result);
   }
 }

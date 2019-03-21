@@ -16,6 +16,7 @@ import { MiseComponent } from './mise/mise';
 import { ProduitComponent } from './produit/produit';
 import { RecettesComponent } from './recettes/recettes';
 import { RetraitEpargneComponent } from './retrait-epargne/retrait-epargne';
+import { RetraitCreditComponent } from './retrait-credit/retrait-credit';
 import { StatsComponent } from './stats/stats';
 import { TontineComponent } from './tontine/tontine';
 import { CreditComponent } from './credit/credit';
@@ -35,6 +36,7 @@ import { CreateCreditComponent } from './create-credit/create-credit';
         CreateCreditComponent,
         DepotEpargneComponent,
         RetraitEpargneComponent,
+        RetraitCreditComponent,
         ProduitComponent,
         RecettesComponent],
     imports: [FormsModule, IonicModule, PipesModule, DirectivesModule],
@@ -51,6 +53,7 @@ import { CreateCreditComponent } from './create-credit/create-credit';
         CreateCreditComponent,
         DepotEpargneComponent,
         RetraitEpargneComponent,
+        RetraitCreditComponent,
         ProduitComponent,
         RecettesComponent],
     providers: [DatePipe, CurrencyPipe]

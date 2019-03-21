@@ -50,6 +50,7 @@ export interface Compte {
     montantDemande?:number;
     accordeCredit?:boolean;
     accordDate?:any;
+    etatDemande?:string;
 }
 export interface Avance {
     id?: any;
@@ -58,10 +59,22 @@ export interface Avance {
     montant?: any;
     date?: any;
 }
+export interface Echeance {
+  id?: any;
+  num?: number;
+  idCompte?: any;
+  compte?: Compte;
+  nominal?: any;
+  interet?: any;
+  date?: any;
+  payer?:any;
+  datePayer?:any;
+}
 export interface Settings {
     id?: any;
     nbreJrAvance?: number;
     fraisTenueDeCompte?: any;
+    fraisOuvertureDeCompte?:any;
 }
 export interface Mise {
     id?: any;

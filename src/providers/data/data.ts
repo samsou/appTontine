@@ -4,7 +4,7 @@ import { Injectable } from '@angular/core';
 import { AngularFireDatabase, AngularFireObject } from 'angularfire2/database';
 import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
-import { Client, Compte, Mise, Produit, Settings } from './model';
+import { Client, Compte, Mise, Produit, Settings, Echeance } from './model';
 import { RESSOURCES, UserData } from './userdata';
 
 /*
@@ -17,6 +17,7 @@ import { RESSOURCES, UserData } from './userdata';
 export class DataProvider {
   isLogged: boolean = false;
   ressources: any[] = [];
+  echeances: Echeance [] = [];
   user: any = {};
   authenticationState = new Subject<any>();
   //private BASE_URL: string = 'http://localhost';
@@ -26,6 +27,7 @@ export class DataProvider {
     this.getSettings().subscribe(() => { }, () => { });
     this.getClients().subscribe(() => { }, () => { });
     this.getProduits().subscribe(() => { }, () => { });
+    //this.getEcheances(compte).subscribe(() => { }, () => { });
     this.getComptes('TONTINE').subscribe(() => { }, () => { });
     this.getComptes('EPARGNE').subscribe(() => { }, () => { });
     this.getComptes('RECETTES').subscribe((recettes) => {
@@ -76,6 +78,16 @@ export class DataProvider {
       });
     });
   }
+  faireRetraitCredit(model: any, montantRestant: number, typeCompte: string = 'CREDIT'): Promise<any> {
+    model.date = this.user.clotureDate || Date.now();
+    return new Promise((resolve, reject) => {
+      this.db.list(`retraits`).push(model).then(() => {
+        resolve(this.db.object(`comptes/${typeCompte}/${model.compte}`).update({ montant: montantRestant }));
+      }, () => {
+        reject([]);
+      });
+    });
+  }
   getSettings(): Observable<Settings> {
     return this.db.object('settings').valueChanges().map((settings) => {
       if (settings)
@@ -110,12 +122,30 @@ export class DataProvider {
     mise.date = this.user.clotureDate || Date.now();
     return Promise.resolve(this.db.list(`mises/${ms.idCompte}`).push(mise));
   }
+  addEcheance(ec: Echeance): Promise<any> {
+    let echeance= Object.assign({}, ec);
+    delete echeance.compte;
+     if (!echeance.id) {
+      return Promise.resolve(this.db.list(`echeances/${echeance.idCompte}`).push(echeance));
+      } else {
+      return this.db.object(`echeances/${echeance.idCompte}/${echeance.id}`).update(echeance);
+    }
+
+
+  }
   cloturerCompte(cpte: Compte): Promise<any> {
     let compte = Object.assign({}, cpte);
     compte.dateCloture = this.user.clotureDate || Date.now();
     return this.addCompte(compte);
   }
   accordAvance(cpte: Compte,montant): Promise<any> {
+    let compte = Object.assign({}, cpte);
+    compte.avanceDate = this.user.clotureDate || Date.now();
+    compte.avanceTontine = true;
+    compte.montantAvance = montant;
+    return this.addCompte(compte);
+  }
+  payerFraisOuverture(cpte: Compte,montant): Promise<any> {
     let compte = Object.assign({}, cpte);
     compte.avanceDate = this.user.clotureDate || Date.now();
     compte.avanceTontine = true;
@@ -241,6 +271,30 @@ export class DataProvider {
       }
       this.userData.produits = produits.reverse();
       return produits;
+    });
+  }
+
+  // getEcheances(compte: Compte): Observable<any> {
+  //   return this.db.object(`echeances/${compte.id}`).valueChanges().map((ech) => {
+  //     //let echeances = [];
+          //let produits: Produit[] = [];
+  //     // for (const key in value) {
+  //     //   if (value[key].idCompte == compte.id)
+  //       this.echeances.push(ech);
+  //     // }
+  //     return echeances;
+  //   });
+  // }
+
+
+  getEcheances(compte: Compte): Observable<Echeance[]> {
+    return this.db.object(`echeances/${compte.id}`).valueChanges().map((prdts) => {
+      for (const key in prdts) {
+        this.echeances.push({ id: key, ...prdts[key] });
+      }
+      console.log(this.echeances);
+      //this.echeances = echeances;
+      return this.echeances;
     });
   }
   addProduit(produit: Produit): Promise<any> {

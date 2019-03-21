@@ -19,7 +19,8 @@ import { Settings } from '../../providers/data/model';
 export class SettingsPage {
   settings: Settings = {
     nbreJrAvance: 15,
-    fraisTenueDeCompte: "200"
+    fraisTenueDeCompte: "200",
+    fraisOuvertureDeCompte: "10000"
   };
   isSaving: boolean = false;
   constructor(public dataProvider: DataProvider, public viewCtrl: ViewController) {
