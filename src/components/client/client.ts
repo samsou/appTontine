@@ -11,14 +11,19 @@ import { DataProvider } from './../../providers/data/data';
   templateUrl: 'client.html'
 })
 export class ClientComponent {
-  clients: Client[];
+  clients: Client[]=[];
   setting : Settings;
   constructor(public dataProvider: DataProvider, private modalCtrl: ModalController, private toastCtrl: ToastController, private popoverCtrl: PopoverController, private alertCtrl: AlertController, private loadingCtrl: LoadingController) {
   }
   ngAfterViewInit() {
-    this.getClients();
+    //this.getClients();
     this.getSetting();
   }
+
+  ngOnInit(){
+    this.getClients();
+  }
+
   getClients() {
     this.dataProvider.getClients().subscribe((clients: Client[]) => {
       this.clients = clients;
@@ -37,6 +42,18 @@ export class ClientComponent {
     });
     modal.present();
   }
+
+  majClients(){
+    console.log(this.clients);
+    this.clients.forEach(element => {
+    element.isFraisOk=false;
+    element.fraisOuverture=0;
+    this.dataProvider.addClient(element).then((client) => {}).
+    catch((err) => {});
+
+    });
+  }
+
   openOptions(myEvent, client: Client) {
     let popover = this.popoverCtrl.create(ClientOptions, { client });
     popover.onDidDismiss((result) => {

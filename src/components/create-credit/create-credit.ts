@@ -63,13 +63,16 @@ this.credit.idClient = result.id;
     this.isSaving = true;
     if (!this.credit.id) {
       this.credit.typeCompte = 'CREDIT';
-      //this.credit.miseTontine = 0;
+      this.credit.deposit = 0;
+      this.credit.depositRetire = false;
+      this.credit.fini=false;
       this.credit.dateCompte = Date.now();
     } else {
       if(this.credit.etatDemande=='ACCORDE'){
         this.credit.accordDate = Date.now();
         this.credit.accordeCredit = true;
-        this.credit.montant = this.credit.montantDemande;
+        // this.credit.montant = this.credit.montantDemande;
+        // this.credit.libelle='Accord de crédit'
         //let echs: Echeance[]=[];
        // echs.length
       }
@@ -88,27 +91,27 @@ this.credit.idClient = result.id;
           let dat:any = new Date;
           //dat = dat.now();
           if(this.credit.produit.periodicite=='JOURNALIER'){
-            x=1*i;
+            x=1+1*i;
             e.date=dat.setDate(dat.getDate() + x);
             tau=+this.credit.produit.tauxAnnuel*1/365;
           }else if(this.credit.produit.periodicite=='HEBDOMADAIRE'){
-            x=7*i;
+            x=1+7*i;
             e.date=dat.setDate(dat.getDate() + x);
             tau=+this.credit.produit.tauxAnnuel*7/365;
           }else if(this.credit.produit.periodicite=='MENSUELLE'){
-            x=1*i;
+            x=1+1*i;
             e.date=dat.setMonth(dat.getMonth() + x);
             tau=+this.credit.produit.tauxAnnuel*1/12;
           }else if(this.credit.produit.periodicite=='TRIMESTRIELLE'){
-            x=3*i;
+            x=1+3*i;
             e.date=dat.setMonth(dat.getMonth() + x);
             tau=+this.credit.produit.tauxAnnuel*3/12;
           }else if(this.credit.produit.periodicite=='SEMESTRIELLE'){
-            x=6*i;
+            x=1+6*i;
             e.date=dat.setMonth(dat.getMonth() + x);
             tau=+this.credit.produit.tauxAnnuel*6/12;
           }else if(this.credit.produit.periodicite=='ANNUELLE'){
-            x=12*i;
+            x=1+12*i;
             e.date=dat.setMonth(dat.getMonth() + x);
             tau=this.credit.produit.tauxAnnuel;
           }
@@ -118,6 +121,17 @@ this.credit.idClient = result.id;
           this.dataProvider.addEcheance(e).then(() => {}).catch(()=> {});
           console.log(e);
         }
+        let model= {
+          compte:this.credit.id,
+          date:this.credit.accordDate,
+          idClient:this.credit.client.id,
+          montant:this.credit.montantDemande,
+          nameDeposant:'Accord de credit',
+          numCarteDeposant:'CARTE DE LA SOCIETE',
+          phoneDeposant:'PHONE DE LA SOCIETE'
+        }
+        this.dataProvider.faireDepot(model,model.montant,'CREDIT').then(() => {}).catch(()=> {});
+
       }
       this.isSaving = false;
       let toast = this.toastCtrl.create({

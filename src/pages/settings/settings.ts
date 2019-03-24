@@ -20,7 +20,9 @@ export class SettingsPage {
   settings: Settings = {
     nbreJrAvance: 15,
     fraisTenueDeCompte: "200",
-    fraisOuvertureDeCompte: "10000"
+    fraisOuvertureDeCompte: "10000",
+    codeSecretInstitution: "BJ",
+    numOrdreClient: "1"
   };
   isSaving: boolean = false;
   constructor(public dataProvider: DataProvider, public viewCtrl: ViewController) {

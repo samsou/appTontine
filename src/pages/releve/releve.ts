@@ -55,7 +55,9 @@ export class RelevePage {
       },
       footer: data.footer,
       pageMargins: data.pageMargins,
-      pageOrientation: data.pageOrientation || 'portrait',
+      pageSize:'A5',
+      //pageOrientation: data.pageOrientation || 'portrait', landscape
+      pageOrientation: data.pageOrientation || 'landscape',
       watermark: data.watermark,
       content: [
         {
@@ -97,18 +99,18 @@ export class RelevePage {
   }
   _buildQuittance(): any {
     return {
-      // footer: (currentPage, pageCount) => {
-      //   return {
-      //     margin: [40, 1, 40, 2],
-      //     columns: [
-      //       {
-      //         with: '*',
-      //         text: `Généré le ${this.datePipe.transform(new Date(), "mediumDate")}`
-      //       },
-      //       { text: `${currentPage}/${pageCount}`, alignment: 'right', with: '*' }
-      //     ]
-      //   };
-      // },
+      footer: (currentPage, pageCount) => {
+        return {
+          margin: [40, 1, 40, 2],
+          columns: [
+            {
+              with: '*',
+              text: `Généré le ${this.datePipe.transform(new Date(), "mediumDate")}`
+            },
+            { text: `${currentPage}/${pageCount}`, alignment: 'right', with: '*' }
+          ]
+        };
+      },
       watermark: { text: `QUITTANCE DE ${this.model.type}`, color: 'blue', opacity: 0.05, bold: true, italics: true },
       content: [
         {
@@ -304,18 +306,18 @@ export class RelevePage {
       ops.reverse();
     }
     return {
-      // footer: (currentPage, pageCount) => {
-      //   return {
-      //     margin: [40, 1, 40, 2],
-      //     columns: [
-      //       {
-      //         with: '*',
-      //         text: `Généré le ${this.datePipe.transform(new Date(), "mediumDate")}`
-      //       },
-      //       { text: `${currentPage}/${pageCount}`, alignment: 'right', with: '*' }
-      //     ]
-      //   };
-      // },
+      footer: (currentPage, pageCount) => {
+        return {
+          margin: [40, 1, 40, 2],
+          columns: [
+            {
+              with: '*',
+              text: `Généré le ${this.datePipe.transform(new Date(), "mediumDate")}`
+            },
+            { text: `${currentPage}/${pageCount}`, alignment: 'right', with: '*' }
+          ]
+        };
+      },
       watermark: { text: 'RELEVE DE COMPTE', color: 'blue', opacity: 0.05, bold: true, italics: true, fontSize: 10 },
       content: [
         {

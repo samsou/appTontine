@@ -1,9 +1,9 @@
 <!-- Generated template for the CreateTontineComponent component -->
 <form name="editForm" role="form" novalidate (ngSubmit)="save()" #editForm="ngForm" padding>
     <ion-list>
-        <div *ngIf="credit.id" class="helper-error" text-right>
+        <!-- <span *ngIf="" class="helper-error" text-right>
             Le client doit d'abord payer les frais d'ouverture de compte, sinon le dossier sera bloqué au deblocage
-        </div>
+        </span> -->
       <!-- *ngIf="!credit.id"  -->
       <!--  [disabled]="credit.id" -->
         <ion-item padding-bottom>
@@ -15,7 +15,7 @@
         </ion-item>
         <ion-item *ngIf="credit.id" padding-bottom>
             --------------- Détail du Produit Crédit: <br>
-             Nbre Echéances: <strong><em>{{credit.produit?.nbreEcheance}}</em></strong>
+             Nbre Echéances: <strong><em>{{credit.produit?.nbreEcheance}}</em></strong><br>
              Périodicité: <strong><em>{{credit.produit?.periodicite}}</em></strong>
             ---------------
         </ion-item>
@@ -23,6 +23,7 @@
             <ion-label class="oblige">Selectionnez le client</ion-label>
         <span item-end *ngIf="dataProvider.userData.clients && dataProvider.userData.clients.length > 3">
           {{client?.name}} {{client?.firstName}}
+
         </span>
 
             <ion-select [(ngModel)]="credit.idClient" required name="client" [disabled]="credit.id" *ngIf="!dataProvider.userData.clients || dataProvider.userData.clients.length <= 3">
@@ -39,10 +40,10 @@
             <ion-input type="text" required pattern="[0-9 ]+" [(ngModel)]="credit.montantDemande" name="montantDemande"></ion-input>
             <!--  [attr.readonly]="credit.id?'':null" -->
         </ion-item>
-        <p *ngIf="credit.montantDemande && credit.montantDemande < +produit?.montantMin" class="helper-error" text-right>
+        <p *ngIf="credit.montantDemande &&  +credit.montantDemande < +credit.produit?.montantMin" class="helper-error" text-right>
             Le montant souscrit doit dépasser le montant minimum du produit ({{produit?.montantMin | currency:'XOF':true:'2.0'}})
         </p>
-        <p *ngIf="credit.montantDemande && credit.montantDemande > +produit?.montantMax" class="helper-error" text-right>
+        <p *ngIf="credit.montantDemande && credit.montantDemande > +credit.produit?.montantMax" class="helper-error" text-right>
             Le montant souscrit ne peut pas dépasser le montant maximum du produit ({{produit?.montantMax | currency:'XOF':true:'2.0'}})
         </p>
 
@@ -53,11 +54,14 @@
               <ion-option value="EN ATTENTE">EN ATTENTE</ion-option>
               <ion-option value="ACCORDE">ACCORDE</ion-option>
               <ion-option value="REJETTE">REJETTE</ion-option>
+              <ion-option value="COMPELTE">COMPLETE</ion-option>
+              <ion-option value="DECLASSE">DECLASSE</ion-option>
             </ion-select>
         </ion-item>
 
     </ion-list>
     <button ion-button outline margin float-right [disabled]="editForm.form.invalid || isSaving || credit.montantDemande < +produit?.montantMin || credit.montantDemande > +produit?.montantMax">
+      <!-- || credit.client.isFraisOk -->
         <ion-spinner *ngIf="isSaving"></ion-spinner>
         {{this.credit.id?'Enrégistrer':'Créer compte'}}</button>
 </form>

@@ -1,5 +1,6 @@
 export interface Client {
     id?: any;
+    code?:any;
     name?: string;
     firstName?: string;
     quartier?: string;
@@ -52,6 +53,9 @@ export interface Compte {
     accordeCredit?:boolean;
     accordDate?:any;
     etatDemande?:string;
+    deposit?:number;
+    depositRetire?:boolean;
+    fini?:boolean;
 }
 export interface Avance {
     id?: any;
@@ -76,6 +80,9 @@ export interface Settings {
     nbreJrAvance?: number;
     fraisTenueDeCompte?: any;
     fraisOuvertureDeCompte?:any;
+    codeSecretInstitution?:any;
+    numOrdreClient?:any;
+
 }
 export interface Mise {
     id?: any;

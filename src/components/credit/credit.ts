@@ -13,7 +13,7 @@ import {
 } from 'ionic-angular';
 
 import { DataProvider } from '../../providers/data/data';
-import { Compte } from '../../providers/data/model';
+import { Compte, Echeance } from '../../providers/data/model';
 
 /**
  * Generated class for the EpargneComponent component.
@@ -78,6 +78,277 @@ export class CreditComponent {
           enableBackdropDismiss: false
         });
         modal.present();
+      }else if (result == 'APPORT_DEPOSIT') {
+        let deposit=(+compte.montantDemande)*(+compte.produit.deposite)/100;
+        let alert = this.alertCtrl.create({
+          title: `Dépôt de DEPOSIT sur le compte de ${compte.client.name} ${compte.client.firstName}`,
+          message: `Voulez-vous déposer combien?`,
+          inputs: [
+            {
+              name:'montant',
+              value: `${deposit}`
+            },
+            {
+              placeholder: 'Nom du déposant',
+              type: 'text',
+              name: 'nameDeposant'
+            },
+            {
+              placeholder: 'Téléphone du déposant',
+              type: 'text',
+              name: 'phoneDeposant'
+            },
+            {
+              placeholder: 'numéro de pièce',
+              type: 'text',
+              name: 'numCarteDeposant'
+            }
+          ],
+          enableBackdropDismiss: false,
+          buttons: [
+            {
+              text: 'Annuler'
+            },
+            {
+              text: 'Valider',
+              handler: (data) => {
+                // data.montant = data.montant.replace(/[ -_a-zA-Z]+/g, '');
+                if (data.montant && +data.montant) {
+                  // console.log(data.montant);
+                  loading.present();
+                  this.dataProvider.faireDepot(
+                    {
+                      numCarteDeposant: data.numCarteDeposant,
+                      phoneDeposant: data.phoneDeposant,
+                      nameDeposant: data.nameDeposant,
+                      montant: +data.montant,
+                      compte: compte.id,
+                      idClient: compte.client.id,
+                    },
+                    (+data.montant) + (+compte.montant),
+                    'CREDIT'
+                  ).then(() => {
+                    compte.deposit=data.montant;
+                    compte.montant=(+data.montant) + (+compte.montant)
+                    this.dataProvider.addCompte(compte).then(() => {})
+                    .catch(() => {
+                        loading.dismiss();
+                        alert = this.alertCtrl.create({
+                        buttons: ['OK']
+                        });
+                        alert.setMessage("Une erreur s'est produite lors de l'enregistrement de DEPOSIT, veuillez réessayer!!!");
+                        alert.present();
+                    });
+
+                    loading.dismiss();
+                    resultIssue.setMessage(`Le DEPOSIT de ${data.montant} a été effectué avec succès sur le compte du client ${compte.client.name} ${compte.client.firstName}`);
+                    resultIssue.present();
+                    this.navCtrl.push(
+                      'RelevePage', {
+                        action: 'QUITTANCE',
+                        model: {
+                          ...compte,
+                          ...data,
+                          type: 'DEPOT'
+                        }
+                      }
+                    );
+                  }).catch(() => {
+                    resultIssue.setMessage(`Le dépôt de ${data.montant} sur le compte du client ${compte.client.name} ${compte.client.firstName} a échoué `);
+                    resultIssue.present();
+                  });
+                } else {
+                  console.log(data.montant);
+                  resultIssue.setMessage(`Le montant ${data.montant} est incorrect`);
+                  resultIssue.present();
+                }
+              }
+            }
+          ]
+        });
+        alert.present();
+      } else if (result == 'SHOW_DEPOT') {
+        let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'DepotEpargneComponent' }, {
+          enableBackdropDismiss: false
+        });
+        modal.present();
+      }else if (result == 'SHOW_RETRAIT') {
+        let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'RetraitCreditComponent' }, {
+          enableBackdropDismiss: false
+        });
+        modal.present();
+      }else if (result == 'RETRAIT') {
+        let alert = this.alertCtrl.create({
+          title: `Retrait de Crédit de ${compte.client.name}`,
+          message: `Voulez-vous retirer combien?`,
+          inputs: [
+            {
+              placeholder: 'Montant',
+              type: 'number',
+              name: 'montant'
+            },
+            {
+              placeholder: 'Nom du retirant',
+              type: 'text',
+              name: 'nameRetirant'
+            }, {
+
+              placeholder: 'Téléphone du retirant',
+              type: 'text',
+              name: 'phoneRetirant'
+            },
+            {
+              placeholder: 'numéro de pièce',
+              type: 'text',
+              name: 'numCarteRetirant'
+            }
+          ],
+          enableBackdropDismiss: false,
+          buttons: [
+            {
+              text: 'Annuler'
+            },
+            {
+              text: 'Valider',
+              handler: (data) => {
+                // data.montant = data.montant.replace(/[ -_a-zA-Z]+/g, '');
+                if (data.montant && +data.montant) {
+                  if (+data.montant > (+compte.montant-compte.montantDemande*(compte.produit.deposite/100))) {
+                    resultIssue.setMessage(`Vous ne pouvez pas retirer cette somme.Le solde est insuffisant sur le compte.`);
+                    resultIssue.present();
+                    return;
+                  }
+                  loading.setContent("Retrait ...");
+                  loading.present();
+                  this.dataProvider.faireRetraitCredit(
+                    {
+                      numCarteRetirant: data.numCarteRetirant,
+                      phoneRetirant: data.phoneRetirant,
+                      nameRetirant: data.nameRetirant,
+                      montant: +data.montant,
+                      compte: compte.id,
+                      idClient: compte.client.id
+                    },
+                    (+compte.montant) - (+data.montant)
+                  ).then((result) => {
+                    loading.dismiss();
+                    resultIssue.setMessage(`Le retrait de ${data.montant} a été effectué avec succès sur le compte crédit du client ${compte.client.name} ${compte.client.firstName}`);
+                    resultIssue.present();
+                    this.navCtrl.push(
+                      'RelevePage', {
+                        action: 'QUITTANCE',
+                        model: {
+                          ...compte,
+                          ...data,
+                          type: 'RETRAIT'
+                        }
+                      }
+                    );
+                  }).catch(() => {
+                    resultIssue.setMessage(`Le retrait de ${data.montant} sur le compte du client ${compte.client.name} ${compte.client.firstName} a échoué `);
+                    resultIssue.present();
+                  });
+                } else {
+                  resultIssue.setMessage(`Le montant est incorrect`);
+                  resultIssue.present();
+                }
+              }
+            }
+          ]
+        });
+        alert.present();
+      }else if (result == 'RETRAIT_DEPOSIT') {
+        let deposit=(+compte.montantDemande)*(+compte.produit.deposite)/100;
+        let alert = this.alertCtrl.create({
+          title: `Retrait de DEPOSIT de ${compte.client.name} ${compte.client.firstName}`,
+          inputs: [
+            {
+              placeholder: 'Montant',
+              type: 'number',
+              name: 'montant',
+              value: `${deposit}`
+            },
+            {
+              placeholder: 'Nom du retirant',
+              type: 'text',
+              name: 'nameRetirant'
+            }, {
+
+              placeholder: 'Téléphone du retirant',
+              type: 'text',
+              name: 'phoneRetirant'
+            },
+            {
+              placeholder: 'numéro de pièce',
+              type: 'text',
+              name: 'numCarteRetirant'
+            }
+          ],
+          enableBackdropDismiss: false,
+          buttons: [
+            {
+              text: 'Annuler'
+            },
+            {
+              text: 'Valider',
+              handler: (data) => {
+                // data.montant = data.montant.replace(/[ -_a-zA-Z]+/g, '');
+                if (data.montant && +data.montant) {
+                  if (+data.montant > (+compte.montant)) {
+                    resultIssue.setMessage(`Vous ne pouvez pas retirer cette somme.Le solde est insuffisant sur le compte.`);
+                    resultIssue.present();
+                    return;
+                  }
+                  loading.setContent("Retrait DEPOSIT...");
+                  loading.present();
+                  this.dataProvider.faireRetraitCredit(
+                    {
+                      numCarteRetirant: data.numCarteRetirant,
+                      phoneRetirant: data.phoneRetirant,
+                      nameRetirant: data.nameRetirant,
+                      montant: +data.montant,
+                      compte: compte.id,
+                      idClient: compte.client.id
+                    },
+                    (+compte.montant) - (+data.montant)
+                  ).then((result) => {
+                    compte.depositRetire=true;
+                    compte.montant= (+compte.montant)-(+data.montant)
+                    this.dataProvider.addCompte(compte).then(() => {})
+                    .catch(() => {
+                        loading.dismiss();
+                        alert = this.alertCtrl.create({
+                        buttons: ['OK']
+                        });
+                        alert.setMessage("Une erreur s'est produite lors de l'enregistrement de DEPOSIT, veuillez réessayer!!!");
+                        alert.present();
+                    });
+                    loading.dismiss();
+                    resultIssue.setMessage(`Le retrait de ${data.montant} a été effectué avec succès sur le compte DEPOSIT du client ${compte.client.name} ${compte.client.firstName}`);
+                    resultIssue.present();
+                    this.navCtrl.push(
+                      'RelevePage', {
+                        action: 'QUITTANCE',
+                        model: {
+                          ...compte,
+                          ...data,
+                          type: 'RETRAIT'
+                        }
+                      }
+                    );
+                  }).catch(() => {
+                    resultIssue.setMessage(`Le retrait DEPOSIT de ${data.montant} sur le compte du client ${compte.client.name} ${compte.client.firstName} a échoué `);
+                    resultIssue.present();
+                  });
+                } else {
+                  resultIssue.setMessage(`Le montant est incorrect`);
+                  resultIssue.present();
+                }
+              }
+            }
+          ]
+        });
+        alert.present();
       }else if (result == 'DEPOT') {
         let alert = this.alertCtrl.create({
           title: `Dépôt sur le compte de ${compte.client.name}`,
@@ -154,98 +425,7 @@ export class CreditComponent {
           ]
         });
         alert.present();
-      } else if (result == 'SHOW_DEPOT') {
-        let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'DepotEpargneComponent' }, {
-          enableBackdropDismiss: false
-        });
-        modal.present();
-      }else if (result == 'SHOW_RETRAIT') {
-        let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'RetraitCreditComponent' }, {
-          enableBackdropDismiss: false
-        });
-        modal.present();
-      }else if (result == 'RETRAIT') {
-        let alert = this.alertCtrl.create({
-          title: `Retrait de Crédit de ${compte.client.name}`,
-          message: `Voulez-vous retirer combien?`,
-          inputs: [
-            {
-              placeholder: 'Montant',
-              type: 'number',
-              name: 'montant'
-            },
-            {
-              placeholder: 'Nom du retirant',
-              type: 'text',
-              name: 'nameRetirant'
-            }, {
-
-              placeholder: 'Téléphone du retirant',
-              type: 'text',
-              name: 'phoneRetirant'
-            },
-            {
-              placeholder: 'numéro de pièce',
-              type: 'text',
-              name: 'numCarteRetirant'
-            }
-          ],
-          enableBackdropDismiss: false,
-          buttons: [
-            {
-              text: 'Annuler'
-            },
-            {
-              text: 'Valider',
-              handler: (data) => {
-                // data.montant = data.montant.replace(/[ -_a-zA-Z]+/g, '');
-                if (data.montant && +data.montant) {
-                  if (+data.montant > +compte.montant) {
-                    resultIssue.setMessage(`Vous ne pouvez pas retirer cette somme.Le solde est insuffisant sur le compte.`);
-                    resultIssue.present();
-                    return;
-                  }
-                  loading.setContent("Retrait ...");
-                  loading.present();
-                  this.dataProvider.faireRetraitCredit(
-                    {
-                      numCarteRetirant: data.numCarteRetirant,
-                      phoneRetirant: data.phoneRetirant,
-                      nameRetirant: data.nameRetirant,
-                      montant: +data.montant,
-                      compte: compte.id,
-                      idClient: compte.client.id
-                    },
-                    (+compte.montant) - (+data.montant)
-                  ).then((result) => {
-                    loading.dismiss();
-                    resultIssue.setMessage(`Le retrait de ${data.montant} a été effectué avec succès sur le compte crédit du client ${compte.client.name} ${compte.client.firstName}`);
-                    resultIssue.present();
-                    this.navCtrl.push(
-                      'RelevePage', {
-                        action: 'QUITTANCE',
-                        model: {
-                          ...compte,
-                          ...data,
-                          type: 'RETRAIT'
-                        }
-                      }
-                    );
-                  }).catch(() => {
-                    resultIssue.setMessage(`Le retrait de ${data.montant} sur le compte du client ${compte.client.name} ${compte.client.firstName} a échoué `);
-                    resultIssue.present();
-                  });
-                } else {
-                  resultIssue.setMessage(`Le montant est incorrect`);
-                  resultIssue.present();
-                }
-              }
-            }
-          ]
-        });
-        alert.present();
-      }
-      else if (result == 'SOLDE') {
+      } else if (result == 'SOLDE') {
         let name: string = '';
         if (compte.client) {
           name = compte.client.name + ' ' + compte.client.firstName;
@@ -285,6 +465,7 @@ export class CreditComponent {
       ev: myEvent
     });
   }
+
   edit(compte: Compte) {
     let modal = this.modalCtrl.create('WrapperPage', { compte, type: 'CreateCreditComponent' }, {
       enableBackdropDismiss: false
@@ -344,6 +525,8 @@ export class CreditComponent {
       <button ion-item (click)="close('SHOW_DEPOT')">Les Rembour.</button>
       <button ion-item *ngIf="isRetrait" (click)="close('RETRAIT')">Retirer</button>
       <button ion-item (click)="close('SHOW_RETRAIT')">Les Retraits</button>
+      <button ion-item *ngIf="isApportDeposit" (click)="close('APPORT_DEPOSIT')">Apport Déposit</button>
+      <button ion-item *ngIf="isRetraitDeposit" (click)="close('RETRAIT_DEPOSIT')">Retrait Déposit</button>
       <button ion-item (click)="close('SOLDE')">Consulter solde</button>
       <button ion-item (click)="close('PRINTER_ECHEANCIER')">L'Echeancier</button>
       <button ion-item (click)="close('PRINTER')">Relevé de compte</button>
@@ -355,15 +538,35 @@ export class CreditOptions {
   isAvance: boolean = false;
   isRetrait: boolean = false;
   isNotFull: boolean = false;
-  constructor(public viewCtrl: ViewController, private navParams: NavParams) {
+  isApportDeposit=false;
+  isRetraitDeposit=false;
+  echeancesPayees: Echeance[] = [];
+  constructor(public viewCtrl: ViewController, private navParams: NavParams, private dataProvider: DataProvider) {
     this.compte = this.navParams.get('compte');
     this.isAvance = this.canAvance();
-    this.isRetrait = this.canRetrait();
     this.isNotFull = this.isNotCloture();
+    this.isApportDeposit=this.canApportDeposit();
+    this.isRetraitDeposit=this.canRetraitDeposit();
+    this.isRetrait=this.canRetrait();
+
+    // console.log(this.isRetraitDeposit);
+    // console.log(this.echeancesPayees);
+    // console.log(this.echeancesPayees.length);
+    // console.log(this.compte.produit.nbreEcheance);
   }
   canRetrait(): boolean {
     if (!this.compte) return false;
     return  this.compte.montant>0;
+  }
+  canApportDeposit(): boolean {
+    if (!this.compte) return false;
+    return  this.compte.deposit<=0;
+  }
+    canRetraitDeposit(): boolean {
+    if (!this.compte) return false;
+    this.getEcheancesPayees(this.compte);
+    console.log(this.echeancesPayees);
+    return this.echeancesPayees.length==this.compte.produit.nbreEcheance;
   }
   isNotCloture(): boolean {
     if (!this.compte || this.compte.dateCloture || this.compte.miseTontine >= this.compte.produit.nbreMiseTotal) return false;
@@ -373,6 +576,16 @@ export class CreditOptions {
     if (!this.compte) return false;
     return this.compte.montant <= this.compte.miseTontine;
   }
+
+  getEcheancesPayees(compte) {
+    this.dataProvider.getEcheancesPayees(compte).subscribe((echeances) => {
+     this.echeancesPayees = echeances;
+     this.isRetraitDeposit=(this.echeancesPayees.length==this.compte.produit.nbreEcheance)&&(this.compte.depositRetire==false);
+    }, () => { });
+  }
+
+
+
   close(result?: any) {
     this.viewCtrl.dismiss(result);
   }

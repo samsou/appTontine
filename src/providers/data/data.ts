@@ -6,6 +6,7 @@ import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { Client, Compte, Mise, Produit, Settings, Echeance } from './model';
 import { RESSOURCES, UserData } from './userdata';
+import { isTrueProperty } from 'ionic-angular/umd/util/util';
 
 /*
   Generated class for the DataProvider provider.
@@ -18,6 +19,7 @@ export class DataProvider {
   isLogged: boolean = false;
   ressources: any[] = [];
   echeances: Echeance [] = [];
+  echeancesPayees: Echeance [] = [];
   user: any = {};
   authenticationState = new Subject<any>();
   //private BASE_URL: string = 'http://localhost';
@@ -209,6 +211,7 @@ export class DataProvider {
   addClient(client: Client): Promise<any> {
     if (!client.id) {
       client.date = this.user.clotureDate || Date.now();
+      client.fraisOuverture=0;
       client.isFraisOk=false;
       return Promise.resolve(this.db.list('clients').push(client));
     } else {
@@ -298,6 +301,23 @@ export class DataProvider {
       return this.echeances;
     });
   }
+
+  getEcheancesPayees(compte: Compte): Observable<Echeance[]> {
+    return this.db.object(`echeances/${compte.id}`)
+    .valueChanges().map((prdts) => {
+      this.echeancesPayees=[];
+      for (const key in prdts) {
+        if(prdts[key].payer===true){
+          this.echeancesPayees.push({ id: key, ...prdts[key] });
+        }
+      }
+      // console.log(this.echeancesPayees);
+      //this.echeances = echeances;
+      return this.echeancesPayees;
+    });
+  }
+
+
   addProduit(produit: Produit): Promise<any> {
     // produit.montantMax = +produit.montantMax || 0;
     // produit.montantMin = +produit.montantMin || 0;

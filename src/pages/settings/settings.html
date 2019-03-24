@@ -31,6 +31,14 @@
             <ion-label color="primary" stacked class="oblige">Frais d'ouverture de compte</ion-label>
             <ion-input type="text" [(ngModel)]="settings.fraisOuvertureDeCompte" name="fraisOuvertureDeCompte" required pattern="^[0-9]+$"></ion-input>
         </ion-item>
+        <ion-item>
+          <ion-label color="primary" stacked class="oblige">Code Secret de l'Institution</ion-label>
+          <ion-input type="text" [(ngModel)]="settings.codeSecretInstitution" name="codeSecretInstitution" required></ion-input>
+      </ion-item>
+      <ion-item>
+        <ion-label color="primary" stacked class="oblige">Numero d'Ordre des Clients</ion-label>
+        <ion-input type="number" [(ngModel)]="settings.numOrdreClient" name="numOrdreClient" required></ion-input>
+      </ion-item>
         <p text-right class="helper-error" [hidden]="!(editForm.controls.fraisOuvertureDeCompte?.dirty && editForm.controls.fraisOuvertureDeCompte?.invalid)">
             Les frais d'ouverture de compte sont incorrect,veuillez saisir un montant
         </p>

@@ -28,6 +28,7 @@
                 <th>Mont. restant</th>
                 <th>Produit</th>
                 <th>Etat</th>
+                <th>Déposit</th>
                 <th>Accordé</th>
                 <th>Date accord</th>
                 <!-- <th>Avance</th>
@@ -54,6 +55,7 @@
                 <td>{{credit.montant}}</td>
                 <td style="text-align:left">{{credit.produit.libelle}}</td>
                 <td>{{credit.etatDemande}}</td>
+                <td>{{credit.deposit}}</td>
                 <td>{{credit.accordeCredit?'Oui':'Non'}}</td>
                 <td>{{credit.accordDate | date:'dd/MM/yyyy'}}</td>
                 <!-- <td>{{credit.mise}}</td>

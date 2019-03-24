@@ -57,7 +57,7 @@ export class CreateEpargneComponent {
       this.epargne.dateCompte = Date.now();
     } else
       this.client = this.epargne.client;
-    this.dataProvider.addCompte(this.epargne).then(() => {
+      this.dataProvider.addCompte(this.epargne).then(() => {
       this.isSaving = false;
       let toast = this.toastCtrl.create({
         message: `Le compte epargne du client ${this.client.name} a été ${!this.epargne.id ? 'crée' : 'modifié'}`,

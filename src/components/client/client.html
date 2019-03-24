@@ -1,5 +1,9 @@
 <!-- Generated template for the ClientComponent component -->
 <h3 padding>Les clients</h3>
+<!-- <ion-button color="primary">CORRECTION</ion-button> -->
+<!-- <button ion-fab (click)="majClients()">
+    <ion-icon name="person"></ion-icon>
+  </button> -->
 <div class="table-wrapper">
     <table>
         <thead>
@@ -7,6 +11,7 @@
                 <th class="counter">N°</th>
                 <th class="id">id</th>
                 <th>Date</th>
+                <th>Code Client</th>
                 <th>Nom & prénoms</th>
                 <th>Quartier & maison</th>
                 <th>Téléphone</th>
@@ -26,6 +31,7 @@
                 <td class="counter">{{index + 1}}</td>
                 <td class="id" style="width:100px">{{client.id}}</td>
                 <td>{{client.date | date:'dd/MM/yyyy'}}</td>
+                <td >{{client.code}}</td>
                 <td style="text-align:left">{{client.name}} {{client.firstName}}</td>
                 <td>{{client.quartier}} {{client.maison}}</td>
                 <td>{{client.telephone}}</td>
