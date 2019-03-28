@@ -6,10 +6,10 @@ import { DataProvider } from './../../providers/data/data';
 
 declare let pdfMake: any;
 @Component({
-  selector: 'audits',
-  templateUrl: 'audits.html'
+  selector: 'audits1',
+  templateUrl: 'audits1.html'
 })
-export class AuditsComponent {
+export class Audits1Component {
   model: any = {
     entity: '',
     filtre: ''

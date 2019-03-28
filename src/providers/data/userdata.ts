@@ -72,7 +72,9 @@ export class UserData {
     }
     menusStats: any[] = [
         { 'libelle': 'Statistiques', code: 'STATS', icon: 'pie' },
-        { 'libelle': 'Etats', code: 'AUDITS', icon: 'pulse' }
+        { 'libelle': 'Etats', code: 'AUDITS', icon: 'pulse' },
+        { 'libelle': 'Autres Etats', code: 'AUDITS1', icon: 'pulse' }
+
     ];
     menus: any[] = [
         {

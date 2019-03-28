@@ -1,0 +1,39 @@
+<h3 ion-text text-center>Etats</h3>
+<ion-row>
+  <ion-col>
+      <ion-item>
+        <ion-label class="oblige">Definissez une Période</ion-label>
+      </ion-item>
+  </ion-col>
+  <ion-col>
+    <ion-item no-lines>
+          <ion-label>Date début</ion-label>
+          <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY"></ion-datetime>
+    </ion-item>
+</ion-col>
+<ion-col>
+  <ion-item no-lines>
+        <ion-label>Date fin</ion-label>
+        <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY"></ion-datetime>
+  </ion-item>
+</ion-col>
+</ion-row>
+<ion-row>
+  <ion-col>
+        <ion-item >
+            <ion-label class="oblige">Sélectionner l'entité</ion-label>
+            <ion-select [(ngModel)]="model.entity" name="entity" (ionChange)="onEntityChange()" required>
+                <ion-option value="produit">Produit</ion-option>
+                <ion-option value="client">Client</ion-option>
+                <ion-option value="comptes">Comptes</ion-option>
+                <ion-option value="recette">Recettes</ion-option>
+            </ion-select>
+        </ion-item>
+    </ion-col>
+
+</ion-row>
+<div ion-row [hidden]="!model.filtre || !filtres?.length">
+    <ion-col col-12>
+        <iframe frameborder="0" #iframe style="height: 100%; width: 100%;"></iframe>
+    </ion-col>
+</div>

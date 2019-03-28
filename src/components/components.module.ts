@@ -6,6 +6,7 @@ import { IonicModule } from 'ionic-angular';
 import { PipesModule } from '../pipes/pipes.module';
 import { DirectivesModule } from './../directives/directives.module';
 import { AuditsComponent } from './audits/audits';
+import { Audits1Component } from './audits1/audits1';
 import { BoardComponent } from './board/board';
 import { ClientComponent } from './client/client';
 import { CreateEpargneComponent } from './create-epargne/create-epargne';
@@ -26,6 +27,7 @@ import { CreateCreditComponent } from './create-credit/create-credit';
     declarations: [ClientComponent,
         StatsComponent,
         AuditsComponent,
+        Audits1Component,
         BoardComponent,
         TontineComponent,
         CreateTontineComponent,
@@ -43,6 +45,7 @@ import { CreateCreditComponent } from './create-credit/create-credit';
     exports: [ClientComponent,
         StatsComponent,
         AuditsComponent,
+        Audits1Component,
         BoardComponent,
         TontineComponent,
         CreateTontineComponent,
