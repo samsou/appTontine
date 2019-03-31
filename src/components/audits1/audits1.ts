@@ -12,8 +12,11 @@ declare let pdfMake: any;
 export class Audits1Component {
   model: any = {
     entity: '',
-    filtre: ''
+    filtre: '',
+    datedebut:Date,
+    datefin:Date
   };
+
   totalSolde : number =0;
   totalDemande : number =0;
   filtres: any[];
@@ -22,7 +25,10 @@ export class Audits1Component {
   date2: any;
   produits: any[] = [];
   clients: any[] = [];
+  clientsPeriode: any[] = [];
+  maMap = new Map();
   recettes: any[] = [];
+  recettesPeriode: any[] = [];
   tontines: Compte[] = [];
   epargnes: Compte[] = [];
   credits: Compte[] = [];
@@ -57,7 +63,7 @@ export class Audits1Component {
     });
   }
   getRecettes() {
-    this.recettes = this.dataProvider.userData.RECETTES;
+    //this.recettes = this.dataProvider.userData.RECETTES;
     this.dataProvider.getComptes('RECETTES').subscribe((recettes: any[]) => {
       this.recettes = recettes;
       /* this.recettes.forEach((rec) => {
@@ -72,117 +78,162 @@ export class Audits1Component {
     }, (err) => {
     });
   }
+
+  getClientsPeriode(date1:Date,date2:Date) {
+    if((date1 && date2) && (date1 < date2)){
+      this.clients=this.clients.filter(client=>{
+        console.log('------------ client date');
+        console.log(client.date);
+        console.log(new Date(client.date).getTime());
+        console.log('------------');
+        console.log('------------ date debut');
+        console.log(date1);
+        console.log(new Date(date1).getTime());
+        console.log('------------');
+        console.log('------------ date fin');
+        console.log(date2);
+        console.log(new Date(date2).getTime());
+        console.log('------------');
+        return (new Date(client.date).getTime()>= new Date(date1).getTime()) && (new Date(client.date).getTime() <= new Date(date2).getTime());
+        });
+    };
+  };
+
+  getRecettesPeriode(date1:Date,date2:Date) {
+    if((date1 && date2) && (date1 < date2)){
+      this.recettesPeriode = [];
+      this.recettesPeriode=this.recettes.filter(recette=>(new Date(recette.date).getTime() > new Date(date1).getTime()));//.filter(rec => (new Date(rec.date).getTime() <= new Date(date2).getTime()));
+      this.recettesPeriode=this.recettesPeriode.filter(rec => (new Date(rec.date).getTime() <= new Date(date2).getTime()));
+    };
+  };
+
+
+
+
   getProduits() {
     this.dataProvider.getProduits().subscribe((produits: Produit[]) => {
       this.produits = produits;
     }, (err) => {
     });
   }
+  // onEntityChange() {
+  //   this.model.filtre = "";
+  //   this.filtres = [];
+  //   if (this.model.entity === 'produit') {
+  //     this.filtres = [
+  //       {
+  //         libelle: 'Tous les produits',
+  //         code: 'ALL_PRODUIT'
+  //       },
+  //       {
+  //         libelle: 'Les produits Epargnes',
+  //         code: 'EPARGNE_PRODUIT'
+  //       },
+  //       {
+  //         libelle: 'Les produits Tontines',
+  //         code: 'TONTINE_PRODUIT'
+  //       },
+  //       {
+  //         libelle: 'Les produits Crédits',
+  //         code: 'CREDIT_PRODUIT'
+  //       }
+  //     ];
+  //   } else if (this.model.entity === 'client') {
+  //     this.filtres = [
+  //       {
+  //         libelle: 'Tous les clients',
+  //         code: 'ALL_CLIENT'
+  //       },
+  //       /*  {
+  //          libelle: 'Les clients qui ont un compte epargne et tontine',
+  //          code: 'CLIENT_ALL_COMPTES'
+  //        } */
+  //     ];
+  //   } else if (this.model.entity === 'comptes') {
+  //     this.filtres = [
+  //       {
+  //         libelle: 'Tous les comptes',
+  //         code: 'ALL_COMPTE'
+  //       },
+  //       {
+  //         libelle: 'Les comptes tontines',
+  //         code: 'TONTINE_COMPTE'
+  //       },
+  //       {
+  //         libelle: 'Les comptes epargnes',
+  //         code: 'EPARGNE_COMPTE'
+  //       }
+  //       ,
+  //       {
+  //         libelle: 'Les comptes crédits',
+  //         code: 'CREDIT_COMPTE'
+  //       }
+  //     ];
+  //   } else if (this.model.entity === 'recette') {
+  //     this.filtres = [
+  //       {
+  //         libelle: 'Toutes nos recettes',
+  //         code: 'ALL_RECETTE'
+  //       },
+  //       /* {
+  //         libelle: 'Les recettes entre',
+  //         code: 'RECETTE_INTERVAL'
+  //       } */
+  //     ];
+  //   }
+  // }
+  // onEntityChange()
+  // onFiltreChange()
   onEntityChange() {
-    this.model.filtre = "";
-    this.filtres = [];
-    if (this.model.entity === 'produit') {
-      this.filtres = [
-        {
-          libelle: 'Tous les produits',
-          code: 'ALL_PRODUIT'
-        },
-        {
-          libelle: 'Les produits Epargnes',
-          code: 'EPARGNE_PRODUIT'
-        },
-        {
-          libelle: 'Les produits Tontines',
-          code: 'TONTINE_PRODUIT'
-        },
-        {
-          libelle: 'Les produits Crédits',
-          code: 'CREDIT_PRODUIT'
-        }
-      ];
-    } else if (this.model.entity === 'client') {
-      this.filtres = [
-        {
-          libelle: 'Tous les clients',
-          code: 'ALL_CLIENT'
-        },
-        /*  {
-           libelle: 'Les clients qui ont un compte epargne et tontine',
-           code: 'CLIENT_ALL_COMPTES'
-         } */
-      ];
-    } else if (this.model.entity === 'comptes') {
-      this.filtres = [
-        {
-          libelle: 'Tous les comptes',
-          code: 'ALL_COMPTE'
-        },
-        {
-          libelle: 'Les comptes tontines',
-          code: 'TONTINE_COMPTE'
-        },
-        {
-          libelle: 'Les comptes epargnes',
-          code: 'EPARGNE_COMPTE'
-        }
-        ,
-        {
-          libelle: 'Les comptes crédits',
-          code: 'CREDIT_COMPTE'
-        }
-      ];
-    } else if (this.model.entity === 'recette') {
-      this.filtres = [
-        {
-          libelle: 'Toutes nos recettes',
-          code: 'ALL_RECETTE'
-        },
-        /* {
-          libelle: 'Les recettes entre',
-          code: 'RECETTE_INTERVAL'
-        } */
-      ];
-    }
-  }
-  onFiltreChange() {
-    if (this.model.filtre === 'RECETTE_INTERVAL') {
+   console.log(this.model.datedebut);
+   console.log(this.model.datefin);
 
-    }
-    if (this.model.filtre)
-      this.buildEtat();
+   if (this.model.entity === 'frais_ouverture'){
+       this.getClientsPeriode(this.model.datedebut,this.model.datefin);
+       console.log(this.clients);
+   }
+
+   if (this.model.entity === 'recettes'){
+    this.getRecettesPeriode(this.model.datedebut,this.model.datefin);
+    //console.log(this.clients);
+}
+
+    // if (this.model.filtre === 'RECETTE_INTERVAL') {
+
+    // }
+  if (this.model.entity)
+    this.buildEtat();
   }
   private getTitle() {
-    if (this.model.filtre === 'ALL_PRODUIT') {
-      return "Les produits";
-    } else if (this.model.filtre === 'EPARGNE_PRODUIT') {
-      return "Les produits epargnes";
-    }else if (this.model.filtre === 'CREDIT_PRODUIT') {
-      return "Les produits crédits";
-    } else if (this.model.filtre === 'TONTINE_PRODUIT') {
-      return "Les produits tontines";
-    } else if (this.model.filtre === 'ALL_CLIENT') {
-      return "Les clients";
-    } else if (this.model.filtre === 'CLIENT_ALL_COMPTES') {
-      return "Les clients ayant un compte tontine & epargne";
-    } else if (this.model.filtre === 'ALL_COMPTE') {
-      return "Les comptes";
-    } else if (this.model.filtre === 'TONTINE_COMPTE') {
-      return "Les comptes tontines";
-    } else if (this.model.filtre === 'CREDIT_COMPTE') {
-      return "Les comptes crédits";
-    } else if (this.model.filtre === 'EPARGNE_COMPTE') {
-      return "Les comptes epargnes";
-    } else if (this.model.filtre === 'ALL_RECETTE') {
-      return "Les recettes";
-    } else if (this.model.filtre === 'RECETTE_INTERVAL') {
-      return `Les recettes du ${this.date1} au ${this.date2}`;
+    if (this.model.entity === 'recettes') {
+      return "Les Recettes";
+    } else if (this.model.entity === 'tontines_clotures') {
+      return "Les Tontines cloturés";
+    }else if (this.model.entity === 'avances_effectuees') {
+      return "Les Avances effectuées";
+    } else if (this.model.entity === 'frais_ouverture') {
+      return "Frais d'ouverture de Comptes";
+    } else if (this.model.entity === 'depot_effectues') {
+      return "Les Dépots effectués";
+    } else if (this.model.entity === 'retraits_effectues') {
+      return "Les Retraits effectués";
+    } else if (this.model.entity === 'dossier_etude') {
+      return "Les Dossiers en Etude";
+    } else if (this.model.entity === 'dossier_accordes') {
+      return "Les Dossiers Accordés";
+    } else if (this.model.entity === 'remboursements') {
+      return "Les Remboursements";
+    } else if (this.model.entity === 'frais_dossiers') {
+      return "Les Frais de Dossiers";
+    } else if (this.model.entity === 'impayes') {
+      return "Les Impayés";
     }
     return '';
   }
   private buildEtat() {
     let data: any = this.buildBody();
     let pageOrientation;
-    if (this.model.entity === 'client') pageOrientation = 'landscape'
+    if (this.model.entity === 'frais_ouverture') pageOrientation = 'landscape'
     if (this.model.entity === 'comptes') pageOrientation = 'landscape'
     let dd = {
       pageOrientation,
@@ -226,6 +277,7 @@ export class Audits1Component {
         counter: {
           italics: true,
           fonSize: 8,
+          width: 10,
           padding: [1, 2, 1, 3]
         }
       }
@@ -245,7 +297,7 @@ export class Audits1Component {
       widths: undefined
     };
     let tt = this._buildTableTitle() || [];
-    if (['EPARGNE_PRODUIT', 'EPARGNE_COMPTE', 'CREDIT_COMPTE'].indexOf(this.model.filtre) !== -1) {
+    if (['frais_ouverture', 'EPARGNE_COMPTE', 'CREDIT_COMPTE'].indexOf(this.model.entity) !== -1) {
       data.widths = tt.map((value, index) => {
         if (index === 0) return 'auto';
         return '*';
@@ -258,158 +310,72 @@ export class Audits1Component {
   private _buildTableBody(): any[] {
     let body: any[] = [];
 
-    if (this.model.entity === 'produit') {
-      if (this.model.filtre === 'ALL_PRODUIT') {
-        for (let index = 0, len = this.produits.length; index < len; index++) {
-          const element: Produit = this.produits[index];
-
-          body.push([
+     if (this.model.entity === 'frais_ouverture') {
+      this.totalSolde=0;
+      console.log(this.clients);
+      if(this.clients.length>0){
+        for (let index = 0, len = this.clients.length; index < len; index++) {
+          const element: Client = this.clients[index];
+          if(element.id){
+            if(!!element.fraisOuverture) this.totalSolde=this.totalSolde + (+element.fraisOuverture);
+          }
+            body.push([
             {
               text: index + 1,
               style: 'counter'
             },
             {
-              text: element.typeProduit
+              text: (element.name || '') + ' ' + (element.firstName || '')
             },
             {
-              text: element.libelle
+              text: (element.quartier || '') + ' ' + (element.maison || '')
             },
             {
-              text: element.periodicite || ''
+              text: element.telephone
             },
             {
-              text: element.montantMin || ''
+              text: element.profession
             },
             {
-              text: element.nbreMiseAvance || ''
+              text: element.activiteExerce
             },
             {
-              text: element.nbreMiseTotal || ''
-            },
-            {
-              text: element.nbreMisePrelever || ''
-            },
-            {
-              text: element.nbreEcheance || ''
+              text: element.fraisOuverture
             }
-          ])
-        }
-      } else if (this.model.filtre === 'EPARGNE_PRODUIT') {
-        for (let index = 0, len = this.produits.length; index < len; index++) {
-          const element: Produit = this.produits[index];
-          if (element.typeProduit === 'EPARGNE') {
-            body.push([
-              {
-                text: body.length + 1,
-                style: 'counter'
-              },
-              {
-                text: this.datePipe.transform(element.date, 'mediumDate')
-              },
-              {
-                text: element.libelle
-              }
-            ])
-          }
-        }
-      } else if (this.model.filtre === 'TONTINE_PRODUIT') {
-        for (let index = 0, len = this.produits.length; index < len; index++) {
-          const element: Produit = this.produits[index];
-          if (element.typeProduit === 'TONTINE') {
-            body.push([
-              {
-                text: body.length + 1,
-                style: 'counter'
-              },
-              {
-                text: element.libelle || ''
-              },
-              {
-                text: element.periodicite || ''
-              },
-              {
-                text: element.montantMin || ''
-              },
-              {
-                text: element.nbreMiseAvance || ''
-              },
-              {
-                text: element.nbreMiseTotal || ''
-              },
-              {
-                text: element.nbreMisePrelever || ''
-              },
-              {
-                text: element.nbreEcheance || ''
-              }
-            ])
-          }
-        }
-      } else if (this.model.filtre === 'CREDIT_PRODUIT') {
-        for (let index = 0, len = this.produits.length; index < len; index++) {
-          const element: Produit = this.produits[index];
-          if (element.typeProduit === 'CREDIT') {
-            body.push([
-              {
-                text: body.length + 1,
-                style: 'counter'
-              },
-              {
-                text: element.libelle
-              },
-              {
-                text: element.periodicite || ''
-              },
-              {
-                text: element.montantMin || ''
-              },
-              {
-                text: element.nbreMiseAvance || ''
-              },
-              {
-                text: element.nbreMiseTotal || ''
-              },
-              {
-                text: element.nbreMisePrelever || ''
-              },
-              {
-                text: element.nbreEcheance || ''
-              }
-            ])
-          }
+          ]);
         }
       }
-    } else if (this.model.entity === 'client') {
-      for (let index = 0, len = this.clients.length; index < len; index++) {
-        const element: Client = this.clients[index];
-        body.push([
-          {
-            text: index + 1,
-            style: 'counter'
-          },
-          {
-            text: (element.name || '') + ' ' + (element.firstName || '')
-          },
-          {
-            text: element.numCarte
-          },
-          {
-            text: (element.quartier || '') + ' ' + (element.maison || '')
-          },
-          {
-            text: element.telephone
-          },
-          {
-            text: element.profession
-          },
-          {
-            text: element.activiteExerce
-          },
-          {
-            text: element.lieuExercice
+
+    } else if (this.model.entity === 'recettes') {
+      this.totalSolde=0;
+      console.log(this.recettesPeriode);
+      if(this.recettesPeriode.length>0){
+        for (let index = 0, len = this.recettesPeriode.length; index < len; index++) {
+          const element: Compte = this.recettesPeriode[index];
+          if(element.id){
+            if(!!element.montant) this.totalSolde=this.totalSolde + (+element.montant);
           }
-        ]);
+            body.push([
+            {
+              text: index + 1,
+              style: 'counter'
+            },
+            {
+              text: this.client(element.idClient) || ''
+            },
+            {
+              text: (element.date ? this.datePipe.transform(element.date, 'dd/MM/yyyy') : '')
+            },
+            {
+              text: element.motif
+            },
+            {
+              text: element.montant
+            }
+          ]);
+        }
       }
+
     } else if (this.model.entity === 'comptes') {
       let cptes = [];
       this.totalSolde=0;
@@ -532,7 +498,7 @@ export class Audits1Component {
       text: this.getTitle().toUpperCase(),
       style: 'title'
     });
-    if (this.model.entity === 'comptes') {
+    if (this.model.entity === 'comptes' || this.model.entity === 'frais_ouverture'|| this.model.entity === 'recettes') {
       cont.push({
       background: '#b45c5c',
       alignment: 'left',
@@ -595,9 +561,13 @@ export class Audits1Component {
         hd = [{ text: 'N°', style: 'tableHeader' }, { text: "Libellé", style: 'tableHeader' }, { text: "Périodicité", style: 'tableHeader' }, { text: "Montant min.", style: 'tableHeader' }, { text: 'Nbre Ech.', style: 'tableHeader' }, { text: 'Déposit', style: 'tableHeader' }, { text: 'Nbre de mise prélever', style: 'tableHeader' }, { text: "Nbre d'écheances", style: 'tableHeader' }];
       }
       title = hd;
-    } else if (this.model.entity === 'client') {
+    } else if (this.model.entity === 'frais_ouverture') {
       title = [
-        { text: 'N°', style: 'tableHeader' }, { text: 'Nom & prénoms', style: 'tableHeader' }, { text: 'Num. carte', style: 'tableHeader' }, { text: 'Quartier & maison', style: 'tableHeader' }, { text: 'Téléphone', style: 'tableHeader' }, { text: 'Profession', style: 'tableHeader' }, { text: 'Activité', style: 'tableHeader' }, { text: "Lieu d'exercice", style: 'tableHeader' }
+        { text: 'N°', style: 'tableHeader' }, { text: 'Nom & prénoms', style: 'tableHeader' }, { text: 'Quartier & maison', style: 'tableHeader' }, { text: 'Téléphone', style: 'tableHeader' }, { text: 'Profession', style: 'tableHeader' }, { text: 'Activité', style: 'tableHeader' }, { text: "Frais ouverture", style: 'tableHeader' }
+      ];
+    } else if (this.model.entity === 'recettes') {
+      title = [
+        { text: 'N°', style: 'tableHeader' }, { text: 'Nom & prénoms', style: 'tableHeader' }, { text: 'Date', style: 'tableHeader' }, { text: 'Motif', style: 'tableHeader' }, { text: 'Montant', style: 'tableHeader' }
       ];
     } else if (this.model.entity === 'comptes') {
       let hd: any = [""];

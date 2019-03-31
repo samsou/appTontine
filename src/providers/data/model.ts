@@ -56,6 +56,8 @@ export interface Compte {
     deposit?:number;
     depositRetire?:boolean;
     fini?:boolean;
+    date?:Date;
+    motif?:any;
 }
 export interface Avance {
     id?: any;

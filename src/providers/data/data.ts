@@ -7,6 +7,7 @@ import { Observable } from 'rxjs/Observable';
 import { Client, Compte, Mise, Produit, Settings, Echeance } from './model';
 import { RESSOURCES, UserData } from './userdata';
 import { isTrueProperty } from 'ionic-angular/umd/util/util';
+import { dateValueRange } from 'ionic-angular/umd/util/datetime-util';
 
 /*
   Generated class for the DataProvider provider.
@@ -208,6 +209,18 @@ export class DataProvider {
       return this.userData.clients;
     });
   }
+
+  // getClientsEntreDeuxDate(date1:Date,date2): Observable<Client[]> {
+  //   return this.db.object('clients')
+  //   // return this.db.object('clients').or.valueChanges().map((clts) => {
+  //   //   let clients: any = {};
+  //   //   for (const key in clts) {
+  //   //     clients[key] = { id: key, ...clts[key] };
+  //   //   }
+  //   //   this.userData.clientsMap = clients;
+  //   //   return this.userData.clients;
+  //   // });
+  // }
   addClient(client: Client): Promise<any> {
     if (!client.id) {
       client.date = this.user.clotureDate || Date.now();

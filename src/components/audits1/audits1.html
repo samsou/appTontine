@@ -1,4 +1,4 @@
-<h3 ion-text text-center>Etats</h3>
+<h3 ion-text text-center>Autres Etats</h3>
 <ion-row>
   <ion-col>
       <ion-item>
@@ -8,13 +8,13 @@
   <ion-col>
     <ion-item no-lines>
           <ion-label>Date début</ion-label>
-          <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY"></ion-datetime>
+          <ion-datetime [(ngModel)]="model.datedebut" display-format="dd/MM/yyyy" picker-format="dd/MM/yyyy" (ionChange)="onEntityChange()"></ion-datetime>
     </ion-item>
 </ion-col>
 <ion-col>
   <ion-item no-lines>
         <ion-label>Date fin</ion-label>
-        <ion-datetime display-format="DD/MM/YYYY" picker-format="DD/MM/YYYY"></ion-datetime>
+        <ion-datetime [(ngModel)]="model.datefin"  display-format="DD/MMM/YYYY" picker-format="DD/MMM/YYYY" (ionChange)="onEntityChange()"></ion-datetime>
   </ion-item>
 </ion-col>
 </ion-row>
@@ -23,17 +23,26 @@
         <ion-item >
             <ion-label class="oblige">Sélectionner l'entité</ion-label>
             <ion-select [(ngModel)]="model.entity" name="entity" (ionChange)="onEntityChange()" required>
-                <ion-option value="produit">Produit</ion-option>
-                <ion-option value="client">Client</ion-option>
-                <ion-option value="comptes">Comptes</ion-option>
-                <ion-option value="recette">Recettes</ion-option>
+                <ion-option value="recettes">Recettes</ion-option>
+                <ion-option value="tontines_clotures">Tontines cloturés</ion-option>
+                <ion-option value="avances_effectuees">Avances effectuées</ion-option>
+                <ion-option value="frais_ouverture">Frais d'ouverture de Comptes</ion-option>
+                <ion-option value="depot_effectues">Dépots effectués</ion-option>
+                <ion-option value="retraits_effectues">Retraits effectués</ion-option>
+                <ion-option value="dossier_etude">Dossiers en Etude</ion-option>
+                <ion-option value="dossier_accordes">Dossiers Accordés</ion-option>
+                <ion-option value="remboursements">Remboursements</ion-option>
+                <ion-option value="remboursements_attendus">Remboursements attendus</ion-option>
+                <ion-option value="mises_attendues">Mises attendues</ion-option>
+                <ion-option value="frais_dossiers">Frais de Dossiers</ion-option>
+                <ion-option value="impayes">Impayés</ion-option>
             </ion-select>
         </ion-item>
     </ion-col>
 
 </ion-row>
-<div ion-row [hidden]="!model.filtre || !filtres?.length">
+<div ion-row [hidden]="!model.entity">
     <ion-col col-12>
-        <iframe frameborder="0" #iframe style="height: 100%; width: 100%;"></iframe>
+        <iframe frameborder="0" #iframe style="height: 400px; width: 100%;"></iframe>
     </ion-col>
 </div>
