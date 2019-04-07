@@ -1,3 +1,4 @@
+import { Depot, Retrait } from './../../providers/data/model';
 import { CurrencyPipe, DatePipe } from '@angular/common';
 import { Component, ViewChild } from '@angular/core';
 
@@ -30,8 +31,13 @@ export class Audits1Component {
   recettes: any[] = [];
   recettesPeriode: any[] = [];
   tontines: Compte[] = [];
+  tontinesAvance: Compte[] = [];
   epargnes: Compte[] = [];
   credits: Compte[] = [];
+  depots: any[] = [];
+  depotsPeriode: any[] = [];
+  retraits: any[] = [];
+  retraitsPeriode: any[] = [];
 
   constructor(private dataProvider: DataProvider, private datePipe: DatePipe, private currencyPipe: CurrencyPipe) {
   }
@@ -39,6 +45,8 @@ export class Audits1Component {
     this.getProduits();
     this.getClients();
     this.getRecettes();
+    this.getRetraits();
+    this.getDepots();
     this.getComptes('EPARGNE');
     this.getComptes('TONTINE');
     this.getComptes('CREDIT');
@@ -49,7 +57,6 @@ export class Audits1Component {
       let cptes = comptes.map((compte) => {
         compte.client = this.dataProvider.getClientById(compte.idClient);
         compte.produit = this.dataProvider.getProduitById(compte.idProduit);
-        //this.montantTotalEpargne += +compte.montant || 0;
         return compte;
       });
       if (type === 'EPARGNE') {
@@ -63,15 +70,43 @@ export class Audits1Component {
     });
   }
   getRecettes() {
-    //this.recettes = this.dataProvider.userData.RECETTES;
     this.dataProvider.getComptes('RECETTES').subscribe((recettes: any[]) => {
       this.recettes = recettes;
-      /* this.recettes.forEach((rec) => {
-        this.montant += +rec.montant;
-      }); */
     }, (err) => {
     });
   }
+
+  getDepots() {
+    this.dataProvider.getDepots().subscribe((depots: any[]) => {
+      this.depots = depots;
+    }, (err) => {
+    });
+  }
+
+  getDepotsPeriode(date1:Date,date2:Date) {
+    if((date1 && date2) && (date1 < date2)){
+      this.depotsPeriode = [];
+      this.depotsPeriode=this.depots.filter(depot=>(new Date(depot.date) > new Date(date1)));
+     this.depotsPeriode=this.depotsPeriode.filter(dep => new Date(dep.date) < new Date(date2));
+    };
+  };
+
+
+  getRetraits() {
+    this.dataProvider.getRetraits().subscribe((retraits: any[]) => {
+      this.retraits = retraits
+    });
+  }
+
+  getRetraitsPeriode(date1:Date,date2:Date) {
+    if((date1 && date2) && (date1 < date2)){
+      this.retraitsPeriode = [];
+      this.retraitsPeriode=this.retraits.filter(retrait=>(new Date(retrait.date) > new Date(date1)));
+     this.retraitsPeriode=this.retraitsPeriode.filter(ret => new Date(ret.date) < new Date(date2));
+    };
+  };
+
+
   getClients() {
     this.dataProvider.getClients().subscribe((clients: Client[]) => {
       this.clients = clients;
@@ -107,6 +142,15 @@ export class Audits1Component {
     };
   };
 
+  getAvancesTontinesPeriode(date1:Date,date2:Date) {
+    if((date1 && date2) && (date1 < date2)){
+      console.log(this.tontines);
+      this.tontinesAvance = [];
+      this.tontinesAvance=this.tontines.filter(tontine=>(new Date(tontine.avanceDate).getTime() > new Date(date1).getTime()));//.filter(rec => (new Date(rec.date).getTime() <= new Date(date2).getTime()));
+      this.tontinesAvance=this.tontinesAvance.filter(one => (new Date(one.avanceDate).getTime() <= new Date(date2).getTime()));
+    };
+  };
+
 
 
 
@@ -116,74 +160,7 @@ export class Audits1Component {
     }, (err) => {
     });
   }
-  // onEntityChange() {
-  //   this.model.filtre = "";
-  //   this.filtres = [];
-  //   if (this.model.entity === 'produit') {
-  //     this.filtres = [
-  //       {
-  //         libelle: 'Tous les produits',
-  //         code: 'ALL_PRODUIT'
-  //       },
-  //       {
-  //         libelle: 'Les produits Epargnes',
-  //         code: 'EPARGNE_PRODUIT'
-  //       },
-  //       {
-  //         libelle: 'Les produits Tontines',
-  //         code: 'TONTINE_PRODUIT'
-  //       },
-  //       {
-  //         libelle: 'Les produits Crédits',
-  //         code: 'CREDIT_PRODUIT'
-  //       }
-  //     ];
-  //   } else if (this.model.entity === 'client') {
-  //     this.filtres = [
-  //       {
-  //         libelle: 'Tous les clients',
-  //         code: 'ALL_CLIENT'
-  //       },
-  //       /*  {
-  //          libelle: 'Les clients qui ont un compte epargne et tontine',
-  //          code: 'CLIENT_ALL_COMPTES'
-  //        } */
-  //     ];
-  //   } else if (this.model.entity === 'comptes') {
-  //     this.filtres = [
-  //       {
-  //         libelle: 'Tous les comptes',
-  //         code: 'ALL_COMPTE'
-  //       },
-  //       {
-  //         libelle: 'Les comptes tontines',
-  //         code: 'TONTINE_COMPTE'
-  //       },
-  //       {
-  //         libelle: 'Les comptes epargnes',
-  //         code: 'EPARGNE_COMPTE'
-  //       }
-  //       ,
-  //       {
-  //         libelle: 'Les comptes crédits',
-  //         code: 'CREDIT_COMPTE'
-  //       }
-  //     ];
-  //   } else if (this.model.entity === 'recette') {
-  //     this.filtres = [
-  //       {
-  //         libelle: 'Toutes nos recettes',
-  //         code: 'ALL_RECETTE'
-  //       },
-  //       /* {
-  //         libelle: 'Les recettes entre',
-  //         code: 'RECETTE_INTERVAL'
-  //       } */
-  //     ];
-  //   }
-  // }
-  // onEntityChange()
-  // onFiltreChange()
+
   onEntityChange() {
    console.log(this.model.datedebut);
    console.log(this.model.datefin);
@@ -195,9 +172,24 @@ export class Audits1Component {
 
    if (this.model.entity === 'recettes'){
     this.getRecettesPeriode(this.model.datedebut,this.model.datefin);
-    //console.log(this.clients);
+  }
+  // depots_effectues
+  if (this.model.entity === 'depots_effectues'){
+    this.getDepotsPeriode(this.model.datedebut,this.model.datefin);
+    console.log(this.depotsPeriode);
+  }
+// getRetraitsPeriode
+if (this.model.entity === 'retraits_effectues'){
+  this.getRetraitsPeriode(this.model.datedebut,this.model.datefin);
+  console.log(this.retraitsPeriode);
 }
+// avances_effectuees
 
+// getRetraitsPeriode
+if (this.model.entity === 'avances_effectuees'){
+  this.getAvancesTontinesPeriode(this.model.datedebut,this.model.datefin);
+  console.log(this.tontinesAvance);
+}
     // if (this.model.filtre === 'RECETTE_INTERVAL') {
 
     // }
@@ -297,7 +289,7 @@ export class Audits1Component {
       widths: undefined
     };
     let tt = this._buildTableTitle() || [];
-    if (['frais_ouverture', 'EPARGNE_COMPTE', 'CREDIT_COMPTE'].indexOf(this.model.entity) !== -1) {
+    if (['frais_ouverture', 'depots_effectues', 'retraits_effectues', 'avances_effectuees'].indexOf(this.model.entity) !== -1) {
       data.widths = tt.map((value, index) => {
         if (index === 0) return 'auto';
         return '*';
@@ -371,6 +363,96 @@ export class Audits1Component {
             },
             {
               text: element.montant
+            }
+          ]);
+        }
+      }
+
+    } else if (this.model.entity === 'depots_effectues') {
+      this.totalSolde=0;
+      //console.log(this.recettesPeriode);
+      if(this.depotsPeriode.length>0){
+        for (let index = 0, len = this.depotsPeriode.length; index < len; index++) {
+          const element: Depot = this.depotsPeriode[index];
+          if(element.id){
+            if(!!element.montant) this.totalSolde=this.totalSolde + (+element.montant);
+          }
+            body.push([
+            {
+              text: index + 1,
+              style: 'counter'
+            },
+            {
+              text: this.client(element.idClient) || ''
+            },
+            {
+              text: (element.date ? this.datePipe.transform(element.date, 'dd/MM/yyyy') : '')
+            },
+            {
+              text: element.nameDeposant
+            },
+            {
+              text: element.montant
+            }
+          ]);
+        }
+      }
+
+    } else if (this.model.entity === 'retraits_effectues') {
+      this.totalSolde=0;
+      //console.log(this.recettesPeriode);
+      if(this.retraitsPeriode.length>0){
+        for (let index = 0, len = this.retraitsPeriode.length; index < len; index++) {
+          const element: Retrait = this.retraitsPeriode[index];
+          if(element.id){
+            if(!!element.montant) this.totalSolde=this.totalSolde + (+element.montant);
+          }
+            body.push([
+            {
+              text: index + 1,
+              style: 'counter'
+            },
+            {
+              text: this.client(element.idClient) || ''
+            },
+            {
+              text: (element.date ? this.datePipe.transform(element.date, 'dd/MM/yyyy') : '')
+            },
+            {
+              text: element.nameRetirant
+            },
+            {
+              text: element.montant
+            }
+          ]);
+        }
+      }
+
+    } else if (this.model.entity === 'avances_effectues') {
+      this.totalSolde=0;
+      //console.log(this.recettesPeriode);
+      if(this.tontinesAvance.length>0){
+        for (let index = 0, len = this.tontinesAvance.length; index < len; index++) {
+          const element: Compte = this.tontinesAvance[index];
+          if(element.id){
+            if(!!element.montantAvance) this.totalSolde=this.totalSolde + (+element.montantAvance);
+          }
+            body.push([
+            {
+              text: index + 1,
+              style: 'counter'
+            },
+            {
+              text: this.client(element.idClient) || ''
+            },
+            {
+              text: (element.avanceDate ? this.datePipe.transform(element.avanceDate, 'dd/MM/yyyy') : '')
+            },
+            {
+              text: element.typeCompte
+            },
+            {
+              text: element.montantAvance
             }
           ]);
         }
@@ -498,7 +580,12 @@ export class Audits1Component {
       text: this.getTitle().toUpperCase(),
       style: 'title'
     });
-    if (this.model.entity === 'comptes' || this.model.entity === 'frais_ouverture'|| this.model.entity === 'recettes') {
+    if (this.model.entity === 'comptes'
+    || this.model.entity === 'frais_ouverture'
+    || this.model.entity === 'recettes'
+    || this.model.entity === 'depots_effectues'
+    || this.model.entity === 'retraits_effectues'
+    || this.model.entity === 'avances_effectuees') {
       cont.push({
       background: '#b45c5c',
       alignment: 'left',
@@ -565,7 +652,10 @@ export class Audits1Component {
       title = [
         { text: 'N°', style: 'tableHeader' }, { text: 'Nom & prénoms', style: 'tableHeader' }, { text: 'Quartier & maison', style: 'tableHeader' }, { text: 'Téléphone', style: 'tableHeader' }, { text: 'Profession', style: 'tableHeader' }, { text: 'Activité', style: 'tableHeader' }, { text: "Frais ouverture", style: 'tableHeader' }
       ];
-    } else if (this.model.entity === 'recettes') {
+    } else if (this.model.entity === 'recettes'
+    ||this.model.entity === 'depots_effectues'
+    ||this.model.entity === 'retraits_effectues'
+    ||this.model.entity === 'avances_effectuees') {
       title = [
         { text: 'N°', style: 'tableHeader' }, { text: 'Nom & prénoms', style: 'tableHeader' }, { text: 'Date', style: 'tableHeader' }, { text: 'Motif', style: 'tableHeader' }, { text: 'Montant', style: 'tableHeader' }
       ];

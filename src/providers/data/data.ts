@@ -6,8 +6,6 @@ import { Subject } from 'rxjs';
 import { Observable } from 'rxjs/Observable';
 import { Client, Compte, Mise, Produit, Settings, Echeance } from './model';
 import { RESSOURCES, UserData } from './userdata';
-import { isTrueProperty } from 'ionic-angular/umd/util/util';
-import { dateValueRange } from 'ionic-angular/umd/util/datetime-util';
 
 /*
   Generated class for the DataProvider provider.
@@ -289,19 +287,6 @@ export class DataProvider {
       return produits;
     });
   }
-
-  // getEcheances(compte: Compte): Observable<any> {
-  //   return this.db.object(`echeances/${compte.id}`).valueChanges().map((ech) => {
-  //     //let echeances = [];
-          //let produits: Produit[] = [];
-  //     // for (const key in value) {
-  //     //   if (value[key].idCompte == compte.id)
-  //       this.echeances.push(ech);
-  //     // }
-  //     return echeances;
-  //   });
-  // }
-
 
   getEcheances(compte: Compte): Observable<Echeance[]> {
     return this.db.object(`echeances/${compte.id}`).valueChanges().map((prdts) => {

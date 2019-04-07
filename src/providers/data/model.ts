@@ -96,3 +96,29 @@ export interface Mise {
     date?: any;
 }
 
+export interface Depot {
+  id?: any;
+  idCompte?: any;
+  idClient?: any;
+  client?: Client;
+  compte?: Compte;
+  montant?: number;
+  date?: any;
+  nameDeposant?:any;
+  numCarteDeposant?:any;
+  phoneDeposant?:any;
+}
+
+export interface Retrait {
+  id?: any;
+  idCompte?: any;
+  idClient?: any;
+  client?: Client;
+  compte?: Compte;
+  montant?: number;
+  date?: any;
+  nameRetirant?:any;
+  numCarteRetirant?:any;
+  phoneRetirant?:any;
+}
+
